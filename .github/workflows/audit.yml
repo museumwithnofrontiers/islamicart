@@ -6,7 +6,6 @@ on:
 permissions:
   contents: read
   issues: write
-  packages: read
 jobs:
   audit:
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/audit-scheduled.yml@v1.7.0
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/audit-scheduled.yml@v1.7.1
