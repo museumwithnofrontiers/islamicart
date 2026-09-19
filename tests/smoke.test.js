@@ -3,7 +3,7 @@ import { loadEntities, mergeMessages } from '@museumwnf/viewer-core'
 import { checkOfferedLanguages, checkRoutes, checkSectionMeta, checkTextsRendered, mountSite as mountOn } from '@museumwnf/viewer-core/testing'
 import { catalogues as sharedTexts } from '@museumwnf/viewer-i18n/standalone'
 import ownTexts from '../locales/en.json'
-import config from '../src/dataset.config.js'
+import config, { PROJECTS } from '../src/dataset.config.js'
 import { useInventoryData } from '../src/composables/useInventoryData.js'
 
 // The same two layers main.js assembles, in the same order: the shared bundle
@@ -53,9 +53,9 @@ describe('website smoke test', () => {
 
   // The Explore checkbox writes the same URL key legacy's opt-in checkbox
   // did (`epm`), so the entrance's link keeps working: checking it must
-  // widen the results beyond the always-searched 'ISL' project. The row
-  // count alone would not show this — a page holds twenty rows regardless —
-  // so this reads the summary's total instead.
+  // widen the results beyond the always-searched Discover Islamic Art
+  // project. The row count alone would not show this — a page holds twenty
+  // rows regardless — so this reads the summary's total instead.
   function summaryTotal(host) {
     return [...host.querySelectorAll('.mwnf-summary__count')]
       .reduce((sum, el) => sum + Number(el.textContent), 0)
@@ -297,7 +297,7 @@ describe('website smoke test', () => {
   // `level`/`parent_id`), so the nesting is visible rather than merely
   // configured.
   it('renders the partner list grouped by country, nesting an associated partner under its own parent', async () => {
-    const { app, host } = await mountSite('#/partners/results?type=museum&project=ISL')
+    const { app, host } = await mountSite(`#/partners/results?type=museum&project=${PROJECTS.discover}`)
     await vi.waitFor(() => expect(host.querySelector('.mwnf-partner-list__row')).not.toBeNull(), { timeout: 20000 })
 
     expect(host.querySelector('.mwnf-heading').textContent).toContain('Partner Museums')
@@ -314,6 +314,45 @@ describe('website smoke test', () => {
 
     app.unmount()
   }, 60000)
+
+  // #1727 phase 4: the project heading reads the data package's own manifest
+  // (`useProjects().label()`, dataset.config.js's `PROJECTS`), and the
+  // partner scope reads `project_uuids` — never the legacy `project_ids`
+  // key array. The Explore project (unlike Discover) offers no
+  // institutions panel, so this exercises the second, narrower entry of
+  // `partnerEntrance`.
+  it('renders the Explore Islamic Art Collections partner list by its manifest name and project UUID scope', async () => {
+    const { app, host } = await mountSite(`#/partners/results?type=museum&project=${PROJECTS.explore}`)
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-partner-list__row')).not.toBeNull(), { timeout: 20000 })
+
+    // The manifest's own name for this project (manifest.json's
+    // `projects['928f5e0d-...'].name.en`), not a site-authored text.
+    expect(host.querySelector('.mwnf-heading').textContent).toContain('Explore Islamic Art Collections')
+    expect(host.textContent).toContain('Aga Khan Museum')
+
+    app.unmount()
+  }, 60000)
+
+  // #1727 phase 4: the entrance's two panels and their buttons render from
+  // `dataset.config.js`'s `partnerEntrance` — Discover offers museums and
+  // institutions, Explore (legacy never had an institutions page for it)
+  // offers only museums.
+  it('renders the partner entrance panels and buttons from dataset.config.js', async () => {
+    const { app, host } = await mountSite('#/partners')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-panel')).not.toBeNull(), { timeout: 20000 })
+
+    const panels = host.querySelectorAll('.mwnf-panel')
+    expect(panels.length).toBe(2)
+    expect(panels[0].textContent).toContain('Browse Museums')
+    expect(panels[0].textContent).toContain('Browse Institutions')
+    expect(panels[1].textContent).toContain('Browse Museums')
+    expect(panels[1].textContent).not.toContain('Browse Institutions')
+
+    const links = [...panels[1].querySelectorAll('button')]
+    expect(links.length).toBe(1)
+
+    app.unmount()
+  }, 30000)
 
   // The partner profile moved onto the composed `RecordView`
   // (metanull/islamicart#48): the description/contact/logo/map sections and

@@ -77,6 +77,10 @@ export const itemSheet = {
   // the description when the item also carries the shorter text.
   shortDescription: 'short_description',
   shortDescriptionAfter: 'description',
+  // Out of #1727 phase 4's scope: RecordView (viewer-layout, still ^2.12.0
+  // here) reads `spec.project ?? record.project_key` for the citation line;
+  // this moves to `useProjects().label(record.project_id)` automatically
+  // once viewer-layout 2.13.0 (metanull/viewer-layout#87) propagates.
   citation: { project: 'ISL' },
   related: { variant: 'list', heading: 'record.related.items' },
   route: 'item',

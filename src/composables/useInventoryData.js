@@ -1,17 +1,14 @@
-import { useCatalogueData, useDataPackage } from '@museumwnf/viewer-core'
+import { useCatalogueData } from '@museumwnf/viewer-core'
 
 // The website's records, read the one way every website reads them: through
 // viewer-core, lazily. Each entity is a shared ref that stays `null` until a
 // route declaring it in `meta.entities` brings its chunk in, so importing
 // this module loads nothing, and a page pays only for what it reads.
 // Translations, the Markdown pipeline and the label shape are
-// `useCatalogueData`'s; what stays here is genuinely this site's own — the
-// project-key rule. The Exhibitions and Artistic Introduction collection
+// `useCatalogueData`'s. The Exhibitions and Artistic Introduction collection
 // trees live in composables/exhibitions.js and composables/artIntro.js,
-// over `useCollectionTree`.
-
-const dataPackage = useDataPackage()
-const manifest = dataPackage.manifest
+// over `useCollectionTree`; which projects are in scope for search and the
+// partner entrance is `dataset.config.js`'s own (#1727 phase 4).
 
 // English is the base language of every catalogue in the platform: every
 // list, label and fallback reads it. A record the visitor reads in another
@@ -38,19 +35,6 @@ const timelineEvents = catalogue.entity('timeline_events')
 const collections = catalogue.entity('collections')
 
 const itemById = catalogue.index('items')
-
-// Legacy project key (e.g. 'ISL', 'EPM') by project UUID — manifest.json's
-// projectIds/projectKeys are parallel arrays, one exported project per index.
-const projectKeyById = new Map(
-  (manifest.projectIds ?? []).map((id, i) => [id, manifest.projectKeys?.[i]])
-)
-
-// 'ISL' ("Discover Islamic Art") is always the default/primary project; any other
-// exported project (e.g. 'EPM', "Explore Islamic Art Collections") is opt-in —
-// mirrors legacy's database.php "Include Explore Islamic Art Collections" checkbox.
-function itemProjectKey(item) {
-  return projectKeyById.get(item.project_id) ?? null
-}
 
 // ── Labels (always English) — `labelOf`'s one shape, over this site's entities.
 
@@ -88,7 +72,6 @@ export function useInventoryData() {
     countryLabel,
     dynastyLabel,
     partnerLabel,
-    itemProjectKey,
     itemById,
     md,
     mdInline,

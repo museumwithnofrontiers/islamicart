@@ -1,11 +1,19 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { I18nText } from '@museumwnf/viewer-core'
+import { partnerEntrance } from '../dataset.config.js'
 
 const router = useRouter()
 
-function browse(type, project) {
-  router.push({ path: '/partners/results', query: { type, project } })
+function browse(kind, project) {
+  router.push({ path: '/partners/results', query: { type: kind, project } })
+}
+
+// The th label reads by button kind, the same way legacy's two list pages
+// each spoke of "museums" or "institutions" regardless of which project the
+// page was for.
+function kindLabel(kind) {
+  return kind === 'museum' ? 'partner.list.museums' : 'islamicart.partner.others'
 }
 </script>
 
@@ -13,36 +21,15 @@ function browse(type, project) {
   <div>
     <h1 class="mwnf-heading">{{ $t('islamicart.nav.partners') }}</h1>
 
-    <div class="mwnf-panel">
-      <I18nText tag="p" class="intro-text" keypath="islamicart.partner.introDiscover" />
+    <div v-for="panel in partnerEntrance" :key="panel.project" class="mwnf-panel">
+      <I18nText tag="p" class="intro-text" :keypath="panel.intro" />
 
       <table class="mwnf-form-table filter-table">
         <tbody>
-          <tr>
-            <th><label>{{ $t('partner.list.museums') }}</label></th>
+          <tr v-for="button in panel.buttons" :key="button.kind">
+            <th><label>{{ $t(kindLabel(button.kind)) }}</label></th>
             <td>
-              <button class="mwnf-button" @click="browse('museum', 'ISL')">{{ $t('islamicart.action.browseMuseums') }} →</button>
-            </td>
-          </tr>
-          <tr>
-            <th><label>{{ $t('islamicart.partner.others') }}</label></th>
-            <td>
-              <button class="mwnf-button" @click="browse('institution', 'ISL')">{{ $t('islamicart.action.browseInstitutions') }} →</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="mwnf-panel">
-      <I18nText tag="p" class="intro-text" keypath="islamicart.partner.introExplore" />
-
-      <table class="mwnf-form-table filter-table">
-        <tbody>
-          <tr>
-            <th><label>{{ $t('partner.list.museums') }}</label></th>
-            <td>
-              <button class="mwnf-button" @click="browse('museum', 'EPM')">{{ $t('islamicart.action.browseMuseums') }} →</button>
+              <button class="mwnf-button" @click="browse(button.kind, panel.project)">{{ $t(button.action) }} →</button>
             </td>
           </tr>
         </tbody>
