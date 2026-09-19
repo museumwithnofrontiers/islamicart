@@ -2,10 +2,12 @@
  * Global styles shared by every Islamic Art view: the legacy palette
  * variables the views' own one-off styles reference. The shared content
  * blocks (panel, heading, form table, buttons, back links) are
- * viewer-layout's `.mwnf-*` content classes now, themed in theme/tokens.css;
+ * viewer-layout's shared content classes now, themed in theme/tokens.css;
  * lists, pagination, filters and summaries are viewer-layout's own composed
  * views, themed there too. Page chrome (header, nav, footer) is themed via
- * theme/tokens.css as well.
+ * theme/tokens.css as well. The back-bar's own layout and colour, for the
+ * anchors/router-links that apply that class directly instead of using the
+ * kit's button-based BackLink component, live in theme/overrides.css.
  */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,400&display=swap');
 
@@ -50,18 +52,4 @@ a {
 a:hover {
   color: var(--link-hover);
   text-decoration: underline;
-}
-
-/* ── Back links ─────────────────────────────────────────────────────────── */
-/* `.mwnf-back-bar` themes a <button> child (the kit's own BackLink
-   component); every back link on this site is a plain anchor/router-link
-   instead (some call router.back(), so they cannot be a plain href), so its
-   colour comes from here rather than the shared class. */
-.mwnf-back-bar {
-  display: inline-block;
-  margin-bottom: 12px;
-  color: var(--muted);
-}
-.mwnf-back-bar:hover {
-  color: var(--nav-active);
 }

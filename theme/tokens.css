@@ -178,6 +178,10 @@
   --mwnf-select-focus-outline: 1px solid #e0b700;
   /* The shared class themes a <button> child only (the kit's own BackLink
      component); this site's back links are plain anchors, so no padding box
-     is wanted around them — site.css supplies their colour instead. */
+     is wanted around them. Text/hover colour reuse the global tokens above;
+     theme/overrides.css supplies the layout and reads these two on the
+     anchor element itself, which the shared rule doesn't reach. */
   --mwnf-back-bar-padding: 0;
+  --mwnf-back-bar-text: var(--mwnf-color-muted);
+  --mwnf-back-bar-hover-text: var(--mwnf-color-accent);
 }
