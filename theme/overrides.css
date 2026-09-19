@@ -24,3 +24,20 @@
 .mwnf-footer {
   text-align: center;
 }
+
+/*
+ * The shared back-bar class themes a <button> child (the kit's own
+ * BackLink component); this site's back links are plain anchors and
+ * router-links applying the class directly instead (some call
+ * router.back(), so they cannot be a plain href) — layout has no token,
+ * and the colour reads the same --mwnf-back-bar-text/-hover-text tokens
+ * theme/tokens.css sets, for an element shape the shared rule can't reach.
+ */
+.mwnf-back-bar {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: var(--mwnf-back-bar-text, inherit);
+}
+.mwnf-back-bar:hover {
+  color: var(--mwnf-back-bar-hover-text, inherit);
+}
