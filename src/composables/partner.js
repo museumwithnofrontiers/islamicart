@@ -5,18 +5,21 @@ import { useInventoryData } from './useInventoryData.js'
 // country grouping, the main/associated tiers, the associated-under-parent
 // nesting (G.1's `level`/`parent_id`), the record language switcher, the
 // glossary — is the platform's; what is declared here is only what is this
-// website's: the museum/institution and ISL/EPM axes legacy read from two
-// separate pages (`pm_partner_list.php`, `pm_partner_list_eiac.php`), and
-// the partner sheet's field/section shape.
+// website's: the museum/institution and project axes legacy read from two
+// separate pages (`pm_partner_list.php`, `pm_partner_list_eiac.php`,
+// `dataset.config.js`'s `partnerEntrance`/`PROJECTS`), and the partner
+// sheet's field/section shape.
 
 const { countryLabel } = useInventoryData()
 
 // Both `filterType`/`project` come from the entrance's own link
 // (PartnersEntrance.vue) and stay on the URL PartnersResults.vue reads, so
 // the spec is rebuilt whenever that query changes rather than read once.
+// `project` is a project UUID; partners carry it under `project_uuids`
+// (`project_ids`, the legacy-key array, is never read here — #1727 phase 4).
 export function partnersResults(filterType, project) {
   return {
-    scope: (partner) => partner.type === filterType && (partner.project_ids ?? []).includes(project),
+    scope: (partner) => partner.type === filterType && (partner.project_uuids ?? []).includes(project),
     // Associated partners nest under their own main partner (G.1's
     // `parent_id`) instead of a flat column, wherever that parent is in the
     // same group; one without a parent in this scope stays flat.

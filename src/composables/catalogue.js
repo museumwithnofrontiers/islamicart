@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { useI18n } from '@museumwnf/viewer-core'
+import { search } from '../dataset.config.js'
 import { useInventoryData } from './useInventoryData.js'
 
 // The catalogue spec: what this website's lists filter and search on. The
@@ -12,7 +13,7 @@ import { useInventoryData } from './useInventoryData.js'
 // declaration.
 
 const {
-  countries, dynasties, dynastyLabel, countryLabel, itemLabel, itemProjectKey, mdInline,
+  countries, dynasties, dynastyLabel, countryLabel, itemLabel, mdInline,
   partnerLabel, partners, tr,
 } = useInventoryData()
 
@@ -23,13 +24,14 @@ export const PAGE_SIZE = 20
 export const DATE_MODE = 'overlap'
 
 /**
- * 'ISL' ("Discover Islamic Art") is always searched and browsed; any other
- * exported project ('EPM', "Explore Islamic Art Collections") is opt-in —
- * legacy database.php's "Include Explore Islamic Art Collections" checkbox.
+ * `dataset.config.js`'s `search.defaultProjects` (the site's primary project,
+ * "Discover Islamic Art") is always searched and browsed; `optionalProjects`
+ * ("Explore Islamic Art Collections") is opt-in — legacy database.php's
+ * "Include Explore Islamic Art Collections" checkbox.
  */
 export function inScope(item, includeEpm) {
-  const key = itemProjectKey(item)
-  return !key || key === 'ISL' || Boolean(includeEpm)
+  const scoped = includeEpm ? [...search.defaultProjects, ...search.optionalProjects] : search.defaultProjects
+  return !item.project_id || scoped.includes(item.project_id)
 }
 
 // ── The nine fields of database.php ────────────────────────────────────────

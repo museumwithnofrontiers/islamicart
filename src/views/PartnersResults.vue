@@ -1,8 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useI18n } from '@museumwnf/viewer-core'
+import { useI18n, useProjects } from '@museumwnf/viewer-core'
 import { PartnerListView } from '@museumwnf/viewer-layout/views'
+import { PROJECTS } from '../dataset.config.js'
 import { partnersResults } from '../composables/partner.js'
 
 // The partner results page is the platform's composed partner list,
@@ -12,14 +13,19 @@ import { partnersResults } from '../composables/partner.js'
 
 const route = useRoute()
 const { t } = useI18n()
+const { label: projectName } = useProjects()
 
 const filterType = computed(() => (route.query.type === 'institution' ? 'institution' : 'museum'))
 const otherType = computed(() => (filterType.value === 'museum' ? 'institution' : 'museum'))
 
-// 'ISL' (Discover Islamic Art) and 'EPM' (Explore Islamic Art Collections)
-// are two entirely separate curated lists in legacy — never merged into one,
-// unlike Permanent Collection/Database.
-const project = computed(() => (route.query.project === 'EPM' ? 'EPM' : 'ISL'))
+const knownProjects = new Set(Object.values(PROJECTS))
+
+// 'Discover Islamic Art' and 'Explore Islamic Art Collections' are two
+// entirely separate curated lists in legacy — never merged into one, unlike
+// Permanent Collection/Database — each reached from the entrance's own link
+// (PartnersEntrance.vue), which always sends one of `dataset.config.js`'s
+// `PROJECTS`; anything else falls back to the primary project.
+const project = computed(() => (knownProjects.has(route.query.project) ? route.query.project : PROJECTS.discover))
 
 const spec = computed(() => partnersResults(filterType.value, project.value))
 
@@ -28,9 +34,8 @@ const spec = computed(() => partnersResults(filterType.value, project.value))
 const typeHeading = computed(() =>
   filterType.value === 'museum' ? t('partner.list.museums') : t('partner.list.institutions')
 )
-const projectLabel = computed(() =>
-  project.value === 'EPM' ? t('islamicart.project.explore') : t('islamicart.project.discover')
-)
+// The project's own name, from the data package's manifest — not a site text.
+const projectLabel = computed(() => projectName(project.value))
 const otherTypeLabel = computed(() =>
   otherType.value === 'museum' ? t('islamicart.partner.viewMuseums') : t('islamicart.partner.viewInstitutions')
 )

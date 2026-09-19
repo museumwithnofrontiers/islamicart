@@ -195,3 +195,49 @@ export default {
   // routes are the canonical ones, so there is nothing to redirect from.
   legacyRoutes: [],
 }
+
+// ── Project knowledge (#1727 phase 4) ───────────────────────────────────────
+//
+// The data package's manifest (`manifest.projects`) carries each project's
+// own name and links; which of them this website searches by default, offers
+// through the "Explore" opt-in, and groups under each partner-entrance panel
+// are this site's own editorial choices, not modelled in the data package
+// (#1727 decision 5) — kept here, next to the rest of this website's config,
+// keyed by the project UUIDs this data package exports (confirmed with
+// `npm pack @museumwnf/islamicart-data`, manifest.json's `projects`).
+
+export const PROJECTS = {
+  // 'Discover Islamic Art' — legacy database.php's own project, always
+  // searched and browsed.
+  discover: '61c122ac-ea86-5462-8bab-6b86138c49b2',
+  // 'Explore Islamic Art Collections' — legacy's "Include Explore Islamic
+  // Art Collections" checkbox, opt-in.
+  explore: '928f5e0d-53e3-5f53-b9c2-5af389c30dd4',
+}
+
+export const search = {
+  defaultProjects: [PROJECTS.discover],
+  optionalProjects: [PROJECTS.explore],
+}
+
+// The partner entrance's panels (PartnersEntrance.vue): legacy's two
+// separate pages (`pm_partner_list.php`, `pm_partner_list_eiac.php`), one
+// per project, each offering the partner kinds legacy offered there —
+// Explore never had an institutions page.
+export const partnerEntrance = [
+  {
+    project: PROJECTS.discover,
+    intro: 'islamicart.partner.introDiscover',
+    buttons: [
+      { kind: 'museum', action: 'islamicart.action.browseMuseums' },
+      { kind: 'institution', action: 'islamicart.action.browseInstitutions' },
+    ],
+  },
+  {
+    project: PROJECTS.explore,
+    intro: 'islamicart.partner.introExplore',
+    buttons: [
+      { kind: 'museum', action: 'islamicart.action.browseMuseums' },
+    ],
+  },
+]
