@@ -220,24 +220,10 @@ export const search = {
   optionalProjects: [PROJECTS.explore],
 }
 
-// The partner entrance's panels (PartnersEntrance.vue): legacy's two
-// separate pages (`pm_partner_list.php`, `pm_partner_list_eiac.php`), one
-// per project, each offering the partner kinds legacy offered there —
-// Explore never had an institutions page.
-export const partnerEntrance = [
-  {
-    project: PROJECTS.discover,
-    intro: 'islamicart.partner.introDiscover',
-    buttons: [
-      { kind: 'museum', action: 'islamicart.action.browseMuseums' },
-      { kind: 'institution', action: 'islamicart.action.browseInstitutions' },
-    ],
-  },
-  {
-    project: PROJECTS.explore,
-    intro: 'islamicart.partner.introExplore',
-    buttons: [
-      { kind: 'museum', action: 'islamicart.action.browseMuseums' },
-    ],
-  },
-]
+// The partner entrance's two panels (PartnersEntrance.vue) each route to one
+// of these — legacy's two separate pages (`pm_partner_list.php`,
+// `pm_partner_list_eiac.php`). Every $t()/I18nText entry name in that view
+// stays written out at its own call site (viewer-i18n-check reads only
+// literal names, never one carried through a config value or a function
+// call — see catalogue.js's `useSearchFields`/`SEARCH_FIELD_ENTRIES` for the
+// same rule), so only the routing target — the project UUID — lives here.

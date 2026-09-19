@@ -333,11 +333,11 @@ describe('website smoke test', () => {
     app.unmount()
   }, 60000)
 
-  // #1727 phase 4: the entrance's two panels and their buttons render from
-  // `dataset.config.js`'s `partnerEntrance` — Discover offers museums and
-  // institutions, Explore (legacy never had an institutions page for it)
-  // offers only museums.
-  it('renders the partner entrance panels and buttons from dataset.config.js', async () => {
+  // #1727 phase 4: the entrance's two panels route on `dataset.config.js`'s
+  // `PROJECTS` (project UUIDs) rather than a legacy key — Discover offers
+  // museums and institutions, Explore (legacy never had an institutions page
+  // for it) offers only museums.
+  it('renders the partner entrance panels and buttons, routed by project UUID', async () => {
     const { app, host } = await mountSite('#/partners')
     await vi.waitFor(() => expect(host.querySelector('.mwnf-panel')).not.toBeNull(), { timeout: 20000 })
 
