@@ -14,10 +14,10 @@
     "namespace": "islamicart"
   },
   "dependencies": {
-    "@museumwnf/islamicart-data": "^1.0.35",
-    "@museumwnf/viewer-core": "^1.15.1",
+    "@museumwnf/islamicart-data": "^1.0.39",
+    "@museumwnf/viewer-core": "^1.16.0",
     "@museumwnf/viewer-i18n": "^3.1.1",
-    "@museumwnf/viewer-layout": "^2.12.0",
+    "@museumwnf/viewer-layout": "^2.14.0",
     "vue": "^3.5.0",
     "vue-router": "^5.0.0"
   },
