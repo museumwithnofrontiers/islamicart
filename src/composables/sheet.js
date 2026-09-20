@@ -4,10 +4,9 @@
 // the credits, the citation, the related records — are the platform's. What
 // is declared here is only what is this website's: the field specification
 // (legacy `database_item.php`'s two orders, one for a monument and one for an
-// object), the prose sections under it, the period/dynasty field (read from
-// the `dynasties` translations the spec asks for), and the project the
-// citation names. Every label is an entry name, written out so the check
-// that every name resolves can read it.
+// object), the prose sections under it, and the period/dynasty field (read
+// from the `dynasties` translations the spec asks for). Every label is an
+// entry name, written out so the check that every name resolves can read it.
 
 const dynastyNames = (c) =>
   (c.record.dynasty_ids ?? [])
@@ -77,11 +76,6 @@ export const itemSheet = {
   // the description when the item also carries the shorter text.
   shortDescription: 'short_description',
   shortDescriptionAfter: 'description',
-  // Out of #1727 phase 4's scope: RecordView (viewer-layout, still ^2.12.0
-  // here) reads `spec.project ?? record.project_key` for the citation line;
-  // this moves to `useProjects().label(record.project_id)` automatically
-  // once viewer-layout 2.13.0 (metanull/viewer-layout#87) propagates.
-  citation: { project: 'ISL' },
   related: { variant: 'list', heading: 'record.related.items' },
   route: 'item',
 }
