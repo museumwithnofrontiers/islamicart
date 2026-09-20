@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { loadEntities, mergeMessages } from '@museumwnf/viewer-core'
+import { loadEntities, mergeMessages, projectLabel, useDataPackage } from '@museumwnf/viewer-core'
 import { checkOfferedLanguages, checkRoutes, checkSectionMeta, checkTextsRendered, mountSite as mountOn } from '@museumwnf/viewer-core/testing'
 import { catalogues as sharedTexts } from '@museumwnf/viewer-i18n/standalone'
 import ownTexts from '../locales/en.json'
@@ -256,6 +256,33 @@ describe('website smoke test', () => {
     expect(creditLink.textContent).toContain(`#/item/${encodeURIComponent(object.id)}`)
 
     app.unmount()
+  }, 60000)
+
+  // #1727 cleanup: `itemSheet` (composables/sheet.js) no longer names a
+  // project for the citation, so `RecordView` resolves it from the record's
+  // own `project_id` against the data package's `manifest.projects` — this
+  // reads the name straight off the installed package rather than asserting
+  // a string this test would otherwise have to hardcode, and covers both
+  // projects the package carries (a Discover item and an Explore item),
+  // since the two used to differ: Explore items rendered the hard-coded
+  // "ISL" name through the deprecated fallback before this cleanup.
+  it('cites the record\'s own project, read from the manifest, for both Discover and Explore items', async () => {
+    const [items] = await loadEntities(['items'])
+    const { manifest } = useDataPackage()
+
+    const discoverItem = items.find((i) => i.project_id === PROJECTS.discover)
+    const exploreItem = items.find((i) => i.project_id === PROJECTS.explore)
+    expect(discoverItem).toBeTruthy()
+    expect(exploreItem).toBeTruthy()
+
+    for (const [item, projectId] of [[discoverItem, PROJECTS.discover], [exploreItem, PROJECTS.explore]]) {
+      const { app, host } = await mountSite(`#/item/${encodeURIComponent(item.id)}`)
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-credits__citation')).not.toBeNull(), { timeout: 20000 })
+      const expectedName = projectLabel(manifest, projectId, 'en')
+      expect(expectedName).toBeTruthy()
+      expect(host.querySelector('.mwnf-credits__citation').textContent).toContain(expectedName)
+      app.unmount()
+    }
   }, 60000)
 
   // Decision D5: the standalone dynasties list/sheet legacy never had are
