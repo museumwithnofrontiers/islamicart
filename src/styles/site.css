@@ -5,9 +5,8 @@
  * viewer-layout's shared content classes now, themed in theme/tokens.css;
  * lists, pagination, filters and summaries are viewer-layout's own composed
  * views, themed there too. Page chrome (header, nav, footer) is themed via
- * theme/tokens.css as well. The back-bar's own layout and colour, for the
- * anchors/router-links that apply that class directly instead of using the
- * kit's button-based BackLink component, live in theme/overrides.css.
+ * theme/tokens.css as well, and so is the back bar: viewer-layout's BackLink
+ * `variant="bar"`, a link, as this site's back links always were.
  */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,400&display=swap');
 

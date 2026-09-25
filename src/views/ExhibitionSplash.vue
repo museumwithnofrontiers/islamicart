@@ -5,7 +5,7 @@ import { useI18n } from '@museumwnf/viewer-core'
 import { SectionCards } from '@museumwnf/viewer-layout/content'
 import { NotFoundView } from '@museumwnf/viewer-core'
 import { exhibitionsTree } from '../composables/exhibitions.js'
-import { useInventoryData } from '../composables/useInventoryData.js'
+import { useData } from '../composables/data.js'
 
 // The exhibition's own home: its title, subtitle, description and credits —
 // per-exhibition data, not fixed text, so this stays a small wrapper of its
@@ -16,7 +16,7 @@ import { useInventoryData } from '../composables/useInventoryData.js'
 // hover image the exhibition's own splash never carried before.
 
 const route = useRoute()
-const { itemById, md, mdInline, mdStrip, tr } = useInventoryData()
+const { itemById, md, mdInline, mdStrip, tr } = useData()
 const { t } = useI18n()
 
 const exhibitionId = computed(() => decodeURIComponent(route.params.exhibitionId))
@@ -56,7 +56,7 @@ const themeCards = computed(() => {
   <NotFoundView v-if="!exhibition" />
 
   <div v-else>
-    <a class="mwnf-back-bar" href="#" @click.prevent="$router.push('/exhibitions')">← {{ t('exhibition.chapter.returnToExhibitions') }}</a>
+    <RouterLink :to="{ name: 'exhibitions' }" class="mwnf-back-bar mwnf-back-bar--link">← {{ t('exhibition.chapter.returnToExhibitions') }}</RouterLink>
 
     <h1 class="mwnf-heading" v-html="mdInline(text.title ?? exhibition.internal_name)" />
 

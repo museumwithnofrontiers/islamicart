@@ -1,6 +1,8 @@
-import { dateRange, effectiveYearTo, eventDateLabel } from '@museumwnf/viewer-core'
-import { useInventoryData } from './useInventoryData.js'
-import { DATE_MODE, PAGE_SIZE, inScope, itemRecord, objectsAndMonumentsSummary } from './catalogue.js'
+import {
+  CATALOGUE_DATE_MODE, CATALOGUE_PAGE_SIZE, dateRange, effectiveYearTo, eventDateLabel, objectsAndMonumentsSummary,
+} from '@museumwnf/viewer-core'
+import { useData } from './data.js'
+import { inScope, itemRecord } from './catalogue.js'
 
 // The timeline spec: what viewer-layout's `TimelineResultsView` renders on
 // `/timeline` (the entrance, `entrance: true`) and `/timeline/results` — the
@@ -13,7 +15,7 @@ import { DATE_MODE, PAGE_SIZE, inScope, itemRecord, objectsAndMonumentsSummary }
 // is only the country/period axis, this website's own events-to-items link,
 // and the gallery's scope.
 
-const { countryLabel, items, md, mdInline, tr } = useInventoryData()
+const { countryLabel, items, md, mdInline, tr } = useData()
 
 /** `useTimelineEvents`'s own `tr(id)` contract, bound to this site's `tr`. */
 const trEvents = (id) => tr('timeline_events', id)
@@ -64,7 +66,7 @@ function eventRow(event, ctx) {
 // Collection and Database pages.
 function periodItems(filters) {
   const inCountry = items.value.filter((item) => inScope(item, false) && countryMatches(item, filters.country))
-  return dateRange(inCountry, { begin: filters.begin, end: filters.end, mode: DATE_MODE })
+  return dateRange(inCountry, { begin: filters.begin, end: filters.end, mode: CATALOGUE_DATE_MODE })
 }
 
 export const timelineEntrance = {
@@ -93,9 +95,9 @@ export const timelineGallery = {
   entity: 'items',
   keys: ['country', 'begin', 'end'],
   scope: (item, filters) => inScope(item, false) && countryMatches(item, filters.country),
-  dates: { mode: DATE_MODE },
+  dates: { mode: CATALOGUE_DATE_MODE },
   sort: 'chronological',
-  pageSize: PAGE_SIZE,
+  pageSize: CATALOGUE_PAGE_SIZE,
   variant: 'list',
   recordRoute: 'item',
   empty: 'catalogue.results.noResultsFilter',

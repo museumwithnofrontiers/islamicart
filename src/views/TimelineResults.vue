@@ -2,7 +2,7 @@
 import { useRoute } from 'vue-router'
 import { useI18n } from '@museumwnf/viewer-core'
 import { TimelineResultsView } from '@museumwnf/viewer-layout/views'
-import { useInventoryData } from '../composables/useInventoryData.js'
+import { useData } from '../composables/data.js'
 import { timelineResults } from '../composables/timeline.js'
 
 // The timeline results is the platform's composed timeline view, rendering
@@ -13,7 +13,7 @@ import { timelineResults } from '../composables/timeline.js'
 
 const route = useRoute()
 const { t } = useI18n()
-const { countryLabel } = useInventoryData()
+const { countryLabel } = useData()
 
 // Null when nothing is filtered, so the suffix depends on the absence of a
 // filter rather than on a comparison against a text that changes with the
@@ -30,7 +30,7 @@ function activeFilterLabel() {
 
 <template>
   <div>
-    <RouterLink to="/timeline" class="mwnf-back-bar">‹ {{ $t('timeline.nav.backLink') }}</RouterLink>
+    <RouterLink :to="{ name: 'timeline' }" class="mwnf-back-bar mwnf-back-bar--link">‹ {{ $t('timeline.nav.backLink') }}</RouterLink>
 
     <h1 class="mwnf-heading">
       {{ $t('islamicart.nav.timeline') }}

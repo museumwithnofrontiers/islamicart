@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import { useCollectionTree } from '@museumwnf/viewer-core'
-import { useInventoryData } from './useInventoryData.js'
+import { useData } from './data.js'
 
 // The Artistic Introduction tree: a purpose marker
 // ("artistic-introduction-root") whose one child is the section's real
@@ -16,7 +16,7 @@ export const artIntroTree = useCollectionTree({ purpose: 'artistic-introduction-
 // above reads `artIntroTree.root` itself.
 export const artIntroRoot = computed(() => artIntroTree.children(artIntroTree.root.value?.id)[0] ?? null)
 
-const { tr } = useInventoryData()
+const { tr } = useData()
 
 // The reverse lookup ItemDetail.vue renders as the Artistic Introduction
 // section of "where this item appears": every theme whose page carries

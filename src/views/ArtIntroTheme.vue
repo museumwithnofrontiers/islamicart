@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
+import { BackLink } from '@museumwnf/viewer-layout/content'
 import { EssayView } from '@museumwnf/viewer-layout/views'
 import { artIntroTree } from '../composables/artIntro.js'
 import { artIntroThemeSpec } from '../composables/artIntroSpecs.js'
@@ -15,7 +16,6 @@ import { artIntroThemeSpec } from '../composables/artIntroSpecs.js'
 // Exhibitions' per-exhibition tree — this component never needs to remount
 // when the address changes.
 const route = useRoute()
-const router = useRouter()
 const spec = artIntroThemeSpec(artIntroTree)
 
 const themeId = computed(() => decodeURIComponent(route.params.themeId))
@@ -26,16 +26,11 @@ const activeId = computed(() => {
   const page = Number.isFinite(idx) && idx >= 0 && idx < list.length ? list[idx] : list[0]
   return page?.id ?? themeId.value
 })
-
-function back() {
-  if (window.history.length > 2) router.back()
-  else router.push('/artistic-introduction')
-}
 </script>
 
 <template>
   <div class="theme-wrap">
-    <a class="mwnf-back-bar" href="#" @click.prevent="back">← {{ $t('islamicart.artIntro.backLink') }}</a>
+    <BackLink variant="bar" label="islamicart.artIntro.backLink" :to="{ name: 'artistic-introduction' }" />
     <EssayView :spec="spec" :id="activeId" class="mwnf-panel" />
   </div>
 </template>

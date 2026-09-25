@@ -6,7 +6,7 @@ import { exhibitionTree } from '../composables/exhibitions.js'
 import { exhibitionThemeSpec, themeRoute } from '../composables/exhibitionSpecs.js'
 
 // A theme's page: an `EssayView` over the page node — the theme itself
-// carries no quote, prose or items of its own (`useInventoryData.js`'s old
+// carries no quote, prose or items of its own (the site's old hand-written
 // walk always read `activePage`, never the theme). `?tab` in the query picks
 // which of the theme's pages is active, same key legacy used; absent, this
 // lands on the theme's first page. `spec.breadcrumb: true` renders the way

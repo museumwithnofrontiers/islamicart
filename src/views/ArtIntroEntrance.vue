@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { TextPageView } from '@museumwnf/viewer-layout/views'
 import { SectionCards } from '@museumwnf/viewer-layout/content'
 import { artIntroRoot, artIntroTree } from '../composables/artIntro.js'
-import { useInventoryData } from '../composables/useInventoryData.js'
+import { useData } from '../composables/data.js'
 
 // The Artistic Introduction entrance: the section root's own subtitle/
 // description/credits (per-record catalogue text on the marker's single
@@ -14,7 +14,7 @@ import { useInventoryData } from '../composables/useInventoryData.js'
 // entry name only, and it carries no slots), so this view renders them
 // itself, around it, same as the site's other entrance pages render their
 // own `.mwnf-heading`.
-const { mdInline, mdStrip, tr } = useInventoryData()
+const { mdInline, mdStrip, tr } = useData()
 
 const rootText = computed(() => {
   const root = artIntroRoot.value

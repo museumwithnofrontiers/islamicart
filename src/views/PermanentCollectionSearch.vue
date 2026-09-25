@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 import { useFacets, I18nText } from '@museumwnf/viewer-core'
 import { SearchFormView } from '@museumwnf/viewer-layout/views'
-import { useInventoryData } from '../composables/useInventoryData.js'
+import { useData } from '../composables/data.js'
 import { FACETS } from '../composables/catalogue.js'
-import { pcEntranceSearch } from '../composables/search.js'
+import { permanentCollectionSearch } from '../composables/search.js'
 
 // The Permanent Collection entrance is the platform's composed search form,
 // rendering the spec in composables/search.js. What is this website's is the
@@ -12,9 +12,9 @@ import { pcEntranceSearch } from '../composables/search.js'
 // values the records actually carry, the same derivation the results page's
 // own filter panel uses (composables/catalogue.js's FACETS).
 
-const { items } = useInventoryData()
+const { items } = useData()
 const options = useFacets(items, FACETS)
-const spec = computed(() => pcEntranceSearch(options.value))
+const spec = computed(() => permanentCollectionSearch(options.value))
 </script>
 
 <template>

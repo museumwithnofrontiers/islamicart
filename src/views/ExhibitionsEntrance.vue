@@ -3,13 +3,13 @@ import { computed } from 'vue'
 import { useI18n } from '@museumwnf/viewer-core'
 import { SectionCards } from '@museumwnf/viewer-layout/content'
 import { exhibitionsTree } from '../composables/exhibitions.js'
-import { useInventoryData } from '../composables/useInventoryData.js'
+import { useData } from '../composables/data.js'
 
 // The exhibitions list: one card per exhibition, `SectionCards`' `rows`
 // variant. A card's title is catalogue data, not a fixed entry, so it is
 // stripped of Markdown rather than rendered — `SectionCards` interpolates
 // it as plain text, not HTML.
-const { mdStrip, tr } = useInventoryData()
+const { mdStrip, tr } = useData()
 const { t } = useI18n()
 
 const exhibitionCards = computed(() => {
