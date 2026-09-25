@@ -1,3 +1,4 @@
+import { partnerView } from '@museumwnf/viewer-core'
 import { useInventoryData } from './useInventoryData.js'
 
 // The partner specs: what viewer-layout's `PartnerListView` renders on
@@ -7,10 +8,10 @@ import { useInventoryData } from './useInventoryData.js'
 // glossary — is the platform's; what is declared here is only what is this
 // website's: the museum/institution and project axes legacy read from two
 // separate pages (`pm_partner_list.php`, `pm_partner_list_eiac.php`,
-// `dataset.config.js`'s `partnerEntrance`/`PROJECTS`), and the partner
-// sheet's field/section shape.
+// `dataset.config.js`'s `partnerEntrance`/`PROJECTS`), and the partner's
+// view-model with this website's routes.
 
-const { countryLabel } = useInventoryData()
+const { countryLabel, md, mdInline } = useInventoryData()
 
 // Both `filterType`/`project` come from the entrance's own link
 // (PartnersEntrance.vue) and stay on the URL PartnersResults.vue reads, so
@@ -38,31 +39,39 @@ export function partnersResults(filterType, project) {
   }
 }
 
-// The partner sheet: description as prose, everything else — contact,
-// logo, the map, the held items — this website's own, filled through
-// RecordView's slots (PartnerDetail.vue), the same split the item sheet
-// (composables/sheet.js) follows.
+// The partner page (PartnerDetail.vue): `RecordView` carries the record's
+// language, its load and the not-found case; the page's body is viewer-
+// layout's `PartnerPanel` (inventory-app#2035), rendering the partner's
+// view-model — the About/Contact/Logo tabs, the homepage link, the pictures
+// and the map. So the sheet itself declares nothing: no field, no section,
+// no media gallery of its own (the pictures are the panel's), no citation
+// (legacy printed none on a partner profile), and no `related` — the held
+// items are a reverse reference (`item.partner_id`), which PartnerDetail.vue's
+// `related` slot lists itself.
 export const partnerSheet = {
   entity: 'partners',
-  sections: [{ key: 'description', label: 'partner.info.about', value: 'description' }],
+  fields: [],
   shortDescription: false,
-  // A partner is never cited the way an item sheet is; legacy printed no
-  // such line on a partner profile.
+  media: () => [],
   citation: false,
-  // Partner images carry `alt_text`, not the per-language `captions` a
-  // catalogue item's images do, so the default media mapping does not fit.
-  media: (record, ctx) => {
-    const name = ctx.text.name ?? record.internal_name ?? record.id
-    return (record.images ?? []).map((img) => ({
-      url: img.url,
-      alt: img.alt_text ?? name,
-      caption: img.alt_text ?? '',
-      photographer: img.photographer ?? '',
-      copyright: img.copyright ?? '',
-    }))
-  },
-  // The held items are a reverse reference (`item.partner_id`), not the
-  // forward `related_items` RecordView's own related-records engine reads;
-  // PartnerDetail.vue's `related` slot builds that list itself.
   related: false,
+}
+
+// Where a partner's "View Objects"/"View Monuments" lands: the Permanent
+// Collection, filtered on the partner.
+export function partnerObjectsLink(partner) {
+  return { name: 'permanent-collection-results', query: { partner: partner.id } }
+}
+
+// The partner's view-model, which `PartnerPanel` renders on the partner page
+// and under an item's holder text: this website's country label, its
+// renderers (the glossary-bound ones) and its two routes.
+export function partnerViewOf(partner, text) {
+  return partnerView(partner, text, {
+    countryLabel,
+    md,
+    mdInline,
+    route: (p) => ({ name: 'partner', params: { id: p.id } }),
+    objectsRoute: partnerObjectsLink,
+  })
 }

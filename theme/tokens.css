@@ -184,4 +184,10 @@
   --mwnf-back-bar-padding: 0;
   --mwnf-back-bar-text: var(--mwnf-color-muted);
   --mwnf-back-bar-hover-text: var(--mwnf-color-accent);
+  /* The partner page and the holding-museum line (viewer-layout's
+     PartnerPanel): the name and headings in the heading colour, the tab band
+     in the select's pale ground, as the page's own blocks were. */
+  --mwnf-partner-name-color: #4c420e;
+  --mwnf-partner-tab-color: #4c420e;
+  --mwnf-partner-bar-background: #fdfbed;
 }

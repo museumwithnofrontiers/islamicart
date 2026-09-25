@@ -26,7 +26,9 @@ const monumentFacts = [
 const objectFacts = [
   { key: 'alsoKnownAs', label: 'sheet.field.alsoKnownAs', value: 'alternate_name' },
   { key: 'location', label: 'sheet.field.location', value: 'location' },
-  { key: 'holder', label: 'sheet.field.holdingMuseum', value: 'holder' },
+  // The holder text, then the partner it refers to (`PartnerPanel`'s summary),
+  // rendered by ItemDetail.vue's `holder` slot (decision D3).
+  { key: 'holder', label: 'sheet.field.holdingMuseum', value: 'holder', render: 'custom' },
   { key: 'date', label: 'sheet.field.dateOfObject', value: 'dates' },
   { key: 'artists', label: 'sheet.field.artists', value: (c) => c.record.artist_names, join: ', ' },
   { key: 'scribe', label: 'sheet.field.scribe', value: 'scriber' },

@@ -228,6 +228,37 @@ describe('website smoke test', () => {
     expect(host.textContent).toContain('Holding institution')
     app.unmount()
   }, 20000)
+  // The holding museum (decision D3, inventory-app#2035): the holder text,
+  // then the partner as viewer-layout's `PartnerPanel` summary — "About
+  // {name}, {city}, {country}" — linking to the partner's page; none for an
+  // associated museum, as legacy's `associated_museums` check did.
+  it("shows the holder text and the holding museum's summary on an object sheet", async () => {
+    const [items, partners] = await loadEntities(['items', 'partners'])
+    const pkg = useDataPackage()
+    const itemTexts = await pkg.loadTranslations('items', 'en')
+    const partnerTexts = await pkg.loadTranslations('partners', 'en')
+    const byId = new Map(partners.map((p) => [p.id, p]))
+    const object = items.find((i) => i.type === 'object' && itemTexts[i.id]?.holder
+      && byId.get(i.partner_id) && byId.get(i.partner_id).level !== 'associated_partner' && partnerTexts[i.partner_id]?.name)
+    const { app, host } = await mountSite(`#/item/${encodeURIComponent(object.id)}`)
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-partner-panel--summary')).not.toBeNull(), { timeout: 20000 })
+    const summary = host.querySelector('.mwnf-partner-panel--summary')
+    expect(summary.textContent).toContain(`About ${partnerTexts[object.partner_id].name}`)
+    expect(summary.querySelector('a').getAttribute('href')).toBe(`#/partner/${object.partner_id}`)
+    // The holder text itself stays, before the summary.
+    expect(host.textContent).toContain(itemTexts[object.id].holder.trim().slice(0, 20))
+    app.unmount()
+
+    const associated = items.find((i) => i.type === 'object' && itemTexts[i.id]?.holder
+      && byId.get(i.partner_id)?.level === 'associated_partner')
+    if (associated) {
+      const { app: other, host: otherHost } = await mountSite(`#/item/${encodeURIComponent(associated.id)}`)
+      await vi.waitFor(() => expect(otherHost.querySelector('.mwnf-sheet__label')).not.toBeNull(), { timeout: 20000 })
+      expect(otherHost.querySelector('.mwnf-partner-panel--summary')).toBeNull()
+      other.unmount()
+    }
+  }, 60000)
+
   // The item sheet runs on the platform's composed record view
   // (metanull/viewer-core#50): the rows come from the sheet spec, and what
   // only this website has — the dynasty popout, the Artistic Introduction
@@ -381,31 +412,35 @@ describe('website smoke test', () => {
     app.unmount()
   }, 30000)
 
-  // The partner profile moved onto the composed `RecordView`
-  // (metanull/islamicart#48): the description/contact/logo/map sections and
-  // the held items list fill its slots. 'Ajlun Castle Museum is picked
-  // because the package carries an image, a logo, coordinates, contact
-  // details and two held items for it, exercising every slot at once.
+  // The partner profile is the composed `RecordView` with viewer-layout's
+  // `PartnerPanel` as its body (inventory-app#2035): the About/Contact/Logo
+  // tabs, the homepage link, the pictures and the map are the panel's; the
+  // type badge, the "View Objects" action and the held items are this
+  // website's. Ajlun Castle Museum is picked because the package carries an
+  // image, a logo, coordinates, contact details and two held items for it,
+  // exercising every part at once.
   it('renders a partner profile with its contact details, logo, map and held items', async () => {
     const [partners] = await loadEntities(['partners'])
     const museum = partners.find((p) => p.id === 'c9284900-9055-5081-9abe-863fad506cdc')
     const { app, host } = await mountSite(`#/partner/${encodeURIComponent(museum.id)}`)
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-record')).not.toBeNull(), { timeout: 20000 })
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-partner-panel--full')).not.toBeNull(), { timeout: 20000 })
 
-    expect(host.querySelector('.detail-title').textContent).toContain('Ajlun Castle Museum')
+    expect(host.querySelector('h1.mwnf-partner-panel__name').textContent).toContain('Ajlun Castle Museum')
     // The badge is the entry name `partner.info.typeMuseum`/`typeInstitution`
     // resolves to, not the record's own `type` value.
     expect(host.querySelector('.detail-type-badge').textContent.trim()).toBe('Museum')
 
     // The action's own count is the package's `item_count`, never a scan of
     // every item in it.
-    const viewItems = host.querySelector('.view-items-row a')
+    const viewItems = host.querySelector('.mwnf-partner-panel__actions a')
     expect(viewItems.textContent).toContain(`(${museum.item_count})`)
 
-    expect(host.textContent).toContain('Contact')
-    expect(host.textContent).toContain('Logo')
-    expect(host.querySelector('.logo-img')).not.toBeNull()
+    const tabs = [...host.querySelectorAll('[role="tab"]')].map((tab) => tab.textContent)
+    expect(tabs).toEqual(['About', 'Contact', 'Logo'])
+    expect(host.querySelector('.mwnf-partner-panel__logos img')).not.toBeNull()
+    // A museum is mapped; the map's heading is the map's own, shown once.
     expect(host.querySelector('.mwnf-partner-map')).not.toBeNull()
+    expect(host.querySelectorAll('.mwnf-partner-map__title').length).toBe(1)
 
     expect(host.textContent).toContain('Related items')
     expect(host.querySelectorAll('.mwnf-list__row').length).toBe(museum.item_count)
