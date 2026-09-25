@@ -1,10 +1,9 @@
 <script setup>
-import { useRouter } from 'vue-router'
 import { useI18n } from '@museumwnf/viewer-core'
-import { PartnerPanel, RecordLanguages, RelatedRecords } from '@museumwnf/viewer-layout/content'
+import { BackLink, PartnerPanel, RecordLanguages, RelatedRecords } from '@museumwnf/viewer-layout/content'
 import { RecordView } from '@museumwnf/viewer-layout/views'
-import { permanentCollection } from '../composables/catalogue.js'
-import { useInventoryData } from '../composables/useInventoryData.js'
+import { itemRecord } from '../composables/catalogue.js'
+import { useData } from '../composables/data.js'
 import { partnerObjectsLink, partnerSheet, partnerViewOf } from '../composables/partner.js'
 
 // The partner profile: the platform's composed record page (the record's
@@ -19,13 +18,7 @@ import { partnerObjectsLink, partnerSheet, partnerViewOf } from '../composables/
 
 defineProps({ id: { type: String, required: true } })
 
-const router = useRouter()
-const { items } = useInventoryData()
-
-function back() {
-  if (window.history.length > 2) router.back()
-  else router.push('/partners')
-}
+const { items } = useData()
 
 const { t } = useI18n()
 
@@ -41,14 +34,14 @@ function partnerTypeLabel(record) {
 // (composables/catalogue.js) — the reverse of `item.partner_id`, since a
 // partner carries no forward list of the items it holds.
 function heldItems(record) {
-  return items.value.filter((i) => i.partner_id === record.id).map(permanentCollection.record)
+  return items.value.filter((i) => i.partner_id === record.id).map(itemRecord)
 }
 </script>
 
 <template>
   <RecordView :spec="partnerSheet" :id="id" class="detail mwnf-panel">
     <template #header="{ language, languages, select }">
-      <a class="mwnf-back-bar" href="#" @click.prevent="back">← {{ $t('partner.nav.back') }}</a>
+      <BackLink variant="bar" label="partner.nav.back" :to="{ name: 'partners' }" />
       <RecordLanguages :languages="languages" :language="language" @select="select" />
     </template>
 

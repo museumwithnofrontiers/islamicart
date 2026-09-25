@@ -1,5 +1,5 @@
 import { partnerView } from '@museumwnf/viewer-core'
-import { useInventoryData } from './useInventoryData.js'
+import { useData } from './data.js'
 
 // The partner specs: what viewer-layout's `PartnerListView` renders on
 // `/partners/results` and `RecordView` on `/partner/:id`. The engine —
@@ -11,7 +11,7 @@ import { useInventoryData } from './useInventoryData.js'
 // `dataset.config.js`'s `partnerEntrance`/`PROJECTS`), and the partner's
 // view-model with this website's routes.
 
-const { countryLabel, md, mdInline } = useInventoryData()
+const { countryLabel, md, mdInline } = useData()
 
 // Both `filterType`/`project` come from the entrance's own link
 // (PartnersEntrance.vue) and stay on the URL PartnersResults.vue reads, so

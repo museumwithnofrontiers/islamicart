@@ -48,6 +48,32 @@ export default {
 
   shell: SiteShell,
 
+  // The landing page, viewer-layout's `HomeView`: the welcome, the six
+  // sections as cards, and one item with an image on display, picked once
+  // per visit — every text an entry name, written out, that the view
+  // resolves. The welcome and the item sit in the site's panels.
+  home: {
+    title: 'islamicart.home.title',
+    intro: 'islamicart.home.intro',
+    cards: [
+      { title: 'islamicart.nav.permanentCollection', description: 'islamicart.home.permanentCollectionText', action: 'core.action.browse', to: { name: 'permanent-collection' } },
+      { title: 'islamicart.nav.database', description: 'islamicart.home.databaseText', action: 'core.action.search', to: { name: 'database' } },
+      { title: 'islamicart.nav.timeline', description: 'islamicart.home.timelineText', action: 'core.action.explore', to: { name: 'timeline' } },
+      { title: 'islamicart.nav.partners', description: 'islamicart.home.partnersText', action: 'core.action.browse', to: { name: 'partners' } },
+      { title: 'islamicart.nav.artisticIntroduction', description: 'islamicart.home.artisticIntroductionText', action: 'core.action.explore', to: { name: 'artistic-introduction' } },
+      { title: 'islamicart.nav.exhibitions', description: 'islamicart.home.exhibitionsText', action: 'core.action.explore', to: { name: 'exhibitions' } },
+    ],
+    featured: {
+      entity: 'items',
+      heading: 'islamicart.home.itemOnDisplay',
+      action: 'core.action.viewDetails',
+      route: 'item',
+      eyebrow: (record) => record.type,
+      meta: ['location', 'dates'],
+    },
+    panels: true,
+  },
+
   // viewer-layout's `SiteShell` (mounted in SiteShell.vue) reads this to
   // build the menu itself: each label is an entry name it resolves through
   // `t()`, and the entry whose `section` matches the route's `meta.section`
@@ -76,25 +102,25 @@ export default {
     {
       path: '/',
       name: 'home',
-      component: () => import('./views/Home.vue'),
+      component: () => import('@museumwnf/viewer-layout/views').then((views) => views.HomeView),
       meta: meta('home', 'items'),
     },
     {
       path: '/permanent-collection',
       name: 'permanent-collection',
-      component: () => import('./views/PcEntrance.vue'),
+      component: () => import('./views/PermanentCollectionSearch.vue'),
       meta: meta('permanent-collection', 'items', 'countries', 'dynasties', 'partners'),
     },
     {
       path: '/permanent-collection/results',
       name: 'permanent-collection-results',
-      component: () => import('./views/PcList.vue'),
+      component: () => import('./views/PermanentCollectionResults.vue'),
       meta: meta('permanent-collection', 'items', 'countries', 'dynasties', 'partners'),
     },
     {
       path: '/database',
       name: 'database',
-      component: () => import('./views/Database.vue'),
+      component: () => import('./views/DatabaseSearch.vue'),
       meta: meta('database'),
     },
     {
@@ -225,5 +251,4 @@ export const search = {
 // `pm_partner_list_eiac.php`). Every $t()/I18nText entry name in that view
 // stays written out at its own call site (viewer-i18n-check reads only
 // literal names, never one carried through a config value or a function
-// call — see catalogue.js's `useSearchFields`/`SEARCH_FIELD_ENTRIES` for the
-// same rule), so only the routing target — the project UUID — lives here.
+// call), so only the routing target — the project UUID — lives here.

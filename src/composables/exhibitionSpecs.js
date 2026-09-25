@@ -1,5 +1,5 @@
 import { renderInline } from '@museumwnf/viewer-core'
-import { useInventoryData } from './useInventoryData.js'
+import { useData } from './data.js'
 
 // The two `EssayView` specs this site declares: an exhibition's theme (its
 // pages, each a quote + prose narrative over a thumbnail-driven item panel)
@@ -10,7 +10,7 @@ import { useInventoryData } from './useInventoryData.js'
 // whole-site one, so `route()` below can read the exhibition id off the
 // tree itself rather than being handed it separately.
 
-const { dynastyLabel, partnerLabel } = useInventoryData()
+const { dynastyLabel, partnerLabel } = useData()
 
 // The importer synthesizes a placeholder title ("Theme 5", "Page 17") when
 // the legacy source has no page_title/theme_title for a given language;

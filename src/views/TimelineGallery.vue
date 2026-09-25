@@ -1,8 +1,9 @@
 <script setup>
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useI18n } from '@museumwnf/viewer-core'
+import { BackLink } from '@museumwnf/viewer-layout/content'
 import { CatalogueResultsView } from '@museumwnf/viewer-layout/views'
-import { useInventoryData } from '../composables/useInventoryData.js'
+import { useData } from '../composables/data.js'
 import { timelineGallery } from '../composables/timeline.js'
 
 // Decision D1: the timeline gallery of objects legacy served from
@@ -12,9 +13,8 @@ import { timelineGallery } from '../composables/timeline.js'
 // with — and the way back to the timeline results that linked here.
 
 const route = useRoute()
-const router = useRouter()
 const { t } = useI18n()
-const { countryLabel } = useInventoryData()
+const { countryLabel } = useData()
 
 function activeFilterLabel() {
   const { country, begin, end } = route.query
@@ -24,19 +24,13 @@ function activeFilterLabel() {
   if (end) parts.push(`${t('catalogue.filter.to')} ${end}`)
   return parts.length ? parts.join(' — ') : null
 }
-
-// Reached only from the timeline results' "See gallery" link, never a nav
-// entry of its own, the way the item sheet's back link also prefers history
-// over a fixed target.
-function back() {
-  if (window.history.length > 2) router.back()
-  else router.push({ name: 'timeline-results', query: route.query })
-}
 </script>
 
 <template>
   <div>
-    <a class="mwnf-back-bar" href="#" @click.prevent="back">‹ {{ $t('timeline.nav.backLink') }}</a>
+    <!-- Reached only from the timeline results' "See gallery" link, never a
+         nav entry of its own: back to the results it came from. -->
+    <BackLink variant="bar" arrow="‹" label="timeline.nav.backLink" :to="{ name: 'timeline-results', query: $route.query }" />
 
     <h1 class="mwnf-heading">
       {{ $t('timeline.results.galleryHeading') }}

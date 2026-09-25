@@ -43,7 +43,7 @@ const otherTypeLabel = computed(() =>
 
 <template>
   <div>
-    <RouterLink to="/partners" class="mwnf-back-bar">‹ {{ $t('partner.nav.back') }}</RouterLink>
+    <RouterLink :to="{ name: 'partners' }" class="mwnf-back-bar mwnf-back-bar--link">‹ {{ $t('partner.nav.back') }}</RouterLink>
 
     <h1 class="mwnf-heading">
       {{ typeHeading }}

@@ -1,6 +1,6 @@
 import { renderInline } from '@museumwnf/viewer-core'
 import { artIntroRoot } from './artIntro.js'
-import { useInventoryData } from './useInventoryData.js'
+import { useData } from './data.js'
 
 // The Artistic Introduction theme's `EssayView` spec — mirrors
 // `exhibitionSpecs.js`'s `exhibitionThemeSpec` (see there for the
@@ -12,7 +12,7 @@ import { useInventoryData } from './useInventoryData.js'
 // breadcrumb (the ancestors above a theme — the tree's marker, the
 // project — carry no text of their own to show).
 
-const { dynastyLabel, partnerLabel, tr } = useInventoryData()
+const { dynastyLabel, partnerLabel, tr } = useData()
 
 // The importer synthesizes a placeholder title ("Theme 5", "Artintro Page
 // 17") when the legacy source has no page_title/theme_title for a given

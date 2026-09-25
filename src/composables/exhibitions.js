@@ -1,14 +1,14 @@
 import { useCollectionTree } from '@museumwnf/viewer-core'
-import { useInventoryData } from './useInventoryData.js'
+import { useData } from './data.js'
 
 // The Exhibitions tree — exhibitions-root → exhibition → theme → page — was
 // three hand-written parent_id walks (exhibitions, exhibitionThemes,
 // exhibitionThemeById) plus a hand-written reverse "collections containing
 // this item" scan (exhibitionLinksForItem); useCollectionTree is that walk,
-// written once, in viewer-core. The Artistic Introduction tree stays in
-// useInventoryData.js — that one moves in #46.
+// written once, in viewer-core. The Artistic Introduction tree is
+// composables/artIntro.js's, over the same walk.
 
-const { tr } = useInventoryData()
+const { tr } = useData()
 
 // The whole tree: the entrance (its exhibitions) and the splash (an
 // exhibition's themes) both read across every exhibition, so they share one

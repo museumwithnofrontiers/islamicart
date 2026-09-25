@@ -1,9 +1,10 @@
 <script setup>
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useSearchFieldOptions } from '@museumwnf/viewer-core'
 import { CatalogueResultsView } from '@museumwnf/viewer-layout/views'
-import { useInventoryData } from '../composables/useInventoryData.js'
-import { useSearchFields } from '../composables/catalogue.js'
+import { useData } from '../composables/data.js'
+import { SEARCH_FIELDS } from '../composables/catalogue.js'
 import { databaseResults } from '../composables/search.js'
 
 // The database results is the platform's composed catalogue results view,
@@ -13,8 +14,8 @@ import { databaseResults } from '../composables/search.js'
 // selects — not a record facet the view can derive options for itself.
 
 const route = useRoute()
-const { loadTranslations } = useInventoryData()
-const fieldOptions = useSearchFields()
+const { loadTranslations } = useData()
+const fieldOptions = useSearchFieldOptions(SEARCH_FIELDS)
 
 // The search language is read straight off the URL, not the composed
 // view's own staged filters, so a language chosen on the entrance loads

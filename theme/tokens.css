@@ -176,14 +176,25 @@
   --mwnf-select-background: #fdfbed;
   --mwnf-select-text: #222222;
   --mwnf-select-focus-outline: 1px solid #e0b700;
-  /* The shared class themes a <button> child only (the kit's own BackLink
-     component); this site's back links are plain anchors, so no padding box
-     is wanted around them. Text/hover colour reuse the global tokens above;
-     theme/overrides.css supplies the layout and reads these two on the
-     anchor element itself, which the shared rule doesn't reach. */
+  /* The back bar (viewer-layout's BackLink `variant="bar"`, and the forward
+     links drawn in its style): a plain link in the page's text size, muted,
+     the accent on hover, with the legacy gap under it. */
   --mwnf-back-bar-padding: 0;
+  --mwnf-back-bar-margin: 0 0 12px;
+  --mwnf-back-bar-size: 0.875rem;
   --mwnf-back-bar-text: var(--mwnf-color-muted);
   --mwnf-back-bar-hover-text: var(--mwnf-color-accent);
+  /* The item page's blocks (special features, related media, on display
+     in), in the sizes and colours the page's own blocks had. */
+  --mwnf-special-features-name-color: var(--heading);
+  --mwnf-special-features-meta-color: var(--muted);
+  --mwnf-related-media-link-size: 0.8125rem;
+  --mwnf-related-media-link-weight: 500;
+  --mwnf-related-media-link-color: var(--nav-active);
+  --mwnf-related-media-description-color: var(--muted);
+  --mwnf-on-display-size: 0.8125rem;
+  --mwnf-on-display-gap: 0;
+  --mwnf-on-display-link-color: var(--nav-active);
   /* The partner page and the holding-museum line (viewer-layout's
      PartnerPanel): the name and headings in the heading colour, the tab band
      in the select's pale ground, as the page's own blocks were. */
