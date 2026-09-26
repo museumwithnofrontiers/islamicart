@@ -5,7 +5,7 @@ import { useSearchFieldOptions } from '@museumwnf/viewer-core'
 import { CatalogueResultsView } from '@museumwnf/viewer-layout/views'
 import { useData } from '../composables/data.js'
 import { SEARCH_FIELDS } from '../composables/catalogue.js'
-import { databaseResults } from '../composables/search.js'
+import { databaseResultsSpec } from '../composables/search.js'
 
 // The database results is the platform's composed catalogue results view,
 // rendering the spec in composables/search.js. What is this website's is
@@ -25,10 +25,10 @@ watch(() => route.query.lang, (lang) => { if (lang) loadTranslations('items', la
 
 <template>
   <div>
-    <h1 class="mwnf-heading">{{ $t('islamicart.nav.database') }} — {{ $t('catalogue.results.heading') }}</h1>
+    <h1 class="mwnf-heading">{{ $t('standalone.nav.database') }} — {{ $t('catalogue.results.heading') }}</h1>
 
     <div class="mwnf-panel">
-      <CatalogueResultsView :spec="databaseResults">
+      <CatalogueResultsView :spec="databaseResultsSpec">
         <template #actions>
           <RouterLink :to="{ name: 'database' }" class="mwnf-button mwnf-button--secondary small">{{ $t('catalogue.search.newSearch') }}</RouterLink>
         </template>

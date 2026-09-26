@@ -14,10 +14,10 @@ import { SiteShell } from '@museumwnf/viewer-layout/components'
 </script>
 
 <template>
-  <SiteShell v-bind="$attrs" :footer-text="$t('islamicart.identity.copyright')">
+  <SiteShell v-bind="$attrs" :footer-text="$t('standalone.identity.copyright')">
     <template #brand>
       <a class="site-logo" href="#/">
-        <span class="site-logo-org">{{ $t('islamicart.identity.organisation') }}</span>
+        <span class="site-logo-org">{{ $t('standalone.identity.organisation') }}</span>
         <span class="site-logo-title">{{ $t('islamicart.identity.title') }}</span>
       </a>
     </template>

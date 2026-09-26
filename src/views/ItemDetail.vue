@@ -8,7 +8,7 @@ import { useData } from '../composables/data.js'
 import { artIntroLinksForItem } from '../composables/artIntro.js'
 import { exhibitionLinksForItem } from '../composables/exhibitions.js'
 import { partnerViewOf } from '../composables/partner.js'
-import { itemSheet } from '../composables/sheet.js'
+import { itemSheetSpec } from '../composables/sheet.js'
 
 // The item sheet is the platform's composed record page, rendering the spec
 // in composables/sheet.js. What is this website's fills the page's slots:
@@ -67,7 +67,7 @@ const thgGalleryGroups = (record) => [{
 </script>
 
 <template>
-  <RecordView :spec="itemSheet" :id="id" class="detail mwnf-panel">
+  <RecordView :spec="itemSheetSpec" :id="id" class="detail mwnf-panel">
     <template #header="{ record, text, language, languages, select, dir, glossary }">
       <div class="detail-top">
         <BackLink variant="bar" label="record.action.backToResults" :to="{ name: 'home' }" />
@@ -103,7 +103,7 @@ const thgGalleryGroups = (record) => [{
         :tr="(d) => tr('dynasties', d.id, language)"
         :dir="dir"
       />
-      <OnDisplayIn heading="islamicart.nav.artisticIntroduction" :groups="artIntroGroups(record)" :dir="dir" />
+      <OnDisplayIn heading="core.nav.artisticIntroduction" :groups="artIntroGroups(record)" :dir="dir" />
       <OnDisplayIn :groups="onDisplayInGroups(record)" :dir="dir" />
       <OnDisplayIn heading="record.related.galleries" :groups="thgGalleryGroups(record)" :dir="dir" />
     </template>

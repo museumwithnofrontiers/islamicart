@@ -4,7 +4,7 @@ import { BackLink, PartnerPanel, RecordLanguages, RelatedRecords } from '@museum
 import { RecordView } from '@museumwnf/viewer-layout/views'
 import { itemRecord } from '../composables/catalogue.js'
 import { useData } from '../composables/data.js'
-import { partnerObjectsLink, partnerSheet, partnerViewOf } from '../composables/partner.js'
+import { partnerObjectsLink, partnerSheetSpec, partnerViewOf } from '../composables/partner.js'
 
 // The partner profile: the platform's composed record page (the record's
 // language, its load, the not-found case), with viewer-layout's
@@ -39,7 +39,7 @@ function heldItems(record) {
 </script>
 
 <template>
-  <RecordView :spec="partnerSheet" :id="id" class="detail mwnf-panel">
+  <RecordView :spec="partnerSheetSpec" :id="id" class="detail mwnf-panel">
     <template #header="{ language, languages, select }">
       <BackLink variant="bar" label="partner.nav.back" :to="{ name: 'partners' }" />
       <RecordLanguages :languages="languages" :language="language" @select="select" />

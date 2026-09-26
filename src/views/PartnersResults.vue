@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 import { useI18n, useProjects } from '@museumwnf/viewer-core'
 import { PartnerListView } from '@museumwnf/viewer-layout/views'
 import { PROJECTS } from '../dataset.config.js'
-import { partnersResults } from '../composables/partner.js'
+import { partnersResultsSpec } from '../composables/partner.js'
 
 // The partner results page is the platform's composed partner list,
 // rendering the spec in composables/partner.js. What is this website's is
@@ -27,7 +27,7 @@ const knownProjects = new Set(Object.values(PROJECTS))
 // `PROJECTS`; anything else falls back to the primary project.
 const project = computed(() => (knownProjects.has(route.query.project) ? route.query.project : PROJECTS.discover))
 
-const spec = computed(() => partnersResults(filterType.value, project.value))
+const spec = computed(() => partnersResultsSpec(filterType.value, project.value))
 
 // Both branches spell their own name in full, for the same reason the spec
 // factory's do.
@@ -37,7 +37,7 @@ const typeHeading = computed(() =>
 // The project's own name, from the data package's manifest — not a site text.
 const projectLabel = computed(() => projectName(project.value))
 const otherTypeLabel = computed(() =>
-  otherType.value === 'museum' ? t('islamicart.partner.viewMuseums') : t('islamicart.partner.viewInstitutions')
+  otherType.value === 'museum' ? t('standalone.partner.viewMuseums') : t('standalone.partner.viewInstitutions')
 )
 </script>
 

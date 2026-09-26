@@ -4,7 +4,7 @@ import { useFacets, I18nText } from '@museumwnf/viewer-core'
 import { SearchFormView } from '@museumwnf/viewer-layout/views'
 import { useData } from '../composables/data.js'
 import { FACETS } from '../composables/catalogue.js'
-import { permanentCollectionSearch } from '../composables/search.js'
+import { permanentCollectionSearchSpec } from '../composables/search.js'
 
 // The Permanent Collection entrance is the platform's composed search form,
 // rendering the spec in composables/search.js. What is this website's is the
@@ -14,17 +14,17 @@ import { permanentCollectionSearch } from '../composables/search.js'
 
 const { items } = useData()
 const options = useFacets(items, FACETS)
-const spec = computed(() => permanentCollectionSearch(options.value))
+const spec = computed(() => permanentCollectionSearchSpec(options.value))
 </script>
 
 <template>
   <div>
-    <h1 class="mwnf-heading">{{ $t('islamicart.nav.permanentCollection') }}</h1>
+    <h1 class="mwnf-heading">{{ $t('standalone.nav.permanentCollection') }}</h1>
 
     <div class="mwnf-panel">
       <SearchFormView :spec="spec">
         <template #intro>
-          <I18nText tag="p" class="intro-text" keypath="islamicart.pc.intro" />
+          <I18nText tag="p" class="intro-text" keypath="standalone.permanentCollection.intro" />
         </template>
       </SearchFormView>
     </div>

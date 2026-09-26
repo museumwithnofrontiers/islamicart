@@ -12,7 +12,7 @@ function browse(kind, project) {
 
 <template>
   <div>
-    <h1 class="mwnf-heading">{{ $t('islamicart.nav.partners') }}</h1>
+    <h1 class="mwnf-heading">{{ $t('core.nav.partners') }}</h1>
 
     <div class="mwnf-panel">
       <I18nText tag="p" class="intro-text" keypath="islamicart.partner.introDiscover" />
@@ -22,13 +22,13 @@ function browse(kind, project) {
           <tr>
             <th><label>{{ $t('partner.list.museums') }}</label></th>
             <td>
-              <button class="mwnf-button" @click="browse('museum', PROJECTS.discover)">{{ $t('islamicart.action.browseMuseums') }} →</button>
+              <button class="mwnf-button" @click="browse('museum', PROJECTS.discover)">{{ $t('standalone.action.browseMuseums') }} →</button>
             </td>
           </tr>
           <tr>
-            <th><label>{{ $t('islamicart.partner.others') }}</label></th>
+            <th><label>{{ $t('standalone.partner.others') }}</label></th>
             <td>
-              <button class="mwnf-button" @click="browse('institution', PROJECTS.discover)">{{ $t('islamicart.action.browseInstitutions') }} →</button>
+              <button class="mwnf-button" @click="browse('institution', PROJECTS.discover)">{{ $t('standalone.action.browseInstitutions') }} →</button>
             </td>
           </tr>
         </tbody>
@@ -43,7 +43,7 @@ function browse(kind, project) {
           <tr>
             <th><label>{{ $t('partner.list.museums') }}</label></th>
             <td>
-              <button class="mwnf-button" @click="browse('museum', PROJECTS.explore)">{{ $t('islamicart.action.browseMuseums') }} →</button>
+              <button class="mwnf-button" @click="browse('museum', PROJECTS.explore)">{{ $t('standalone.action.browseMuseums') }} →</button>
             </td>
           </tr>
         </tbody>

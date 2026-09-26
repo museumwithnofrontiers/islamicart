@@ -280,7 +280,7 @@ describe('website smoke test', () => {
 
     // The citation's source credit (islamicart#58): `sourceUrl()` only
     // produces an address once the website declares `site.origin`
-    // (dataset.config.js), and `itemSheet`'s citation carries no permalink
+    // (dataset.config.js), and `itemSheetSpec`'s citation carries no permalink
     // override, so the record's own hash address is the default.
     const credit = host.querySelector('.mwnf-source-credit')
     expect(credit).not.toBeNull()
@@ -317,7 +317,7 @@ describe('website smoke test', () => {
     app.unmount()
   }, 60000)
 
-  // #1727 cleanup: `itemSheet` (composables/sheet.js) no longer names a
+  // #1727 cleanup: `itemSheetSpec` (composables/sheet.js) no longer names a
   // project for the citation, so `RecordView` resolves it from the record's
   // own `project_id` against the data package's `manifest.projects` — this
   // reads the name straight off the installed package rather than asserting

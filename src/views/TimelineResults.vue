@@ -3,7 +3,7 @@ import { useRoute } from 'vue-router'
 import { useI18n } from '@museumwnf/viewer-core'
 import { TimelineResultsView } from '@museumwnf/viewer-layout/views'
 import { useData } from '../composables/data.js'
-import { timelineResults } from '../composables/timeline.js'
+import { timelineResultsSpec } from '../composables/timeline.js'
 
 // The timeline results is the platform's composed timeline view, rendering
 // the results spec in composables/timeline.js. What is this website's is
@@ -33,12 +33,12 @@ function activeFilterLabel() {
     <RouterLink :to="{ name: 'timeline' }" class="mwnf-back-bar mwnf-back-bar--link">‹ {{ $t('timeline.nav.backLink') }}</RouterLink>
 
     <h1 class="mwnf-heading">
-      {{ $t('islamicart.nav.timeline') }}
+      {{ $t('core.nav.timeline') }}
       <span v-if="activeFilterLabel()" class="heading-filter"> — {{ activeFilterLabel() }}</span>
     </h1>
 
     <div class="mwnf-panel">
-      <TimelineResultsView :spec="timelineResults" />
+      <TimelineResultsView :spec="timelineResultsSpec" />
     </div>
   </div>
 </template>

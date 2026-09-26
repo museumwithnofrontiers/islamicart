@@ -32,7 +32,7 @@ const exhibitionTitle = computed(() => {
       <!-- Filling EssayView's #after slot replaces its default SourceCredit,
            so the credit is drawn here, before the way back. -->
       <SourceCredit />
-      <BackLink variant="bar" :to="{ name: 'exhibition', params: { exhibitionId } }">{{ $t('islamicart.exhibition.backTo') }} {{ exhibitionTitle }}</BackLink>
+      <BackLink variant="bar" :to="{ name: 'exhibition', params: { exhibitionId } }">{{ $t('standalone.exhibition.backTo') }} {{ exhibitionTitle }}</BackLink>
     </template>
   </EssayView>
 </template>

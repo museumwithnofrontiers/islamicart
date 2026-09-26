@@ -18,7 +18,7 @@ const { countryLabel, md, mdInline } = useData()
 // the spec is rebuilt whenever that query changes rather than read once.
 // `project` is a project UUID; partners carry it under `project_uuids`
 // (`project_ids`, the legacy-key array, is never read here — #1727 phase 4).
-export function partnersResults(filterType, project) {
+export function partnersResultsSpec(filterType, project) {
   return {
     scope: (partner) => partner.type === filterType && (partner.project_uuids ?? []).includes(project),
     // Associated partners nest under their own main partner (G.1's
@@ -28,13 +28,13 @@ export function partnersResults(filterType, project) {
     nested: true,
     variant: 'accordion',
     count: true,
-    label: (countryId, ctx) => (countryId ? countryLabel(countryId) : ctx.t('islamicart.results.otherCountry')),
+    label: (countryId, ctx) => (countryId ? countryLabel(countryId) : ctx.t('catalogue.field.other')),
     // Both branches spell their own name in full — a name built from
     // `filterType` would resolve at run time, invisible to the check that
     // every name a page asks for exists.
     associatedLabel:
       filterType === 'museum' ? 'islamicart.partner.associatedMuseums' : 'islamicart.partner.associatedInstitutions',
-    empty: filterType === 'museum' ? 'islamicart.partner.noMuseums' : 'islamicart.partner.noInstitutions',
+    empty: filterType === 'museum' ? 'standalone.partner.noMuseums' : 'standalone.partner.noInstitutions',
     route: 'partner',
   }
 }
@@ -48,7 +48,7 @@ export function partnersResults(filterType, project) {
 // (legacy printed none on a partner profile), and no `related` — the held
 // items are a reverse reference (`item.partner_id`), which PartnerDetail.vue's
 // `related` slot lists itself.
-export const partnerSheet = {
+export const partnerSheetSpec = {
   entity: 'partners',
   fields: [],
   shortDescription: false,

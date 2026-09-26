@@ -68,7 +68,7 @@ const themeCards = computed(() => {
 
     <div class="mwnf-panel">
       <SectionCards v-if="themeCards.length" :cards="themeCards" variant="rows" />
-      <p v-else>{{ t('islamicart.exhibition.empty') }}</p>
+      <p v-else>{{ t('standalone.exhibition.empty') }}</p>
     </div>
   </div>
 </template>

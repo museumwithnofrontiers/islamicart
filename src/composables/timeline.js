@@ -69,7 +69,7 @@ function periodItems(filters) {
   return dateRange(inCountry, { begin: filters.begin, end: filters.end, mode: CATALOGUE_DATE_MODE })
 }
 
-export const timelineEntrance = {
+export const timelineEntranceSpec = {
   entrance: true,
   route: 'timeline-results',
   controls,
@@ -77,7 +77,7 @@ export const timelineEntrance = {
   tr: trEvents,
 }
 
-export const timelineResults = {
+export const timelineResultsSpec = {
   controls,
   countryLabel,
   tr: trEvents,
@@ -91,7 +91,7 @@ export const timelineResults = {
 // The gallery: the Permanent Collection's own row and summary shapes
 // (composables/catalogue.js), scoped to the country and period the timeline
 // results page was showing when "See gallery" was followed.
-export const timelineGallery = {
+export const timelineGallerySpec = {
   entity: 'items',
   keys: ['country', 'begin', 'end'],
   scope: (item, filters) => inScope(item, false) && countryMatches(item, filters.country),

@@ -2,7 +2,7 @@
 import { useI18n } from '@museumwnf/viewer-core'
 import { CatalogueResultsView } from '@museumwnf/viewer-layout/views'
 import { useData } from '../composables/data.js'
-import { permanentCollection } from '../composables/catalogue.js'
+import { permanentCollectionResultsSpec } from '../composables/catalogue.js'
 
 // The Permanent Collection list is the platform's composed results page,
 // rendering the spec in composables/catalogue.js. What is this website's is
@@ -25,10 +25,10 @@ function activeFilterLabel(filters) {
 </script>
 
 <template>
-  <CatalogueResultsView :spec="permanentCollection" class="permanent-collection">
+  <CatalogueResultsView :spec="permanentCollectionResultsSpec" class="permanent-collection">
     <template #before="{ filters }">
       <h1 class="mwnf-heading">
-        {{ $t('islamicart.nav.permanentCollection') }}
+        {{ $t('standalone.nav.permanentCollection') }}
         <span v-if="activeFilterLabel(filters)" class="heading-filter"> — {{ activeFilterLabel(filters) }}</span>
       </h1>
     </template>
