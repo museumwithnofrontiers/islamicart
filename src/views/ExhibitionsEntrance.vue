@@ -24,13 +24,13 @@ const exhibitionCards = computed(() => {
 
 <template>
   <div v-if="!exhibitionCards.length" class="mwnf-panel">
-    <p>{{ t('islamicart.notFound.exhibitions') }}</p>
+    <p>{{ t('standalone.notFound.exhibitions') }}</p>
   </div>
 
   <div v-else>
-    <h1 class="mwnf-heading">{{ t('islamicart.nav.exhibitions') }}</h1>
+    <h1 class="mwnf-heading">{{ t('standalone.nav.exhibitions') }}</h1>
     <div class="mwnf-panel">
-      <p>{{ t('islamicart.exhibition.selectPrompt') }}</p>
+      <p>{{ t('standalone.exhibition.selectPrompt') }}</p>
       <SectionCards :cards="exhibitionCards" variant="rows" />
     </div>
   </div>

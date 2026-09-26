@@ -10,7 +10,7 @@ import { timelineEntrance } from '../composables/timeline.js'
 
 <template>
   <div>
-    <h1 class="mwnf-heading">{{ $t('islamicart.nav.timeline') }}</h1>
+    <h1 class="mwnf-heading">{{ $t('core.nav.timeline') }}</h1>
 
     <div class="mwnf-panel">
       <I18nText tag="p" class="intro-text" keypath="islamicart.timeline.intro" />

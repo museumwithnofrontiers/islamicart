@@ -103,7 +103,7 @@ const thgGalleryGroups = (record) => [{
         :tr="(d) => tr('dynasties', d.id, language)"
         :dir="dir"
       />
-      <OnDisplayIn heading="islamicart.nav.artisticIntroduction" :groups="artIntroGroups(record)" :dir="dir" />
+      <OnDisplayIn heading="core.nav.artisticIntroduction" :groups="artIntroGroups(record)" :dir="dir" />
       <OnDisplayIn :groups="onDisplayInGroups(record)" :dir="dir" />
       <OnDisplayIn heading="record.related.galleries" :groups="thgGalleryGroups(record)" :dir="dir" />
     </template>

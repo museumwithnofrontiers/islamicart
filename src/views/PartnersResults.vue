@@ -37,7 +37,7 @@ const typeHeading = computed(() =>
 // The project's own name, from the data package's manifest — not a site text.
 const projectLabel = computed(() => projectName(project.value))
 const otherTypeLabel = computed(() =>
-  otherType.value === 'museum' ? t('islamicart.partner.viewMuseums') : t('islamicart.partner.viewInstitutions')
+  otherType.value === 'museum' ? t('standalone.partner.viewMuseums') : t('standalone.partner.viewInstitutions')
 )
 </script>
 

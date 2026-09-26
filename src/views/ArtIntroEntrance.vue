@@ -43,7 +43,7 @@ const themeCards = computed(() => {
   </div>
 
   <div v-else>
-    <h1 class="mwnf-heading">{{ $t('islamicart.nav.artisticIntroduction') }}</h1>
+    <h1 class="mwnf-heading">{{ $t('core.nav.artisticIntroduction') }}</h1>
 
     <div class="mwnf-panel intro-box">
       <h2 v-if="rootText.extra?.subtitle" class="intro-subtitle" v-html="mdInline(rootText.extra.subtitle)" />

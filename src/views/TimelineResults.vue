@@ -33,7 +33,7 @@ function activeFilterLabel() {
     <RouterLink :to="{ name: 'timeline' }" class="mwnf-back-bar mwnf-back-bar--link">‹ {{ $t('timeline.nav.backLink') }}</RouterLink>
 
     <h1 class="mwnf-heading">
-      {{ $t('islamicart.nav.timeline') }}
+      {{ $t('core.nav.timeline') }}
       <span v-if="activeFilterLabel()" class="heading-filter"> — {{ activeFilterLabel() }}</span>
     </h1>
 

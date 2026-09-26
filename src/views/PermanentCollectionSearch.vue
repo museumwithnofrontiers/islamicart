@@ -19,12 +19,12 @@ const spec = computed(() => permanentCollectionSearch(options.value))
 
 <template>
   <div>
-    <h1 class="mwnf-heading">{{ $t('islamicart.nav.permanentCollection') }}</h1>
+    <h1 class="mwnf-heading">{{ $t('standalone.nav.permanentCollection') }}</h1>
 
     <div class="mwnf-panel">
       <SearchFormView :spec="spec">
         <template #intro>
-          <I18nText tag="p" class="intro-text" keypath="islamicart.pc.intro" />
+          <I18nText tag="p" class="intro-text" keypath="standalone.permanentCollection.intro" />
         </template>
       </SearchFormView>
     </div>

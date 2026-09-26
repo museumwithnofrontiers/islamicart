@@ -25,7 +25,7 @@ watch(() => route.query.lang, (lang) => { if (lang) loadTranslations('items', la
 
 <template>
   <div>
-    <h1 class="mwnf-heading">{{ $t('islamicart.nav.database') }} — {{ $t('catalogue.results.heading') }}</h1>
+    <h1 class="mwnf-heading">{{ $t('standalone.nav.database') }} — {{ $t('catalogue.results.heading') }}</h1>
 
     <div class="mwnf-panel">
       <CatalogueResultsView :spec="databaseResults">

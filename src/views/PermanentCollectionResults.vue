@@ -28,7 +28,7 @@ function activeFilterLabel(filters) {
   <CatalogueResultsView :spec="permanentCollection" class="permanent-collection">
     <template #before="{ filters }">
       <h1 class="mwnf-heading">
-        {{ $t('islamicart.nav.permanentCollection') }}
+        {{ $t('standalone.nav.permanentCollection') }}
         <span v-if="activeFilterLabel(filters)" class="heading-filter"> — {{ activeFilterLabel(filters) }}</span>
       </h1>
     </template>

@@ -28,13 +28,13 @@ export function partnersResults(filterType, project) {
     nested: true,
     variant: 'accordion',
     count: true,
-    label: (countryId, ctx) => (countryId ? countryLabel(countryId) : ctx.t('islamicart.results.otherCountry')),
+    label: (countryId, ctx) => (countryId ? countryLabel(countryId) : ctx.t('catalogue.field.other')),
     // Both branches spell their own name in full — a name built from
     // `filterType` would resolve at run time, invisible to the check that
     // every name a page asks for exists.
     associatedLabel:
       filterType === 'museum' ? 'islamicart.partner.associatedMuseums' : 'islamicart.partner.associatedInstitutions',
-    empty: filterType === 'museum' ? 'islamicart.partner.noMuseums' : 'islamicart.partner.noInstitutions',
+    empty: filterType === 'museum' ? 'standalone.partner.noMuseums' : 'standalone.partner.noInstitutions',
     route: 'partner',
   }
 }
