@@ -70,7 +70,7 @@ function nextPage(id) {
     <template #navigation="{ node }">
       <div class="mwnf-essay__nav">
         <router-link v-if="previousPage(node.id)" :to="route_(previousPage(node.id))" class="mwnf-essay__nav-link mwnf-essay__nav-link--previous">
-          ← {{ $t('exhibition.theme.previous') }}
+          ← {{ $t('core.pagination.previous') }}
         </router-link>
         <router-link
           v-else-if="hasIntroduction"
@@ -82,7 +82,7 @@ function nextPage(id) {
         <span v-else class="mwnf-essay__nav-spacer"></span>
 
         <router-link v-if="nextPage(node.id)" :to="route_(nextPage(node.id))" class="mwnf-essay__nav-link mwnf-essay__nav-link--next">
-          {{ $t('exhibition.theme.next') }} →
+          {{ $t('core.pagination.next') }} →
         </router-link>
       </div>
     </template>
