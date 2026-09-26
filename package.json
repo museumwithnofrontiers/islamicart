@@ -17,7 +17,7 @@
     "@museumwnf/islamicart-data": "^1.0.45",
     "@museumwnf/viewer-core": "^2.5.1",
     "@museumwnf/viewer-i18n": "^4.6.1",
-    "@museumwnf/viewer-layout": "^3.1.1",
+    "@museumwnf/viewer-layout": "^3.2.0",
     "vue": "^3.5.0",
     "vue-router": "^5.0.0"
   },
