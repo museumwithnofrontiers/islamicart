@@ -1,7 +1,7 @@
 <script setup>
 import { I18nText } from '@museumwnf/viewer-core'
 import { SearchFormView } from '@museumwnf/viewer-layout/views'
-import { databaseSearch } from '../composables/search.js'
+import { databaseSearchSpec } from '../composables/search.js'
 
 // The search entrance is the platform's composed search form, rendering the
 // spec in composables/search.js. What is this website's is the heading and
@@ -13,7 +13,7 @@ import { databaseSearch } from '../composables/search.js'
     <h1 class="mwnf-heading">{{ $t('standalone.nav.database') }}</h1>
 
     <div class="mwnf-panel">
-      <SearchFormView :spec="databaseSearch">
+      <SearchFormView :spec="databaseSearchSpec">
         <template #intro>
           <I18nText tag="p" class="intro-text" keypath="catalogue.search.intro" />
         </template>

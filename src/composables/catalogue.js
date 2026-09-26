@@ -7,7 +7,7 @@ import { useData } from './data.js'
 // fields of the legacy search form, the result row — is viewer-core's
 // catalogue layer and viewer-layout's views; what is declared here is only
 // what is this website's: the scope rule, the three facets of the Permanent
-// Collection, and the `permanentCollection` spec that composes them for
+// Collection, and the `permanentCollectionResultsSpec` that composes them for
 // viewer-layout's `CatalogueResultsView`. Two entrances and two results pages
 // read this one declaration.
 
@@ -73,7 +73,7 @@ export const FACETS = {
 // shape.
 export const itemRecord = (item) => itemRow(item, ['country', 'dates', 'dynasties', 'holder'])
 
-export const permanentCollection = {
+export const permanentCollectionResultsSpec = {
   entity: 'items',
   keys: ['country', 'dynasty', 'partner', 'begin', 'end', 'epm'],
   facets: FACETS,

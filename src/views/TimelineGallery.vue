@@ -4,7 +4,7 @@ import { useI18n } from '@museumwnf/viewer-core'
 import { BackLink } from '@museumwnf/viewer-layout/content'
 import { CatalogueResultsView } from '@museumwnf/viewer-layout/views'
 import { useData } from '../composables/data.js'
-import { timelineGallery } from '../composables/timeline.js'
+import { timelineGallerySpec } from '../composables/timeline.js'
 
 // Decision D1: the timeline gallery of objects legacy served from
 // `hcr_gallery.php`, regained as the platform's composed results page,
@@ -37,7 +37,7 @@ function activeFilterLabel() {
       <span v-if="activeFilterLabel()" class="heading-filter"> — {{ activeFilterLabel() }}</span>
     </h1>
 
-    <CatalogueResultsView :spec="timelineGallery" class="timeline-gallery" />
+    <CatalogueResultsView :spec="timelineGallerySpec" class="timeline-gallery" />
   </div>
 </template>
 

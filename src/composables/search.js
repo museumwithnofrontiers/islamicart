@@ -15,7 +15,7 @@ import { SEARCH_FIELDS, inScope } from './catalogue.js'
 
 const { itemRow } = useData()
 
-export const databaseSearch = {
+export const databaseSearchSpec = {
   mode: 'rows',
   fields: searchFieldOptions(SEARCH_FIELDS),
   dates: { presets: centuryPresets() },
@@ -34,7 +34,7 @@ export const databaseSearch = {
 // read by PermanentCollectionSearch.vue — the radio facets' own values,
 // sourced from the records the way every other facet on this site is, never
 // invented here.
-export function permanentCollectionSearch(options) {
+export function permanentCollectionSearchSpec(options) {
   return {
     mode: 'radio',
     facets: [
@@ -44,7 +44,7 @@ export function permanentCollectionSearch(options) {
       { key: 'begin', label: 'catalogue.facet.startDate', type: 'year' },
       { key: 'end', label: 'catalogue.facet.endDate', type: 'year' },
     ],
-    // Writes the exact keys `permanentCollection` (composables/catalogue.js)
+    // Writes the exact keys `permanentCollectionResultsSpec` (composables/catalogue.js)
     // already reads.
     extras: [{ key: 'epm', type: 'checkbox', label: 'islamicart.filter.includeEpm' }],
     target: 'permanent-collection-results',
@@ -60,7 +60,7 @@ const { narrow } = useFieldSearch({ fields: SEARCH_FIELDS })
 // Legacy's recap line names the Explore opt-in after the keyword rows.
 const explore = (filters, t) => (filters.epm === '1' ? `+ ${t('core.project.explorePartners')}` : '')
 
-export const databaseResults = {
+export const databaseResultsSpec = {
   entity: 'items',
   keys: [...searchRowKeys(), 'from', 'to', 'lang', 'epm'],
   scope: (item, filters) => inScope(item, filters.epm === '1'),
