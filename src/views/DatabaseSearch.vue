@@ -26,7 +26,7 @@ import { databaseSearchSpec } from '../composables/search.js'
 .intro-text {
   font-size: 14px;
   line-height: 1.65;
-  color: var(--text);
+  color: var(--mwnf-color-text);
   margin-bottom: 16px;
 }
 </style>

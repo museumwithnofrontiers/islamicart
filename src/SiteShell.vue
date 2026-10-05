@@ -30,7 +30,7 @@ import { SiteShell } from '@museumwnf/viewer-layout/components'
   display: flex;
   flex-direction: column;
   gap: 1px;
-  color: var(--header-fg);
+  color: var(--mwnf-header-text);
   text-decoration: none !important;
 }
 .site-logo-org {
@@ -45,9 +45,9 @@ import { SiteShell } from '@museumwnf/viewer-layout/components'
   font-weight: 400;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  text-shadow: 2px 2px 4px var(--accent-light);
+  text-shadow: 2px 2px 4px var(--site-gold-glow);
 }
 .site-logo:hover {
-  color: var(--header-fg);
+  color: var(--mwnf-header-text);
 }
 </style>

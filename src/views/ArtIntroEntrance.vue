@@ -59,34 +59,34 @@ const themeCards = computed(() => {
 </template>
 
 <style scoped>
-.not-found { color: var(--muted); font-family: 'Roboto', sans-serif; font-size: 13px; }
+.not-found { color: var(--mwnf-color-muted); font-family: 'Roboto', sans-serif; font-size: 13px; }
 
-.intro-box { border-top: 3px solid var(--accent-dark); }
+.intro-box { border-top: 3px solid var(--site-rule-color); }
 .intro-subtitle {
   font-size: 16px;
   font-weight: 400;
-  color: var(--heading);
+  color: var(--mwnf-heading-color);
   margin-bottom: 12px;
   font-family: 'Roboto', sans-serif;
 }
-.intro-box :deep(.mwnf-prose) { font-size: 14px; line-height: 1.7; color: var(--text); font-family: 'Roboto', sans-serif; }
+.intro-box :deep(.mwnf-prose) { font-size: 14px; line-height: 1.7; color: var(--mwnf-color-text); font-family: 'Roboto', sans-serif; }
 .intro-box :deep(.mwnf-prose p) { margin: 0 0 .75em; }
 .intro-box :deep(.mwnf-prose p:last-child) { margin-bottom: 0; }
 
 .intro-credits {
   margin-top: 14px;
   padding-top: 12px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--mwnf-color-border);
   font-size: 12px;
   font-style: italic;
-  color: var(--muted);
+  color: var(--mwnf-color-muted);
   font-family: 'Roboto', sans-serif;
 }
 
 .intro-text {
   font-size: 13px;
   line-height: 1.65;
-  color: var(--muted);
+  color: var(--mwnf-color-muted);
   margin-bottom: 16px;
   font-family: 'Roboto', sans-serif;
 }

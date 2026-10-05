@@ -42,12 +42,5 @@ function activeFilterLabel() {
 </template>
 
 <style scoped>
-.heading-filter { font-weight: normal; font-size: 14px; color: var(--muted); }
-.timeline-gallery :deep(.mwnf-catalogue__filters) { margin-bottom: 16px; }
-.timeline-gallery :deep(.mwnf-catalogue__body) {
-  background: var(--content-bg);
-  border: 1px solid var(--border);
-  padding: 20px;
-  margin-bottom: 16px;
-}
+.heading-filter { font-weight: normal; font-size: 14px; color: var(--mwnf-color-muted); }
 </style>

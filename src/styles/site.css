@@ -1,54 +1,22 @@
 /*
- * Global styles shared by every Islamic Art view: the legacy palette
- * variables the views' own one-off styles reference. The shared content
- * blocks (panel, heading, form table, buttons, back links) are
- * viewer-layout's shared content classes now, themed in theme/tokens.css;
- * lists, pagination, filters and summaries are viewer-layout's own composed
- * views, themed there too. Page chrome (header, nav, footer) is themed via
- * theme/tokens.css as well, and so is the back bar: viewer-layout's BackLink
- * `variant="bar"`, a link, as this site's back links always were.
+ * Global styles shared by every Islamic Art view: the font, the body's text
+ * size, and the look of a link outside the shared components. Every colour is
+ * theme/tokens.css's: the platform's tokens, and the site's own few its pages
+ * read.
  */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,400&display=swap');
-
-:root {
-  /* Text on gold surfaces */
-  --header-fg: #4c420e;
-  --nav-fg: #4c4214;
-  --nav-active: #990000;
-
-  /* Heading & body text */
-  --heading: #4c420e;
-  --text: #222222;
-  --muted: #4c4000;
-  --link: #222222;
-  --link-hover: #990000;
-
-  /* Accent ramp — this website's own gold */
-  --accent: #ffd600;
-  --accent-soft: #eec201;
-  --accent-dark: #e0b700;
-  --accent-light: #f5da66;
-  --accent-pale: #fdfbed;
-
-  /* Surfaces */
-  --page-bg: #ffffff;
-  --content-bg: #ffffff;
-  --section-bg: #fffff0; /* ivory for info sections */
-
-  /* Borders */
-  --border: #a19869;
-}
 
 body {
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
 }
 
+/* In the text colour, turning the links' red under the pointer, as legacy's. */
 a {
-  color: var(--link);
+  color: var(--mwnf-color-text);
   text-decoration: none;
 }
 a:hover {
-  color: var(--link-hover);
+  color: var(--mwnf-link-hover-text);
   text-decoration: underline;
 }

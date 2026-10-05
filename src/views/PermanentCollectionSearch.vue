@@ -35,7 +35,7 @@ const spec = computed(() => permanentCollectionSearchSpec(options.value))
 .intro-text {
   font-size: 13px;
   line-height: 1.65;
-  color: var(--muted);
+  color: var(--mwnf-color-muted);
   margin-bottom: 16px;
 }
 </style>

@@ -44,5 +44,5 @@ function activeFilterLabel() {
 </template>
 
 <style scoped>
-.heading-filter { font-weight: normal; font-size: 14px; color: var(--muted); }
+.heading-filter { font-weight: normal; font-size: 14px; color: var(--mwnf-color-muted); }
 </style>

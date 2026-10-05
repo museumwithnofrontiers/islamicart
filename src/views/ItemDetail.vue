@@ -118,8 +118,8 @@ const thgGalleryGroups = (record) => [{
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--heading);
-  border: 1px solid var(--accent-dark);
+  color: var(--mwnf-heading-color);
+  border: 1px solid var(--site-rule-color);
   padding: 2px 8px;
   margin-bottom: 10px;
 }
@@ -127,11 +127,8 @@ const thgGalleryGroups = (record) => [{
 .detail-title {
   font-size: 24px;
   font-weight: 400;
-  color: var(--heading);
+  color: var(--mwnf-heading-color);
   margin: 10px 0 16px;
   line-height: 1.3;
 }
-
-.detail :deep(.mwnf-media) { margin-bottom: 20px; }
-.detail :deep(.mwnf-sheet) { margin-bottom: 20px; }
 </style>

@@ -17,6 +17,9 @@
   --mwnf-color-text: #222222;
   --mwnf-color-background: #ffffff;
   --mwnf-color-accent: #990000;
+  /* The shared components' links: the site's red, as its accent drew them. */
+  --mwnf-link-text: #990000;
+  --mwnf-link-hover-text: #990000;
   --mwnf-color-muted: #4c4000;
   --mwnf-color-border: #a19869;
   --mwnf-content-width: 62rem;
@@ -183,22 +186,28 @@
   --mwnf-back-bar-margin: 0 0 12px;
   --mwnf-back-bar-size: 0.875rem;
   --mwnf-back-bar-text: var(--mwnf-color-muted);
-  --mwnf-back-bar-hover-text: var(--mwnf-color-accent);
+  --mwnf-back-bar-hover-text: var(--mwnf-link-hover-text);
   /* The item page's blocks (special features, related media, on display
      in), in the sizes and colours the page's own blocks had. */
-  --mwnf-special-features-name-color: var(--heading);
-  --mwnf-special-features-meta-color: var(--muted);
+  --mwnf-special-features-name-color: var(--mwnf-heading-color);
+  --mwnf-special-features-meta-color: var(--mwnf-color-muted);
   --mwnf-related-media-link-size: 0.8125rem;
   --mwnf-related-media-link-weight: 500;
-  --mwnf-related-media-link-color: var(--nav-active);
-  --mwnf-related-media-description-color: var(--muted);
+  --mwnf-related-media-description-color: var(--mwnf-color-muted);
   --mwnf-on-display-size: 0.8125rem;
   --mwnf-on-display-gap: 0;
-  --mwnf-on-display-link-color: var(--nav-active);
   /* The partner page and the holding-museum line (viewer-layout's
      PartnerPanel): the name and headings in the heading colour, the tab band
      in the select's pale ground, as the page's own blocks were. */
   --mwnf-partner-name-color: #4c420e;
   --mwnf-partner-tab-color: #4c420e;
   --mwnf-partner-bar-background: #fdfbed;
+
+  /* ---------- This site's own ---------- */
+  /* The colours of this site's own pages (src/views, src/SiteShell.vue) that
+     no platform token carries: the gold rule above the welcome and the
+     introductions and around the type badges, and the glow under the
+     header's title. */
+  --site-rule-color: #e0b700;
+  --site-gold-glow: #f5da66;
 }
