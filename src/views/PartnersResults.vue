@@ -63,14 +63,14 @@ const otherTypeLabel = computed(() =>
 </template>
 
 <style scoped>
-.heading-project { font-weight: normal; font-size: 14px; color: var(--muted); }
+.heading-project { font-weight: normal; font-size: 14px; color: var(--mwnf-color-muted); }
 
 .other-type {
   font-family: 'Roboto', sans-serif;
   font-size: 12px;
-  color: var(--muted);
+  color: var(--mwnf-color-muted);
   margin-bottom: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--mwnf-color-border);
 }
 </style>

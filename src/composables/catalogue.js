@@ -98,4 +98,6 @@ export const permanentCollectionResultsSpec = {
   pagination: { window: 7 },
   record: itemRecord,
   summary: objectsAndMonumentsSummary,
+  // In the site's content box, as every section's page is.
+  boxed: true,
 }

@@ -56,7 +56,7 @@ function browse(kind, project) {
 .intro-text {
   font-size: 13px;
   line-height: 1.65;
-  color: var(--muted);
+  color: var(--mwnf-color-muted);
   margin-bottom: 16px;
   font-family: 'Roboto', sans-serif;
 }
@@ -69,7 +69,7 @@ function browse(kind, project) {
   padding: 10px 16px 10px 0;
   font-family: 'Roboto', sans-serif;
   font-size: 13px;
-  color: var(--text);
+  color: var(--mwnf-color-text);
   vertical-align: middle;
   width: auto;
 }

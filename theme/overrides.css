@@ -31,17 +31,17 @@
  * at the legacy size and weight, the intro in the body text.
  */
 .mwnf-home__welcome {
-  border-top: 3px solid var(--accent-dark);
+  border-top: 3px solid var(--site-rule-color);
 }
 .mwnf-home__title {
   margin-bottom: 10px;
   font-size: 20px;
   font-weight: 400;
-  color: var(--heading);
+  color: var(--mwnf-heading-color);
 }
 .mwnf-home__intro {
   max-width: 680px;
   font-size: 14px;
   line-height: 1.7;
-  color: var(--text);
+  color: var(--mwnf-color-text);
 }
