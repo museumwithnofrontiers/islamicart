@@ -22,7 +22,7 @@
   --mwnf-link-hover-text: #990000;
   --mwnf-color-muted: #4c4000;
   --mwnf-color-border: #a19869;
-  --mwnf-content-width: 62rem;
+  --mwnf-content-width: min(90.3%, 1349px);
   --mwnf-content-padding: 1rem;
   --mwnf-space: 0.75rem;
   --mwnf-radius: 0;
@@ -73,6 +73,7 @@
   --mwnf-footer-background: #e0b700;
   --mwnf-footer-text-color: #4c4214;
   --mwnf-footer-text-size: 0.75rem;
+  --mwnf-footer-justify: center;
 
   /* ---------- Content: the record page ---------- */
   /* The sheet as the legacy site set it: a bordered table with gold-tinted
@@ -203,11 +204,42 @@
   --mwnf-partner-tab-color: #4c420e;
   --mwnf-partner-bar-background: #fdfbed;
 
+  /* ---------- The standalone family's chrome ---------- */
+  /* Legacy's values (css/style.css, css/style_inside.css): the 81px header
+     with the heading centred, the menu's yellow cells alternating with gold,
+     the titled band of the inner pages, the yellow Related Content column,
+     the sponsor band, and the arrows before the side links and Back. */
+  --mwnf-standalone-header-height: 81px;
+  --mwnf-standalone-header-inset: 65px;
+  --mwnf-standalone-header-link-color: #000000;
+  --mwnf-standalone-heading-size: 34px;
+  --mwnf-standalone-heading-color: #4c420e;
+  --mwnf-standalone-heading-shadow: 2px 2px 5px #ffd600;
+  --mwnf-standalone-logo-height: 50px;
+  --mwnf-standalone-banner-height: 160px;
+  --mwnf-standalone-banner-title-size: 30px;
+  --mwnf-standalone-banner-title-color: #ffeeab;
+  --mwnf-standalone-banner-title-padding: 8px 0 14px 64px;
+  --mwnf-standalone-menu-background: #ffd600;
+  --mwnf-standalone-menu-alt-background: #e0b700;
+  --mwnf-standalone-menu-link: #4c4214;
+  --mwnf-standalone-menu-hover: #990000;
+  --mwnf-standalone-menu-size: 15px;
+  --mwnf-standalone-menu-padding: 5px 0;
+  --mwnf-standalone-bullet: url('./assets/legacy/next_arrow.png');
+  --mwnf-standalone-back-arrow: url('./assets/legacy/back_arrow.png');
+  --mwnf-standalone-home-link: #222222;
+  --mwnf-standalone-home-text-size: 16px;
+  --mwnf-standalone-related-background: #ffd600;
+  --mwnf-standalone-related-text: #222222;
+  --mwnf-standalone-related-link: #222222;
+  --mwnf-standalone-sponsors-background: #eec201;
+  --mwnf-standalone-drop-cap-color: #4c420e;
+
   /* ---------- This site's own ---------- */
-  /* The colours of this site's own pages (src/views, src/SiteShell.vue) that
-     no platform token carries: the gold rule above the welcome and the
-     introductions and around the type badges, and the glow under the
-     header's title. */
+  /* The colours of this site's own pages (src/views) that no platform token
+     carries: the gold rule above the introductions, and the glow under
+     titles. */
   --site-rule-color: #e0b700;
   --site-gold-glow: #f5da66;
 }
