@@ -834,17 +834,9 @@ describe('website smoke test', () => {
     expect(text).toContain('Permanent Collection')
     expect(text).toContain('© Museum With No Frontiers (MWNF) 2004 –')
 
-    // The footer attribution (islamicart#58): once the data package's
-    // manifest.rights names a holder, viewer-layout's SiteShell renders it
-    // unasked — the sentence and the terms link are the package's own facts,
-    // not this website's.
-    const { default: manifest } = await import('@museumwnf/islamicart-data/manifest.json', { assert: { type: 'json' } })
-    const attribution = host.querySelector('.mwnf-footer__attribution')
-    expect(attribution).not.toBeNull()
-    expect(attribution.textContent).toContain(manifest.rights.attribution)
-    const termsLink = attribution.querySelector('a')
-    expect(termsLink.textContent.trim()).toBe('Terms of use')
-    expect(termsLink.getAttribute('href')).toBe(manifest.rights.terms_url)
+    // The footer is legacy's: no rights-holder line, which legacy never
+    // printed (Pascal, 2026-10-20; viewer-layout 3.4.0 makes it opt-in).
+    expect(host.querySelector('.mwnf-footer__attribution')).toBeNull()
 
     // Nothing rendered as a bare entry name, which is what a missing text
     // looks like — there is no exception to throw for one. Every namespace
