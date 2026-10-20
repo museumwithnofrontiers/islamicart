@@ -6,7 +6,7 @@ import { itemRecord } from '../composables/catalogue.js'
 import { useDynasties } from '../composables/dynasties.js'
 
 // A dynasty's objects or monuments, as legacy's client listed them
-// ("42 Related Objects for Umayyads of al-Andalus", the pictures in a grid,
+// ("42 Related Objects for Umayyads of al-Andalus", a thumbnail beside each one's lines,
 // paged): the platform's results view, scoped to the dynasty and the type.
 const props = defineProps({
   id: { type: String, required: true },
@@ -25,7 +25,8 @@ const spec = computed(() => ({
   scope: (item) => item.type === type.value && (item.dynasty_ids ?? []).includes(props.id),
   sort: 'chronological',
   pageSize: 20,
-  variant: 'grid',
+  variant: 'list',
+  boxed: true,
   recordRoute: 'item',
   record: itemRecord,
   pagination: { window: 7 },
