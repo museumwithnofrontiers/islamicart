@@ -20,7 +20,10 @@ const dynastyNames = (c) =>
 // legacy printed it; the record's linked dynasties stand in when it has none,
 // and keep their own popouts (decision D5, inventory-app#2233).
 const periodDynasty = (c) => removeEndingPoint(c.text.dynasty) || dynastyNames(c)
+// Each sheet opens with the record's name, under legacy's own label
+// (db_name_monument, db_name_object): the page has no other title.
 const monumentFacts = [
+  { key: 'name', label: 'islamicart.item.nameOfMonument', value: 'name' },
   { key: 'alsoKnownAs', label: 'sheet.field.alsoKnownAs', value: 'alternate_name' },
   { key: 'location', label: 'sheet.field.location', value: 'location' },
   { key: 'date', label: 'sheet.field.dateOfMonument', value: 'dates' },
@@ -30,6 +33,7 @@ const monumentFacts = [
 ]
 
 const objectFacts = [
+  { key: 'name', label: 'islamicart.item.nameOfObject', value: 'name' },
   { key: 'alsoKnownAs', label: 'sheet.field.alsoKnownAs', value: 'alternate_name' },
   { key: 'location', label: 'sheet.field.location', value: 'location' },
   // The holder text, then the partner it refers to (`PartnerPanel`'s summary),
@@ -87,7 +91,9 @@ export const itemSheetSpec = {
   translations: ['dynasties', 'glossary'],
   fields: (ctx) => (isMonument(ctx) ? monumentFacts : objectFacts),
   sections: (ctx) => (isMonument(ctx) ? monumentSections : objectSections),
-  layout: 'table',
+  // Legacy's sheet: each label over its value (modules/database_item.php's
+  // h3 and p).
+  layout: 'list',
   // Legacy's collapsible short description (`pc_view_sdesc`), folded under
   // the description when the item also carries the shorter text.
   shortDescription: 'short_description',

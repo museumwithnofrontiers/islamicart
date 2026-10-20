@@ -1,5 +1,16 @@
-import { languageLabels, offeredLanguages, sectionMeta, useDataPackage } from '@museumwnf/viewer-core'
-import SiteShell from './SiteShell.vue'
+import { languageLabels, mwnfLinks, offeredLanguages, sectionMeta, useDataPackage } from '@museumwnf/viewer-core'
+import { StandaloneShell } from '@museumwnf/viewer-layout/standalone'
+import homeItems from './home-items.json'
+// The chrome is legacy's own pictures, kept in this repository (decision D7);
+// theme/assets/legacy/SOURCES.json names where each one was taken from.
+import logo from '../theme/assets/legacy/logo_isl_en.png'
+import logoPrint from '../theme/assets/legacy/logo_print.gif'
+import logoPrintFr from '../theme/assets/legacy/logo_print_fr.gif'
+import banner from '../theme/assets/legacy/banner.jpg'
+import bannerInside from '../theme/assets/legacy/banner_inside.jpg'
+import euromed from '../theme/assets/legacy/euromed.jpg'
+import calouste from '../theme/assets/legacy/Calouste.png'
+import barakat from '../theme/assets/legacy/barakat.png'
 
 // The whole declaration of this website. Before it mounts, the website reads
 // nothing from its package but the manifest: the languages it offers, their
@@ -14,8 +25,8 @@ const { manifest } = useDataPackage()
 // touching the site language.
 const languages = offeredLanguages()
 
-// A route says what section it is (kebab-case, matching the nav entry in
-// SiteShell.vue), and the shell reads it through viewer-core's `useSection()`
+// A route says what section it is (kebab-case, matching the nav entry
+// below), and the shell reads it through viewer-core's `useSection()`
 // for the active menu entry — never derived from the path. This site has no
 // chrome entities every page loads regardless of section, so `sectionMeta()`
 // is called with none.
@@ -46,50 +57,107 @@ export default {
 
   languages,
 
-  shell: SiteShell,
+  // viewer-layout's standalone family shell: legacy Discover Islamic Art's
+  // chrome (index.php, includes/header_bottom.php), read from `standalone`
+  // below. Every text in this file is an entry of locales/, extracted from
+  // legacy by inventory-app's `scripts/site-i18n` (`extract:standalone`).
+  shell: StandaloneShell,
 
-  // The landing page, viewer-layout's `HomeView`: the welcome, the six
-  // sections as cards, and one item with an image on display, picked once
-  // per visit — every text an entry name, written out, that the view
-  // resolves. The welcome and the item sit in the site's panels.
-  home: {
-    title: 'islamicart.home.title',
-    intro: 'islamicart.home.intro',
-    cards: [
-      { title: 'standalone.nav.permanentCollection', description: 'islamicart.home.permanentCollectionText', action: 'core.action.browse', to: { name: 'permanent-collection' } },
-      { title: 'standalone.nav.database', description: 'standalone.home.databaseText', action: 'core.action.search', to: { name: 'database' } },
-      { title: 'core.nav.timeline', description: 'standalone.home.timelineText', action: 'core.action.explore', to: { name: 'timeline' } },
-      { title: 'core.nav.partners', description: 'islamicart.home.partnersText', action: 'core.action.browse', to: { name: 'partners' } },
-      { title: 'core.nav.artisticIntroduction', description: 'islamicart.home.artisticIntroductionText', action: 'core.action.explore', to: { name: 'artistic-introduction' } },
-      { title: 'standalone.nav.exhibitions', description: 'islamicart.home.exhibitionsText', action: 'core.action.explore', to: { name: 'exhibitions' } },
+  standalone: {
+    // The logo links to the MWNF portal, as legacy's did. Legacy served one
+    // file per language, all four byte for byte the same.
+    logo: { src: logo, alt: 'islamicart.identity.title', href: mwnfLinks.portal, print: { en: logoPrint, fr: logoPrintFr } },
+    heading: 'islamicart.identity.heading',
+    headerLinks: [
+      { label: 'islamicart.nav.portal', href: mwnfLinks.portal },
+      { label: 'islamicart.nav.home', to: { name: 'home' }, on: 'inner' },
     ],
-    featured: {
-      entity: 'items',
-      heading: 'standalone.home.itemOnDisplay',
-      action: 'core.action.viewDetails',
-      route: 'item',
-      eyebrow: (record) => record.type,
-      meta: ['location', 'dates'],
+    banner: { home: banner, inner: bannerInside },
+    // The home page's menu is under its picture; every other page's is above
+    // the titled band.
+    menu: { home: 'after-banner', inner: 'before-banner' },
+    copyright: 'islamicart.footer.copyright',
+    // "Discover Islamic Art was set up with the support of:", the European
+    // Union (its logo opens legacy's explanation) and the Gulbenkian
+    // Foundation; "Explore Islamic Art Collections — Arabic version", Barakat.
+    sponsors: {
+      on: 'home',
+      columns: [
+        { width: 3, lead: 'islamicart.sponsors.supportHead', text: 'islamicart.sponsors.supportText' },
+        {
+          width: 4,
+          logos: [
+            { src: euromed, alt: 'islamicart.sponsors.supportHead', note: 'islamicart.sponsors.europeanUnion' },
+            { src: calouste, href: 'http://www.gulbenkian.pt' },
+          ],
+        },
+        { width: 3, lead: 'islamicart.sponsors.exploreHead', text: 'islamicart.sponsors.exploreText', break: true },
+        { width: 2, logos: [{ src: barakat, href: 'https://barakat.org/' }] },
+      ],
     },
-    panels: true,
+    // The home page's two columns (diaTemplates/leftLink.php, randomText.php):
+    // the side links, and the item of the day from legacy's own list.
+    home: {
+      links: [
+        { label: 'islamicart.home.recommendedLinks', to: { name: 'recommended-links' } },
+        { label: 'islamicart.home.credits', href: mwnfLinks.credits },
+        { label: 'islamicart.home.missionStatement', to: { name: 'mission-statement' } },
+        {
+          label: 'islamicart.home.explore',
+          prefix: 'islamicart.home.visit',
+          italic: true,
+          title: 'islamicart.home.exploreTooltip',
+          // Legacy's pm_partner_list_eiac.php?type=museum: the museums of
+          // PROJECTS.explore (declared below, after this object is built).
+          to: { name: 'partners-results', query: { type: 'museum', project: '928f5e0d-53e3-5f53-b9c2-5af389c30dd4' } },
+          gap: true,
+        },
+      ],
+      highlight: {
+        list: homeItems,
+        heading: 'islamicart.home.highlight',
+        alsoKnownAs: 'islamicart.home.alsoKnownAs',
+        action: 'islamicart.home.viewDescription',
+        route: 'item',
+      },
+    },
   },
 
-  // viewer-layout's `SiteShell` (mounted in SiteShell.vue) reads this to
-  // build the menu itself: each label is an entry name it resolves through
-  // `t()`, and the entry whose `section` matches the route's `meta.section`
-  // (via `useSection()`) is marked active. The footer line stays a prop on
-  // SiteShell.vue directly — `config.navigation` has no field for it.
+  // The menu, in legacy's order (includes/header_bottom.php): each label an
+  // entry name, the entry whose `section` matches the route's `meta.section`
+  // marked active. My Collection leaves for the portal, as legacy's did.
   navigation: {
     languages: languageLabels(languages),
     links: [
-      { section: 'home', label: 'core.nav.home', to: { name: 'home' } },
-      { section: 'permanent-collection', label: 'standalone.nav.permanentCollection', to: { name: 'permanent-collection' } },
-      { section: 'database', label: 'standalone.nav.database', to: { name: 'database' } },
-      { section: 'timeline', label: 'core.nav.timeline', to: { name: 'timeline' } },
-      { section: 'partners', label: 'core.nav.partners', to: { name: 'partners' } },
-      { section: 'artistic-introduction', label: 'core.nav.artisticIntroduction', to: { name: 'artistic-introduction' } },
-      { section: 'exhibitions', label: 'standalone.nav.exhibitions', to: { name: 'exhibitions' } },
+      { section: 'permanent-collection', label: 'islamicart.nav.permanentCollection', to: { name: 'permanent-collection' } },
+      { section: 'database', label: 'islamicart.nav.database', to: { name: 'database' } },
+      { section: 'exhibitions', label: 'islamicart.nav.exhibitions', to: { name: 'exhibitions' } },
+      { section: 'artistic-introduction', label: 'islamicart.nav.artisticIntroduction', to: { name: 'artistic-introduction' } },
+      { section: 'partners', label: 'islamicart.nav.partners', to: { name: 'partners' } },
+      { section: 'timeline', label: 'islamicart.nav.timeline', to: { name: 'timeline' } },
+      { label: 'islamicart.nav.myCollection', href: mwnfLinks.myCollection, external: true },
     ],
+    // The footer (includes/footer.php), in its order; the copyright line and
+    // the year follow (`standalone.copyright`).
+    footerLinks: [
+      { label: 'islamicart.footer.aboutMwnf', href: mwnfLinks.about },
+      { label: 'islamicart.footer.contact', href: mwnfLinks.contact },
+      { label: 'islamicart.footer.legalNotice', href: mwnfLinks.legalNotice },
+      { label: 'islamicart.footer.credits', href: mwnfLinks.credits },
+      { label: 'islamicart.footer.languagePolicy', href: 'https://www.museumwnf.org/about/language-policy' },
+      { label: 'islamicart.footer.cookies', href: mwnfLinks.cookies, external: true },
+    ],
+    // The title on each section's band (legacy's SectionTitle() per page).
+    sectionTitles: {
+      'permanent-collection': 'islamicart.section.permanentCollection',
+      database: 'islamicart.section.database',
+      exhibitions: 'islamicart.nav.exhibitions',
+      'artistic-introduction': 'islamicart.nav.artisticIntroduction',
+      partners: 'islamicart.section.partners',
+      timeline: 'islamicart.nav.timeline',
+      'mission-statement': 'islamicart.missionStatement.title',
+      'recommended-links': 'islamicart.home.recommendedLinks',
+    },
   },
 
   // The route map: every route named, kebab-case sections, the package id in
@@ -102,8 +170,25 @@ export default {
     {
       path: '/',
       name: 'home',
-      component: () => import('@museumwnf/viewer-layout/views').then((views) => views.HomeView),
-      meta: meta('home', 'items'),
+      component: () => import('@museumwnf/viewer-layout/standalone').then((family) => family.StandaloneHome),
+      meta: meta('home', 'items', 'countries'),
+    },
+    {
+      // isl_missionstatement.php: legacy's text, then "→ Discover Islamic
+      // Art" to the Permanent Collection, and Print.
+      path: '/mission-statement',
+      name: 'mission-statement',
+      component: () => import('./views/MissionStatement.vue'),
+      meta: meta('mission-statement'),
+    },
+    {
+      // recommendedlinks.php: its groups of links, in English as legacy
+      // printed them in every language.
+      path: '/recommended-links',
+      name: 'recommended-links',
+      component: () => import('@museumwnf/viewer-layout/standalone').then((family) => family.StandaloneTextPage),
+      props: { body: 'islamicart.recommendedLinks.body' },
+      meta: meta('recommended-links'),
     },
     {
       path: '/permanent-collection',

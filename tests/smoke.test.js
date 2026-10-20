@@ -20,16 +20,26 @@ describe('website smoke test', () => {
   it('mounts against the configured data package', async () => {
     const { app, host } = await mountSite()
 
-    expect(host.textContent).toContain(config.siteName)
     expect(host.querySelector('.mwnf-page')).not.toBeNull()
+    // The header's mark is legacy's logo, named after the site.
+    expect(host.querySelector('.mwnf-standalone__logo').getAttribute('alt')).toBe('Discover Islamic Art - Virtual Museum')
 
-    // The home route renders viewer-layout's HomeView from `config.home`, in
-    // place of viewer-core's generic home view: the welcome and the six
-    // sections, the welcome in the site's panel.
+    // The home route renders legacy's home page (inventory-app#2233, S1):
+    // the standalone family's chrome around the side links and the item of
+    // the day — no card grid, no welcome text legacy never had (D2).
     expect(host.querySelector('.vc-home')).toBeNull()
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-home__welcome')).not.toBeNull(), { timeout: 15000 })
-    expect(host.querySelector('.mwnf-home__welcome').classList.contains('mwnf-panel')).toBe(true)
-    expect(host.querySelectorAll('.mwnf-cards__title')).toHaveLength(6)
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-highlight')).not.toBeNull(), { timeout: 15000 })
+    expect(host.querySelector('.mwnf-cards')).toBeNull()
+    expect(host.querySelector('.mwnf-page').classList.contains('mwnf-standalone--home')).toBe(true)
+    expect([...host.querySelectorAll('.mwnf-standalone-home__links li')].map((li) => li.textContent.trim())).toEqual([
+      'Recommended Links', 'Credits', 'Mission Statement', 'Visit Explore Islamic Art Collections',
+    ])
+    expect(host.querySelector('.mwnf-standalone-highlight__heading').textContent).toBe('Today’s highlight from the Permanent Collection')
+    expect(host.querySelector('.mwnf-standalone-highlight__image')).not.toBeNull()
+    expect(host.querySelector('.mwnf-banner__image').getAttribute('src')).toContain('banner')
+    // The sponsor band, on the home page only.
+    expect(host.querySelector('.mwnf-sponsors').textContent).toContain('Discover Islamic Art was set up with the support of:')
+    expect(host.querySelector('.mwnf-sponsors').textContent).toContain('Arabic version')
 
     app.unmount()
     // Longer than vitest's default 5s. This mounts the whole website against
@@ -267,16 +277,24 @@ describe('website smoke test', () => {
   // The item sheet runs on the platform's composed record view
   // (metanull/viewer-core#50): the rows come from the sheet spec, and what
   // only this website has — the dynasty popout, the Artistic Introduction
-  // links, the type badge — fills the view's slots. A monument and an object
-  // read different field orders (composables/sheet.js), so both are mounted.
+  // links — fills the view's slots. A monument and an object read different
+  // field orders (composables/sheet.js), so both are mounted.
   it('renders an object sheet on the composed record view', async () => {
     const [items] = await loadEntities(['items'])
     const object = items.find((i) => i.type === 'object')
     const { app, host } = await mountSite(`#/item/${encodeURIComponent(object.id)}`)
     await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet__label')).not.toBeNull(), { timeout: 20000 })
     expect(host.querySelector('.mwnf-record')).not.toBeNull()
-    expect(host.querySelector('.detail-type-badge').textContent.trim()).toBe('object')
-    expect(host.querySelector('.detail-title').textContent.trim()).not.toBe('')
+    // Legacy's three columns (S2): the way back and the pictures, the sheet,
+    // the Related Content column with its print link.
+    const main = host.querySelector('.mwnf-record__main')
+    expect(main.querySelector(':scope > .mwnf-standalone-item__left .mwnf-media')).not.toBeNull()
+    expect([...main.querySelectorAll('.mwnf-standalone-item__back-link')].map((l) => l.textContent.trim()))
+      .toEqual(['Back', 'Collection start page'])
+    expect(main.querySelector(':scope > .mwnf-sheet')).not.toBeNull()
+    const related = main.querySelector(':scope > .mwnf-standalone-related')
+    expect(related.querySelector('.mwnf-standalone-related__heading').textContent).toBe('Related Content')
+    expect(related.querySelector('.mwnf-standalone-related__print').textContent).toBe('As PDF (including images)')
 
     // The citation's source credit (islamicart#58): `sourceUrl()` only
     // produces an address once the website declares `site.origin`
@@ -363,8 +381,6 @@ describe('website smoke test', () => {
     const monument = items.find((i) => i.type === 'monument')
     const { app, host } = await mountSite(`#/item/${encodeURIComponent(monument.id)}`)
     await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet__label')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelector('.detail-type-badge').textContent.trim()).toBe('monument')
-    expect(host.querySelector('.detail-title').textContent.trim()).not.toBe('')
     const labels = [...host.querySelectorAll('.mwnf-sheet__label')].map((el) => el.textContent.trim())
     // A monument's date reads "Date of monument", an object's "Date of
     // object" — the two specs in composables/sheet.js name the same field
@@ -730,6 +746,46 @@ describe('website smoke test', () => {
     expect(switcher.every((l) => Boolean(l.label))).toBe(true)
   })
 
+  // Legacy's menu (S3), in its order, and its footer (T2): every label is
+  // legacy's own word, extracted into locales/.
+  it("draws legacy's menu and footer", async () => {
+    const { app, host } = await mountSite('#/database')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-nav__link')).not.toBeNull(), { timeout: 15000 })
+    expect([...host.querySelectorAll('.mwnf-nav__link')].map((l) => l.textContent.trim())).toEqual([
+      'Permanent Collection', 'Database', 'Exhibitions', 'Artistic Introduction', 'Partners', 'Timeline', 'My Collection',
+    ])
+    const footer = [...host.querySelectorAll('.mwnf-footer__link')]
+    expect(footer.map((l) => l.textContent.trim())).toEqual([
+      'About MWNF', 'Contact', 'Legal Notice', 'Credits', 'Language Policy', 'Cookies',
+    ])
+    expect(footer[4].getAttribute('href')).toBe('https://www.museumwnf.org/about/language-policy')
+    // An inner page: the heading, the Home link, the titled band, no sponsor band.
+    expect(host.querySelector('.mwnf-header__title').textContent.trim()).toBe('Discover Islamic Art')
+    expect([...host.querySelectorAll('.mwnf-header__link')].map((l) => l.textContent.trim())).toEqual(['MWNF Portal', 'Home'])
+    expect(host.querySelector('.mwnf-standalone-banner').textContent.trim()).toBe('Database')
+    expect(host.querySelector('.mwnf-sponsors')).toBeNull()
+    app.unmount()
+  }, 60000)
+
+  // T6: the Mission Statement and the Recommended Links, legacy's own text.
+  it('renders the Mission Statement and the Recommended Links from legacy', async () => {
+    const { app, host } = await mountSite('#/mission-statement')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-page__body')).not.toBeNull(), { timeout: 15000 })
+    expect(host.querySelector('.mwnf-standalone-banner').textContent.trim()).toBe('Mission Statement')
+    expect(host.querySelector('.mwnf-standalone-page__body').textContent).toContain('Like the other great traditions of world art')
+    expect(host.querySelector('.mwnf-standalone-page__link a').getAttribute('href')).toBe('#/permanent-collection')
+    expect(host.querySelector('.mwnf-standalone-page__print-button').textContent).toBe('Print this page')
+    app.unmount()
+
+    const { app: links, host: linksHost } = await mountSite('#/recommended-links')
+    await vi.waitFor(() => expect(linksHost.querySelector('.mwnf-standalone-page__body')).not.toBeNull(), { timeout: 15000 })
+    const body = linksHost.querySelector('.mwnf-standalone-page__body')
+    expect(body.querySelectorAll('h3')).toHaveLength(8)
+    expect(body.querySelectorAll('h4')).toHaveLength(27)
+    expect(body.querySelector('a').getAttribute('href')).toBe('http://islam.de/')
+    links.unmount()
+  }, 60000)
+
   // The chrome is now two layers, and either one failing is silent: a missing
   // entry renders as its own name rather than as an error. These assert the
   // rendered page, not the files, so a bundle that installs but never reaches
@@ -738,13 +794,13 @@ describe('website smoke test', () => {
     const { app, host } = await mountSite()
 
     const text = host.textContent
-    // From viewer-i18n: the layout's skip link and the menu's first entry.
+    // From viewer-i18n: the layout's skip link.
     expect(text).toContain('Skip to content')
-    expect(text).toContain('Home')
-    // From locales/en.json: the header lockup, a menu entry, the footer.
-    expect(text).toContain('Museum With No Frontiers')
+    // From locales/en.json, legacy's own words: the header link, a menu
+    // entry, the footer's copyright.
+    expect(text).toContain('MWNF Portal')
     expect(text).toContain('Permanent Collection')
-    expect(text).toContain('Welcome to Islamic Art')
+    expect(text).toContain('© Museum With No Frontiers (MWNF) 2004 –')
 
     // The footer attribution (islamicart#58): once the data package's
     // manifest.rights names a holder, viewer-layout's SiteShell renders it

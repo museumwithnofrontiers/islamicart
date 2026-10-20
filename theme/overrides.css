@@ -1,47 +1,6 @@
 /*
- * Legacy nav-bar treatment that tokens cannot express: nav links are solid
- * blocks with an alternating background, matching the old MWNF yellow bar.
+ * What tokens cannot express. The legacy chrome — the header, the menu's
+ * alternating cells, the banners, the sponsor band, the item sheet's columns —
+ * is viewer-layout's standalone family stylesheet, themed by tokens.css;
+ * nothing of it is left here.
  */
-.mwnf-nav__link {
-  display: inline-block;
-  padding: 0.5rem 1.25rem;
-  text-decoration: none;
-  transition:
-    color 0.15s,
-    background 0.15s;
-}
-.mwnf-nav__links li:nth-child(even) .mwnf-nav__link {
-  background: #e0b700;
-}
-.mwnf-nav__link:hover {
-  color: var(--mwnf-nav-link-active-color, #990000);
-  background: rgba(0, 0, 0, 0.08);
-  text-decoration: none;
-}
-.mwnf-nav__language {
-  padding-inline: 0.5rem;
-}
-.mwnf-footer {
-  text-align: center;
-}
-
-/*
- * The home page (viewer-layout's HomeView, `panels: true`): the welcome in
- * the site's panel under the accent rule, its title in the heading colour
- * at the legacy size and weight, the intro in the body text.
- */
-.mwnf-home__welcome {
-  border-top: 3px solid var(--site-rule-color);
-}
-.mwnf-home__title {
-  margin-bottom: 10px;
-  font-size: 20px;
-  font-weight: 400;
-  color: var(--mwnf-heading-color);
-}
-.mwnf-home__intro {
-  max-width: 680px;
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--mwnf-color-text);
-}
