@@ -22,7 +22,7 @@ describe('website smoke test', () => {
 
     expect(host.querySelector('.mwnf-page')).not.toBeNull()
     // The header's mark is legacy's logo, named after the site.
-    expect(host.querySelector('.mwnf-standalone__logo').getAttribute('alt')).toBe('Discover Islamic Art - Virtual Museum')
+    expect(host.querySelector('.mwnf-header__brand-logo').getAttribute('alt')).toBe('Discover Islamic Art - Virtual Museum')
 
     // The home route renders legacy's home page (inventory-app#2233, S1):
     // the standalone family's chrome around the side links and the item of
@@ -694,15 +694,10 @@ describe('website smoke test', () => {
         'timeline', 'timeline-results', 'timeline-gallery', 'partners', 'partners-results', 'partner',
         'artistic-introduction', 'artistic-introduction-theme', 'exhibitions', 'exhibition',
         'exhibition-introduction', 'exhibition-theme', 'item',
+        'mission-statement', 'recommended-links', 'dynasties', 'dynasty', 'dynasty-related',
       ],
     })).toEqual([])
     expect(config.legacyRoutes).toEqual([])
-    // Decision D5: the dynasties list/sheet were an addition over legacy
-    // (which only ever popped dynasties up from an item sheet); the item
-    // sheet's own popout (metanull/islamicart#50) is their only trace now.
-    const names = config.extraViews.map((r) => r.name)
-    expect(names).not.toContain('dynasties')
-    expect(names).not.toContain('dynasty')
   })
 
   it('declares the entities every route reads', () => {
@@ -752,19 +747,56 @@ describe('website smoke test', () => {
     const { app, host } = await mountSite('#/database')
     await vi.waitFor(() => expect(host.querySelector('.mwnf-nav__link')).not.toBeNull(), { timeout: 15000 })
     expect([...host.querySelectorAll('.mwnf-nav__link')].map((l) => l.textContent.trim())).toEqual([
-      'Permanent Collection', 'Database', 'Exhibitions', 'Artistic Introduction', 'Partners', 'Timeline', 'My Collection',
+      'Permanent Collection', 'Database', 'Exhibitions', 'Artistic Introduction', 'Partners', 'Timeline', 'Islamic Dynasties', 'My Collection',
     ])
     const footer = [...host.querySelectorAll('.mwnf-footer__link')]
     expect(footer.map((l) => l.textContent.trim())).toEqual([
       'About MWNF', 'Contact', 'Legal Notice', 'Credits', 'Language Policy', 'Cookies',
     ])
     expect(footer[4].getAttribute('href')).toBe('https://www.museumwnf.org/about/language-policy')
-    // An inner page: the heading, the Home link, the titled band, no sponsor band.
+    // Legacy's six social icons follow the line (T1).
+    expect(host.querySelectorAll('.mwnf-footer__social-link')).toHaveLength(6)
+    // An inner page: the menu above the titled band, the heading, the Home
+    // link, no sponsor band.
+    const html = host.innerHTML
+    expect(html.indexOf('mwnf-nav')).toBeLessThan(html.indexOf('mwnf-standalone-banner'))
     expect(host.querySelector('.mwnf-header__title').textContent.trim()).toBe('Discover Islamic Art')
     expect([...host.querySelectorAll('.mwnf-header__link')].map((l) => l.textContent.trim())).toEqual(['MWNF Portal', 'Home'])
     expect(host.querySelector('.mwnf-standalone-banner').textContent.trim()).toBe('Database')
     expect(host.querySelector('.mwnf-sponsors')).toBeNull()
     app.unmount()
+  }, 60000)
+
+  // Islamic Dynasties (Pascal, 2026-10-20): legacy's /dynasties/ client rebuilt
+  // from the package — the start page with its picker and introduction, a
+  // dynasty's profile, its related objects.
+  it('renders the Islamic Dynasties section from the package', async () => {
+    const pkg = useDataPackage()
+    const names = await pkg.loadTranslations('dynasties', 'en')
+    const [id, umayyads] = Object.entries(names).find(([, t]) => t.name === 'Umayyads of al-Andalus')
+
+    const { app, host } = await mountSite('#/dynasties')
+    await vi.waitFor(() => expect(host.querySelectorAll('.dynasties-entrance option').length).toBeGreaterThan(50), { timeout: 15000 })
+    expect(host.querySelector('.mwnf-standalone-banner').textContent.trim()).toBe('Islamic Dynasties')
+    expect(host.querySelector('.mwnf-nav__link--active').textContent.trim()).toBe('Islamic Dynasties')
+    expect(host.querySelector('.dynasties-entrance__intro').textContent).toContain('What do we intend by')
+    expect(host.querySelector('.dynasties-entrance button').textContent).toBe('GO')
+    app.unmount()
+
+    const { app: profile, host: profileHost } = await mountSite(`#/dynasties/${id}`)
+    await vi.waitFor(() => expect(profileHost.querySelector('.dynasty__history')).not.toBeNull(), { timeout: 15000 })
+    expect(profileHost.querySelector('.dynasty__name').textContent).toContain('Umayyads of al-Andalus')
+    expect(profileHost.querySelector('.dynasty__name').textContent).toContain(`Also known as: ${umayyads.also_known_as}`)
+    expect(profileHost.querySelector('.dynasty__when').textContent).toContain(`${umayyads.date_description_ah} / ${umayyads.date_description_ad}`)
+    const related = [...profileHost.querySelectorAll('.dynasty__links a')]
+    expect(related.map((a) => a.textContent.trim())).toEqual(expect.arrayContaining(['Related objects', 'Timeline', 'Artistic Introduction']))
+    profile.unmount()
+
+    const { app: objects, host: objectsHost } = await mountSite(`#/dynasties/${id}/objects`)
+    await vi.waitFor(() => expect(objectsHost.querySelector('.dynasty-related__heading')).not.toBeNull(), { timeout: 20000 })
+    expect(objectsHost.querySelector('.dynasty-related__heading').textContent.replace(/\s+/g, ' ').trim())
+      .toMatch(/^\d+ Related Objects for Umayyads of al-Andalus$/)
+    objects.unmount()
   }, 60000)
 
   // T6: the Mission Statement and the Recommended Links, legacy's own text.

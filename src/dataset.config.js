@@ -1,16 +1,16 @@
 import { languageLabels, mwnfLinks, offeredLanguages, sectionMeta, useDataPackage } from '@museumwnf/viewer-core'
+import { mwnfSocialLinks } from '@museumwnf/viewer-layout'
 import { StandaloneShell } from '@museumwnf/viewer-layout/standalone'
 import homeItems from './home-items.json'
-// The chrome is legacy's own pictures, kept in this repository (decision D7);
-// theme/assets/legacy/SOURCES.json names where each one was taken from.
-import logo from '../theme/assets/legacy/logo_isl_en.png'
-import logoPrint from '../theme/assets/legacy/logo_print.gif'
-import logoPrintFr from '../theme/assets/legacy/logo_print_fr.gif'
-import banner from '../theme/assets/legacy/banner.jpg'
-import bannerInside from '../theme/assets/legacy/banner_inside.jpg'
-import euromed from '../theme/assets/legacy/euromed.jpg'
-import calouste from '../theme/assets/legacy/Calouste.png'
-import barakat from '../theme/assets/legacy/barakat.png'
+
+// The chrome is legacy's own pictures, kept in this repository under
+// theme/assets/ (decision D7; theme/assets/legacy/SOURCES.json names where
+// each one was taken from), handed to the layout as one map that Vite builds
+// and fingerprints. The config below names a file by its path under
+// theme/assets/.
+const chrome = import.meta.glob('../theme/assets/**/*.{jpg,jpeg,png,gif,svg}', {
+  eager: true, query: '?url', import: 'default',
+})
 
 // The whole declaration of this website. Before it mounts, the website reads
 // nothing from its package but the manifest: the languages it offers, their
@@ -63,19 +63,23 @@ export default {
   // legacy by inventory-app's `scripts/site-i18n` (`extract:standalone`).
   shell: StandaloneShell,
 
+  chrome,
+
   standalone: {
     // The logo links to the MWNF portal, as legacy's did. Legacy served one
     // file per language, all four byte for byte the same.
-    logo: { src: logo, alt: 'islamicart.identity.title', href: mwnfLinks.portal, print: { en: logoPrint, fr: logoPrintFr } },
+    logo: {
+      src: 'legacy/logo_isl_en.png',
+      alt: 'islamicart.identity.title',
+      href: mwnfLinks.portal,
+      print: { en: 'legacy/logo_print.gif', fr: 'legacy/logo_print_fr.gif' },
+    },
     heading: 'islamicart.identity.heading',
     headerLinks: [
       { label: 'islamicart.nav.portal', href: mwnfLinks.portal },
       { label: 'islamicart.nav.home', to: { name: 'home' }, on: 'inner' },
     ],
-    banner: { home: banner, inner: bannerInside },
-    // The home page's menu is under its picture; every other page's is above
-    // the titled band.
-    menu: { home: 'after-banner', inner: 'before-banner' },
+    banner: { home: 'legacy/banner.jpg', inner: 'legacy/banner_inside.jpg' },
     copyright: 'islamicart.footer.copyright',
     // "Discover Islamic Art was set up with the support of:", the European
     // Union (its logo opens legacy's explanation) and the Gulbenkian
@@ -87,12 +91,12 @@ export default {
         {
           width: 4,
           logos: [
-            { src: euromed, alt: 'islamicart.sponsors.supportHead', note: 'islamicart.sponsors.europeanUnion' },
-            { src: calouste, href: 'http://www.gulbenkian.pt' },
+            { src: 'legacy/euromed.jpg', alt: 'islamicart.sponsors.supportHead', note: 'islamicart.sponsors.europeanUnion' },
+            { src: 'legacy/Calouste.png', href: 'http://www.gulbenkian.pt' },
           ],
         },
         { width: 3, lead: 'islamicart.sponsors.exploreHead', text: 'islamicart.sponsors.exploreText', break: true },
-        { width: 2, logos: [{ src: barakat, href: 'https://barakat.org/' }] },
+        { width: 2, logos: [{ src: 'legacy/barakat.png', href: 'https://barakat.org/' }] },
       ],
     },
     // The home page's two columns (diaTemplates/leftLink.php, randomText.php):
@@ -125,7 +129,8 @@ export default {
 
   // The menu, in legacy's order (includes/header_bottom.php): each label an
   // entry name, the entry whose `section` matches the route's `meta.section`
-  // marked active. My Collection leaves for the portal, as legacy's did.
+  // marked active. My Collection leaves for the portal, as legacy's did. It
+  // sits under the home page's picture, and above every other page's band.
   navigation: {
     languages: languageLabels(languages),
     links: [
@@ -135,8 +140,12 @@ export default {
       { section: 'artistic-introduction', label: 'islamicart.nav.artisticIntroduction', to: { name: 'artistic-introduction' } },
       { section: 'partners', label: 'islamicart.nav.partners', to: { name: 'partners' } },
       { section: 'timeline', label: 'islamicart.nav.timeline', to: { name: 'timeline' } },
+      { section: 'dynasties', label: 'islamicart.nav.dynasties', to: { name: 'dynasties' } },
       { label: 'islamicart.nav.myCollection', href: mwnfLinks.myCollection, external: true },
     ],
+    placement: ({ section }) => (section === 'home' ? 'after-banner' : 'before-banner'),
+    // Legacy's footer icons: YouTube, X, Facebook, Instagram, Weibo, LinkedIn.
+    socialLinks: mwnfSocialLinks,
     // The footer (includes/footer.php), in its order; the copyright line and
     // the year follow (`standalone.copyright`).
     footerLinks: [
@@ -155,6 +164,7 @@ export default {
       'artistic-introduction': 'islamicart.nav.artisticIntroduction',
       partners: 'islamicart.section.partners',
       timeline: 'islamicart.nav.timeline',
+      dynasties: 'islamicart.dynasties.title',
       'mission-statement': 'islamicart.missionStatement.title',
       'recommended-links': 'islamicart.home.recommendedLinks',
     },
@@ -180,6 +190,28 @@ export default {
       name: 'mission-statement',
       component: () => import('./views/MissionStatement.vue'),
       meta: meta('mission-statement'),
+    },
+    {
+      // Islamic Dynasties (legacy's /dynasties/ client): the start page with
+      // the picker, a dynasty's profile, and its objects or monuments.
+      path: '/dynasties',
+      name: 'dynasties',
+      component: () => import('./views/DynastiesEntrance.vue'),
+      meta: meta('dynasties', 'dynasties'),
+    },
+    {
+      path: '/dynasties/:id',
+      name: 'dynasty',
+      component: () => import('./views/DynastyProfile.vue'),
+      props: (route) => ({ id: decodeURIComponent(route.params.id) }),
+      meta: meta('dynasties', 'dynasties', 'items'),
+    },
+    {
+      path: '/dynasties/:id/:kind(objects|monuments)',
+      name: 'dynasty-related',
+      component: () => import('./views/DynastyRelated.vue'),
+      props: (route) => ({ id: decodeURIComponent(route.params.id), kind: route.params.kind }),
+      meta: meta('dynasties', 'dynasties', 'items', 'countries', 'partners'),
     },
     {
       // recommendedlinks.php: its groups of links, in English as legacy
