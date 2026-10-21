@@ -22,8 +22,10 @@ function itemEntry(node, itemId) {
   return node?.items?.find((entry) => entry.id === itemId) ?? null
 }
 
+// The page language's own text: legacy's exhibition pages read that language's
+// rows and printed nothing where it had none.
 function localCaption(entry, language) {
-  return entry?.caption?.[language] ?? entry?.caption?.en ?? {}
+  return entry?.caption?.[language] ?? {}
 }
 
 // The four unlabeled meta lines legacy showed beside an item's picture —

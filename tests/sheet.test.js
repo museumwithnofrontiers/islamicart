@@ -8,7 +8,8 @@ import { itemSheetSpec } from '../src/composables/sheet.js'
 
 const object = { id: 'o1', type: 'object', dynasty_ids: ['d1'], artist_names: ['Ali'] }
 const monument = { id: 'm1', type: 'monument', dynasty_ids: [] }
-const tr = (entity, id) => (entity === 'dynasties' && id === 'd1' ? { name: 'Mamluks' } : {})
+// RecordView's strict accessor: the sheet language's rows of one entity.
+const translations = (entity) => (entity === 'dynasties' ? { d1: { name: 'Mamluks' } } : {})
 
 const row = (list, key) => list.find((f) => f.key === key)
 const fieldsOf = (record) => itemSheetSpec.fields({ record })
@@ -19,10 +20,10 @@ describe('item sheet spec', () => {
     for (const record of [object, monument]) {
       const field = row(fieldsOf(record), 'dynasty')
       expect(field.label).toBe('sheet.field.periodDynasty')
-      expect(field.value({ record, tr, text: { dynasty: 'Mamluk period.' } })).toBe('Mamluk period')
+      expect(field.value({ record, translations, text: { dynasty: 'Mamluk period.' } })).toBe('Mamluk period')
     }
-    expect(row(fieldsOf(object), 'dynasty').value({ record: object, tr, text: {} })).toBe('Mamluks')
-    expect(row(fieldsOf(monument), 'dynasty').value({ record: monument, tr, text: {} })).toBe('')
+    expect(row(fieldsOf(object), 'dynasty').value({ record: object, translations, text: {} })).toBe('Mamluks')
+    expect(row(fieldsOf(monument), 'dynasty').value({ record: monument, translations, text: {} })).toBe('')
   })
 
   it('prints the materials under Material(s) / Technique(s), not the type of object', () => {
@@ -42,5 +43,12 @@ describe('item sheet spec', () => {
     for (const record of [object, monument]) {
       expect(sectionsOf(record).at(-1)).toMatchObject({ key: 'copyright', label: 'sheet.field.copyrightInformation', value: 'copyright' })
     }
+  })
+})
+
+describe('item sheet spec, languages', () => {
+  it('prints no linked dynasty name in a language the dynasty has no text in', () => {
+    const none = () => ({})
+    expect(row(fieldsOf(object), 'dynasty').value({ record: object, translations: none, text: {} })).toBe('')
   })
 })
