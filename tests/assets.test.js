@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import { readdirSync, readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { relative, resolve, sep } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import sources from '../theme/assets/legacy/SOURCES.json'
 
@@ -15,9 +15,10 @@ describe('legacy chrome assets', () => {
 
   it('holds no file the manifest does not list', () => {
     const listed = new Set(Object.keys(sources.files))
-    const present = readdirSync(resolve('theme/assets/legacy'))
-      .filter((name) => name !== 'SOURCES.json')
-      .map((name) => `theme/assets/legacy/${name}`)
+    // Every file, in the folder and its subfolders (random_image/DIA_new).
+    const present = readdirSync(resolve('theme/assets/legacy'), { recursive: true, withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name !== 'SOURCES.json')
+      .map((entry) => `${relative(process.cwd(), entry.parentPath).split(sep).join('/')}/${entry.name}`)
     expect(present.filter((path) => !listed.has(path))).toEqual([])
   })
 })

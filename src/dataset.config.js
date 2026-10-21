@@ -123,6 +123,10 @@ export default {
         alsoKnownAs: 'islamicart.home.alsoKnownAs',
         action: 'islamicart.home.viewDescription',
         route: 'item',
+        // Legacy's own picture of the day (libs/class.homepage_item.inc.php):
+        // random_image/DIA_new/1.jpg to 171.jpg, a cycle of its own by the day
+        // of the year, kept under theme/assets/legacy/.
+        pictures: Array.from({ length: 171 }, (_, i) => `legacy/random_image/DIA_new/${i + 1}.jpg`),
       },
     },
   },
