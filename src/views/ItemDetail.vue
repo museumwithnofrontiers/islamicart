@@ -21,7 +21,7 @@ import { itemSheetSpec } from '../composables/sheet.js'
 
 defineProps({ id: { type: String, required: true } })
 
-const { dynastyById, mdInline, partnerById, tr } = useData()
+const { dynastyById, mdInline, partnerById, tr, translations } = useData()
 
 const timelineLink = (record) => timelineLinkFor(record, { name: 'timeline-results' })
 
@@ -56,9 +56,12 @@ function holderPartner(record, language) {
 
 // Decision D5: the dynasty popout — legacy's `dynasty.php` popup. `DynastyList`
 // reads the record's own dynasties and resolves each one's translation itself,
-// through `tr` below.
-function itemDynasties(record) {
-  return (record.dynasty_ids ?? []).map((id) => dynastyById.value.get(id)).filter(Boolean)
+// through `tr` below. Only the ones with a text in the sheet's language: the
+// popup read dynasty_texts in that language and had nothing for the others.
+function itemDynasties(record, language) {
+  return (record.dynasty_ids ?? [])
+    .map((id) => dynastyById.value.get(id))
+    .filter((dynasty) => dynasty && translations('dynasties', language)[dynasty.id]?.name)
 }
 
 const artIntroGroups = (record) => [{
@@ -114,10 +117,10 @@ const thgGalleryGroups = (record) => [{
         <RouterLink :to="timelineLink(record)">{{ $t('islamicart.item.timeline') }}</RouterLink>
       </p>
       <DynastyList
-        v-if="itemDynasties(record).length"
+        v-if="itemDynasties(record, language).length"
         :heading="$t('islamicart.item.dynasties')"
-        :dynasties="itemDynasties(record)"
-        :tr="(d) => tr('dynasties', d.id, language)"
+        :dynasties="itemDynasties(record, language)"
+        :tr="(d) => translations('dynasties', language)[d.id] ?? {}"
         :dir="dir"
       />
       <RelatedMedia :media="record.media ?? []" :language="language" heading="islamicart.item.relatedVideos" :dir="dir" />

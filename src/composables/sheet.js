@@ -10,9 +10,12 @@ import { removeEndingPoint } from '@museumwnf/viewer-core'
 // from the `dynasties` translations the spec asks for). Every label is an
 // entry name, written out so the check that every name resolves can read it.
 
+// The linked dynasties' names in the sheet's language only (RecordView's
+// `translations`, which reads no other language): legacy joined dynasty_texts
+// on that language, and a dynasty without a text in it was not printed.
 const dynastyNames = (c) =>
   (c.record.dynasty_ids ?? [])
-    .map((id) => c.tr('dynasties', id)?.name)
+    .map((id) => c.translations('dynasties')[id]?.name)
     .filter(Boolean)
     .join(', ')
 
