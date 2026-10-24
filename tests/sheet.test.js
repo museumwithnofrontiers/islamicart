@@ -34,9 +34,8 @@ describe('item sheet spec', () => {
     expect(field.join).toBe('; ')
   })
 
-  it('prints the artist alone, as legacy did', () => {
-    const text = { artist_birthdate: '1500' }
-    expect(row(fieldsOf(object), 'artists').value({ record: object, text })).toEqual(['Ali'])
+  it("prints the page's language's own artist line, alone, as legacy did", () => {
+    expect(row(fieldsOf(object), 'artists').value).toBe('artist')
   })
 
   it('closes both sheets with the rights line', () => {
