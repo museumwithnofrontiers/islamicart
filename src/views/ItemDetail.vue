@@ -108,6 +108,7 @@ const thgGalleryGroups = (record) => [{
         :language="language"
         :glossary="glossary"
         :dir="dir"
+        :picture-limit="6"
       />
     </template>
 

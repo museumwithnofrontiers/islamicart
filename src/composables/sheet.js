@@ -43,7 +43,9 @@ const objectFacts = [
   // rendered by ItemDetail.vue's `holder` slot (decision D3).
   { key: 'holder', label: 'sheet.field.holdingMuseum', value: 'holder', render: 'custom' },
   { key: 'date', label: 'sheet.field.dateOfObject', value: 'dates' },
-  { key: 'artists', label: 'sheet.field.artists', value: (c) => c.record.artist_names, join: ', ' },
+  // The artist line as the page's language writes it, or none: legacy printed
+  // each language's own line, and `artist_names` come from one language's.
+  { key: 'artists', label: 'sheet.field.artists', value: 'artist' },
   { key: 'scribe', label: 'sheet.field.scribe', value: 'scriber' },
   { key: 'inventoryNumber', label: 'sheet.field.inventoryNumber', value: (c) => c.record.owner_reference },
   // Legacy's Material(s) / Technique(s) line is the record's own materials
