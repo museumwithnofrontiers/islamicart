@@ -2,22 +2,23 @@
 import { computed } from 'vue'
 import { useI18n } from '@museumwnf/viewer-core'
 import { SectionCards } from '@museumwnf/viewer-layout/content'
-import { exhibitionsTree } from '../composables/exhibitions.js'
+import { exhibitionsTree, minisiteHref } from '../composables/exhibitions.js'
 import { useData } from '../composables/data.js'
 
 // The exhibitions list: one card per exhibition, `SectionCards`' `rows`
-// variant. A card's title is catalogue data, not a fixed entry, so it is
-// stripped of Markdown rather than rendered — `SectionCards` interpolates
-// it as plain text, not HTML.
+// variant, leading to the exhibition's own website (its mini-site). A card's
+// title is catalogue data, not a fixed entry, so it is stripped of Markdown
+// rather than rendered — `SectionCards` interpolates it as plain text, not
+// HTML.
 const { mdStrip, tr } = useData()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const exhibitionCards = computed(() => {
   const root = exhibitionsTree.root.value
   if (!root) return []
   return exhibitionsTree.children(root.id).map((exhibition) => ({
     title: mdStrip(tr('collections', exhibition.id).title ?? exhibition.internal_name),
-    to: { name: 'exhibition', params: { exhibitionId: exhibition.id } },
+    href: minisiteHref(exhibition.id, locale.value) ?? undefined,
   }))
 })
 </script>

@@ -2,11 +2,9 @@ import { renderInline } from '@museumwnf/viewer-core'
 import { artIntroRoot } from './artIntro.js'
 import { useData } from './data.js'
 
-// The Artistic Introduction theme's `EssayView` spec — mirrors
-// `exhibitionSpecs.js`'s `exhibitionThemeSpec` (see there for the
-// panel/variant shape this follows): the same narrative-over-item-panel
-// page, over `composables/artIntro.js`'s one global tree instead of a
-// per-exhibition one, with `navigation: 'siblings'` (a fixed tab strip
+// The Artistic Introduction theme's `EssayView` spec: a narrative-over-
+// item-panel page, over `composables/artIntro.js`'s one global tree, with
+// `navigation: 'siblings'` (a fixed tab strip
 // over a theme's own pages, not previous/next across the whole section —
 // legacy never walked from one theme into the next here) and no
 // breadcrumb (the ancestors above a theme — the tree's marker, the

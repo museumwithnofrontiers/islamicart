@@ -1,12 +1,12 @@
 <script setup>
-import { timelineLinkFor } from '@museumwnf/viewer-core'
+import { timelineLinkFor, useI18n } from '@museumwnf/viewer-core'
 import {
   DynastyList, OnDisplayIn, PartnerPanel, RelatedMedia, SpecialFeatures,
 } from '@museumwnf/viewer-layout/content'
 import { StandaloneItemSheet } from '@museumwnf/viewer-layout/standalone'
 import { useData } from '../composables/data.js'
 import { artIntroLinksForItem } from '../composables/artIntro.js'
-import { exhibitionLinksForItem } from '../composables/exhibitions.js'
+import { exhibitionLinksForItem, minisiteHref } from '../composables/exhibitions.js'
 import { partnerViewOf } from '../composables/partner.js'
 import { itemSheetSpec } from '../composables/sheet.js'
 
@@ -22,6 +22,7 @@ import { itemSheetSpec } from '../composables/sheet.js'
 defineProps({ id: { type: String, required: true } })
 
 const { dynastyById, mdInline, partnerById, tr, translations } = useData()
+const { locale } = useI18n()
 
 const timelineLink = (record) => timelineLinkFor(record, { name: 'timeline-results' })
 
@@ -72,12 +73,12 @@ const artIntroGroups = (record) => [{
   })),
 }]
 
+// Each exhibition page that places the item, on the exhibition's own website
+// (its mini-site), in the site's language.
 const onDisplayInGroups = (record) => [{
   links: exhibitionLinksForItem(record.id).map((l) => ({
     label: mdInline(l.label),
-    to: l.themeId
-      ? { name: 'exhibition-theme', params: { exhibitionId: l.exhibitionId, themeId: l.themeId } }
-      : { name: 'exhibition-introduction', params: { exhibitionId: l.exhibitionId } },
+    href: minisiteHref(l.exhibitionId, locale.value, l.at) ?? undefined,
   })),
 }]
 
