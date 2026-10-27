@@ -5,6 +5,7 @@ import { catalogues as sharedTexts } from '@museumwnf/viewer-i18n/standalone'
 import ownTexts from '../locales/en.json'
 import config, { PROJECTS } from '../src/dataset.config.js'
 import { useData } from '../src/composables/data.js'
+import minisites from '../src/minisites.json'
 
 // The same two layers main.js assembles, in the same order: the shared bundle
 // first, this website's own file last. Mounting without them would prove
@@ -492,143 +493,45 @@ describe('website smoke test', () => {
     app.unmount()
   }, 60000)
 
-  // The Exhibitions entrance, splash, introduction and theme pages moved
-  // onto viewer-layout's composed views (metanull/islamicart#45) over
-  // `useCollectionTree`: `SectionCards` for the entrance and the splash's
-  // theme list, `EssayView` for the introduction (an `about` page) and a
-  // theme's pages (the narrative, the tab strip, the picture panel, and
-  // previous/next walking the whole exhibition — decision D2).
-  function findExhibitionThemeWithPages() {
-    // Not every theme has more than one page; the tab strip (asserted
-    // below) only renders past one, so this hunts for one that does rather
-    // than assuming the first exhibition's first theme is that one.
-    for (const exhibition of collectionsFixture.filter((c) => c.parent_id === exhibitionsRoot.id)) {
-      for (const theme of collectionsFixture.filter((c) => c.parent_id === exhibition.id)) {
-        const pages = collectionsFixture.filter((c) => c.parent_id === theme.id)
-        if (pages.length > 1) return { exhibition, theme }
-      }
-    }
-    return null
-  }
+  // Each exhibition is a website of its own (a mini-site, inventory-app#2359):
+  // this site lists the exhibitions and links each to its own address
+  // (src/minisites.json), and an item sheet links the exhibition pages that
+  // place the item, on the mini-site.
+  it('lists the exhibitions, each leading to its own website', async () => {
+    const [collections] = await loadEntities(['collections'])
+    const root = collections.find((c) => c.purpose === 'exhibitions-root')
+    expect(root).toBeTruthy()
+    const exhibitions = collections.filter((c) => c.parent_id === root.id)
+    for (const exhibition of exhibitions) expect(minisites[exhibition.id], exhibition.internal_name).toMatch(/^https:\/\//)
 
-  let collectionsFixture
-  let exhibitionsRoot
-
-  it('renders the Exhibitions entrance on SectionCards', async () => {
-    ;[collectionsFixture] = await loadEntities(['collections'])
-    exhibitionsRoot = collectionsFixture.find((c) => c.purpose === 'exhibitions-root')
-    expect(exhibitionsRoot).toBeTruthy()
-
-    const { app, host } = await mountSite('#/exhibitions')
+    const { app, host } = await mountSite('#/exhibitions?lang=en')
     await vi.waitFor(() => expect(host.querySelector('.mwnf-cards')).not.toBeNull(), { timeout: 20000 })
     expect(host.querySelector('.mwnf-heading').textContent).toContain('Exhibitions')
+    const hrefs = Array.from(host.querySelectorAll('.mwnf-cards__link')).map((a) => a.getAttribute('href'))
+    expect(hrefs).toHaveLength(exhibitions.length)
+    for (const href of hrefs) expect(Object.values(minisites).some((base) => href.startsWith(base))).toBe(true)
     app.unmount()
   }, 30000)
 
-  it('renders an exhibition theme on the composed essay view, with its panel and navigation (previous/next, no tab strip)', async () => {
-    const { exhibition, theme } = findExhibitionThemeWithPages()
-    const { app, host } = await mountSite(`#/exhibitions/${exhibition.id}/theme/${theme.id}`)
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-essay')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelector('.mwnf-essay__tabs')).toBeNull()
-    expect(host.querySelector('.mwnf-essay__nav-link')).not.toBeNull()
-    expect(host.querySelector('.mwnf-essay__panel')).not.toBeNull()
-    expect(host.querySelector('.mwnf-essay-nav, .mwnf-essay__nav')).not.toBeNull()
+  it('links an item to the exhibition pages that place it, on the mini-site', async () => {
+    const [collections] = await loadEntities(['collections'])
+    const byId = new Map(collections.map((c) => [c.id, c]))
+    const up = (c, n) => (n === 0 || !c ? c : up(byId.get(c.parent_id), n - 1))
+    const root = collections.find((c) => c.purpose === 'exhibitions-root')
+    // A page: three levels below the exhibitions (exhibition, theme, page).
+    const page = collections.find((c) => (c.items?.length ?? 0) > 0 && up(c, 3)?.id === root.id)
+    expect(page).toBeTruthy()
 
-    // The source credit (islamicart#58): `exhibitionThemeSpec` overrides
-    // neither `EssayView`'s `after` slot nor its default `SourceCredit`, so
-    // a theme page carries the same citation an item sheet does.
-    expect(host.querySelector('.mwnf-source-credit')).not.toBeNull()
-
-    // `panel.variants` (metanull/viewer-layout#49, islamicart#57): the panel
-    // opens on the first item's own image with its name as the panel's
-    // title; where that item carries curated "detail" close-ups
-    // (`entry.details`), a second thumbnail is offered and swaps the whole
-    // caption — title, justification and fields together, not just the
-    // picture — when picked.
-    const panelName = host.querySelector('.mwnf-essay__panel-name')
-    expect(panelName).not.toBeNull()
-    expect(panelName.textContent.trim()).not.toBe('')
-
-    const activePage = collectionsFixture.find((c) => c.parent_id === theme.id)
-    const firstItemEntry = activePage?.items?.[0]
-    if ((firstItemEntry?.details ?? []).length > 0) {
-      const variants = host.querySelectorAll('.mwnf-essay__variant')
-      expect(variants.length).toBeGreaterThan(1)
-      const initialName = panelName.textContent
-      variants[1].click()
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-essay__panel-name').textContent).not.toBe(initialName))
-    }
-
-    // The panel's link opens the selected item's own sheet, not a list of
-    // every item in the theme (metanull/islamicart#63) — it must read the
-    // dictionary's dedicated entry, not `EssayView`'s "See all …" default.
-    const panelLink = host.querySelector('.mwnf-essay__panel-link')
-    expect(panelLink).not.toBeNull()
-    expect(panelLink.textContent).toContain(sharedTexts.en['exhibition.theme.seeItemEntry'])
-
-    // Every page of a theme is reachable by next/previous (metanull/islamicart#63):
-    // `findExhibitionThemeWithPages` picked a theme with more than one page, so its
-    // first page (`?tab` absent) must offer a "next" link into the second (`tab=1`).
-    const nextLink = host.querySelector('.mwnf-essay__nav-link--next')
-    expect(nextLink).not.toBeNull()
-    expect(nextLink.getAttribute('href')).toContain('tab=1')
-
-    // viewer-core 1.12.1 exposes tree.entity, so EssayView reads the theme's
-    // translated title from the collections entity, not the internal_name.
-    // The view reads these texts through the tree's own entity, and a wrong
-    // entity renders internal names silently.
-    const { default: collectionsTranslations } = await import('@museumwnf/islamicart-data/translations/collections.en.json', { assert: { type: 'json' } })
-    const themeTranslation = collectionsTranslations[theme.id]
-    const essayTitle = host.querySelector('.mwnf-essay__title')
-    expect(essayTitle?.textContent.trim()).toBe(themeTranslation?.title ?? theme.internal_name)
-    expect(essayTitle?.textContent.trim()).not.toBe(theme.internal_name)
-    const essayBody = host.querySelector('.mwnf-essay__body, .mwnf-essay__prose')
-    if (themeTranslation?.description) {
-      expect(essayBody?.textContent.trim().length).toBeGreaterThan(0)
-    }
-
-    app.unmount()
-  }, 30000)
-
-  // The regression this guards against (metanull/islamicart#63): the old
-  // `tree.parents(node.id).length !== 2` test never matched a real page (its
-  // ancestry runs past this tree's own root, to the exhibitions marker and
-  // the project collection above it), so `nextPage`/`previousPage` skipped
-  // every candidate and a theme's first page showed no "Next" at all.
-  it('reaches the second page of an exhibition theme by following "next"', async () => {
-    const { exhibition, theme } = findExhibitionThemeWithPages()
-    const { app, host } = await mountSite(`#/exhibitions/${exhibition.id}/theme/${theme.id}?tab=1`)
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-essay')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelector('.mwnf-essay__panel')).not.toBeNull()
-
-    const pages = collectionsFixture.filter((c) => c.parent_id === theme.id)
-    if (pages.length > 2) {
-      const nextLink = host.querySelector('.mwnf-essay__nav-link--next')
-      expect(nextLink).not.toBeNull()
-      expect(nextLink.getAttribute('href')).toContain('tab=2')
-    }
-
-    app.unmount()
-  }, 30000)
-
-  it('renders an exhibition introduction as an about essay', async () => {
-    const withIntro = collectionsFixture.find((c) => c.parent_id === exhibitionsRoot.id && (c.items?.length ?? 0) > 0)
-    expect(withIntro).toBeTruthy()
-
-    const { app, host } = await mountSite(`#/exhibitions/${withIntro.id}/introduction`)
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-essay')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelector('.mwnf-essay--about')).not.toBeNull()
-    // The page fills EssayView's `after` slot with its way back, and draws the
-    // source credit that slot would otherwise have carried.
-    expect(host.querySelector('.mwnf-source-credit')).not.toBeNull()
-    const back = host.querySelector('.mwnf-back-bar--link')
-    expect(back.getAttribute('href')).toBe(`#/exhibitions/${withIntro.id}`)
+    const { app, host } = await mountSite(`#/item/${encodeURIComponent(page.items[0].id)}?lang=en`)
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-on-display a[href*="#/exhibition/"]')).not.toBeNull(), { timeout: 20000 })
+    const link = host.querySelector('.mwnf-on-display a[href*="#/exhibition/"]')
+    expect(link.getAttribute('href')).toMatch(/^https:\/\/museumwithnofrontiers\.github\.io\/islamicart-[a-z-]+\/#\/exhibition\/\d+\/\d+\?lang=en$/)
     app.unmount()
   }, 30000)
 
   // The Artistic Introduction entrance and theme pages moved onto
-  // viewer-layout's composed views (islamicart#46), the same way Exhibitions
-  // did: `TextPageView` (its `body(ctx)`, metanull/viewer-layout#49) for the
+  // viewer-layout's composed views (islamicart#46): `TextPageView` (its
+  // `body(ctx)`, metanull/viewer-layout#49) for the
   // entrance's own text plus `SectionCards` for the theme list, `EssayView`
   // for a theme's pages — `tabs: true`, `navigation: 'siblings'` (legacy
   // never walked from one theme into the next here, unlike Exhibitions).
@@ -640,9 +543,11 @@ describe('website smoke test', () => {
     return null
   }
 
+  let collectionsFixture
   let artIntroRootFixture
 
   it('renders the Artistic Introduction entrance on TextPageView and SectionCards', async () => {
+    ;[collectionsFixture] = await loadEntities(['collections'])
     const marker = collectionsFixture.find((c) => c.purpose === 'artistic-introduction-root')
     expect(marker).toBeTruthy()
     artIntroRootFixture = collectionsFixture.find((c) => c.parent_id === marker.id)
