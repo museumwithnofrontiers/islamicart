@@ -25,6 +25,13 @@ function itemEntry(node, itemId) {
   return node?.items?.find((entry) => entry.id === itemId) ?? null
 }
 
+// Each item once, at its first position. A page may place one item more than
+// once (another view of it, with its own picture and texts); this site shows
+// one entry per item, the first, as it always has.
+function itemIdsOf(entries) {
+  return [...new Set(entries.map((entry) => entry.id))]
+}
+
 // The page language's own text: legacy's exhibition pages read that language's
 // rows and printed nothing where it had none.
 function localCaption(entry, language) {
@@ -108,7 +115,7 @@ export function artIntroThemeSpec(tree) {
     quote: 'quote',
     body: 'description',
     items: {
-      of: (node) => (node.items ?? []).map((entry) => entry.id),
+      of: (node) => itemIdsOf(node.items ?? []),
       caption: (item, node, ctx) => {
         const caption = localCaption(itemEntry(node, item.id), ctx.language)
         const override = {}
