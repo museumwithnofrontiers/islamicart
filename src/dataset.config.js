@@ -289,17 +289,20 @@ export default {
       props: (route) => ({ id: decodeURIComponent(route.params.id) }),
       meta: meta('partners', 'partners', 'items', 'countries'),
     },
+    // The Artistic Introduction is a website of its own now
+    // (src/minisites.json): the addresses this site gave its pages lead there.
     {
       path: '/artistic-introduction',
       name: 'artistic-introduction',
-      component: () => import('./views/ArtIntroEntrance.vue'),
+      component: () => import('./views/ArtIntroMoved.vue'),
       meta: meta('artistic-introduction', 'collections'),
     },
     {
       path: '/artistic-introduction/:themeId',
       name: 'artistic-introduction-theme',
-      component: () => import('./views/ArtIntroTheme.vue'),
-      meta: meta('artistic-introduction', 'collections', 'items', 'partners', 'dynasties'),
+      component: () => import('./views/ArtIntroMoved.vue'),
+      props: true,
+      meta: meta('artistic-introduction', 'collections'),
     },
     {
       path: '/exhibitions',
