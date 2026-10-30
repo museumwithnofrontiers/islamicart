@@ -5,7 +5,7 @@ import {
 } from '@museumwnf/viewer-layout/content'
 import { StandaloneItemSheet } from '@museumwnf/viewer-layout/standalone'
 import { useData } from '../composables/data.js'
-import { artIntroLinksForItem } from '../composables/artIntro.js'
+import { artIntroHref, artIntroLinksForItem } from '../composables/artIntro.js'
 import { exhibitionLinksForItem, minisiteHref } from '../composables/exhibitions.js'
 import { partnerViewOf } from '../composables/partner.js'
 import { itemSheetSpec } from '../composables/sheet.js'
@@ -65,11 +65,14 @@ function itemDynasties(record, language) {
     .filter((dynasty) => dynasty && translations('dynasties', language)[dynasty.id]?.name)
 }
 
+// Each Artistic Introduction theme whose page places the item, at that page
+// on the Artistic Introduction's own website (its mini-site), in the site's
+// language.
 const artIntroGroups = (record) => [{
   links: artIntroLinksForItem(record.id).map((l) => ({
     id: l.themeId,
     label: mdInline(l.label),
-    to: { name: 'artistic-introduction-theme', params: { themeId: l.themeId } },
+    href: artIntroHref(locale.value, l.at) ?? undefined,
   })),
 }]
 

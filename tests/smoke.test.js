@@ -529,64 +529,22 @@ describe('website smoke test', () => {
     app.unmount()
   }, 30000)
 
-  // The Artistic Introduction entrance and theme pages moved onto
-  // viewer-layout's composed views (islamicart#46): `TextPageView` (its
-  // `body(ctx)`, metanull/viewer-layout#49) for the
-  // entrance's own text plus `SectionCards` for the theme list, `EssayView`
-  // for a theme's pages — `tabs: true`, `navigation: 'siblings'` (legacy
-  // never walked from one theme into the next here, unlike Exhibitions).
-  function findArtIntroThemeWithPages() {
-    for (const theme of collectionsFixture.filter((c) => c.parent_id === artIntroRootFixture.id)) {
-      const pages = collectionsFixture.filter((c) => c.parent_id === theme.id)
-      if (pages.length > 1) return theme
-    }
-    return null
-  }
+  // The Artistic Introduction is a website of its own too (a mini-site,
+  // inventory-app#2359): an item sheet links the page that places the item,
+  // on the mini-site.
+  it('links an item to the Artistic Introduction page that places it, on its mini-site', async () => {
+    const [collections] = await loadEntities(['collections'])
+    const marker = collections.find((c) => c.purpose === 'artistic-introduction-root')
+    const root = collections.find((c) => c.parent_id === marker.id)
+    expect(minisites[root.id]).toMatch(/^https:\/\//)
+    const themes = new Set(collections.filter((c) => c.parent_id === root.id).map((c) => c.id))
+    const page = collections.find((c) => themes.has(c.parent_id) && (c.items?.length ?? 0) > 0)
+    expect(page).toBeTruthy()
 
-  let collectionsFixture
-  let artIntroRootFixture
-
-  it('renders the Artistic Introduction entrance on TextPageView and SectionCards', async () => {
-    ;[collectionsFixture] = await loadEntities(['collections'])
-    const marker = collectionsFixture.find((c) => c.purpose === 'artistic-introduction-root')
-    expect(marker).toBeTruthy()
-    artIntroRootFixture = collectionsFixture.find((c) => c.parent_id === marker.id)
-    expect(artIntroRootFixture).toBeTruthy()
-
-    const { app, host } = await mountSite('#/artistic-introduction')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-text-page')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelector('.mwnf-heading').textContent).toContain('Artistic Introduction')
-    expect(host.querySelector('.mwnf-cards')).not.toBeNull()
-    app.unmount()
-  }, 30000)
-
-  it('renders an Artistic Introduction theme on the composed essay view, with its tab strip and panel', async () => {
-    const theme = findArtIntroThemeWithPages()
-    expect(theme).toBeTruthy()
-
-    const { app, host } = await mountSite(`#/artistic-introduction/${theme.id}`)
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-essay')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelector('.mwnf-essay__tabs')).not.toBeNull()
-    expect(host.querySelector('.mwnf-essay__panel')).not.toBeNull()
-
-    const panelName = host.querySelector('.mwnf-essay__panel-name')
-    expect(panelName).not.toBeNull()
-    expect(panelName.textContent.trim()).not.toBe('')
-
-    // viewer-core 1.12.1 exposes tree.entity, so EssayView reads the theme's
-    // translated title from the collections entity, not the internal_name.
-    // The view reads these texts through the tree's own entity, and a wrong
-    // entity renders internal names silently.
-    const { default: collectionsTranslations } = await import('@museumwnf/islamicart-data/translations/collections.en.json', { assert: { type: 'json' } })
-    const themeTranslation = collectionsTranslations[theme.id]
-    const essayTitle = host.querySelector('.mwnf-essay__title')
-    expect(essayTitle?.textContent.trim()).toBe(themeTranslation?.title ?? theme.internal_name)
-    expect(essayTitle?.textContent.trim()).not.toBe(theme.internal_name)
-    const essayBody = host.querySelector('.mwnf-essay__body, .mwnf-essay__prose')
-    if (themeTranslation?.description) {
-      expect(essayBody?.textContent.trim().length).toBeGreaterThan(0)
-    }
-
+    const { app, host } = await mountSite(`#/item/${encodeURIComponent(page.items[0].id)}?lang=en`)
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-on-display a[href*="#/page/"]')).not.toBeNull(), { timeout: 20000 })
+    const link = host.querySelector('.mwnf-on-display a[href*="#/page/"]')
+    expect(link.getAttribute('href')).toMatch(/^https:\/\/museumwithnofrontiers\.github\.io\/islamicart-artistic-introduction\/#\/page\/\d+\/\d+\?lang=en$/)
     app.unmount()
   }, 30000)
 
