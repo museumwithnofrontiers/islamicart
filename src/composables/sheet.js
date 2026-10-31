@@ -23,12 +23,29 @@ const dynastyNames = (c) =>
 // legacy printed it; the record's linked dynasties stand in when it has none,
 // and keep their own popouts (decision D5, inventory-app#2233).
 const periodDynasty = (c) => removeEndingPoint(c.text.dynasty) || dynastyNames(c)
+
+// Legacy's Location line: the location and the province without their ending
+// period, then the country's name in the sheet's language ("London, England,
+// United Kingdom"). Legacy named no country for the Palestinian museum's
+// objects (Mus01;pa, this partner) nor for these Palestinian monuments.
+const NO_COUNTRY_PARTNER = '325b7505-1527-5442-99ea-6a40f8c43d3f'
+const NO_COUNTRY_MONUMENTS = /^PA (01|02|03|04|05|06|07|08|09|10|11|14|18|19|20|21|24|25|26|27|28|29|30|31|32|33|34|35)$/
+const namesCountry = (record) =>
+  !(record.type === 'object' && record.country_id === 'pse' && record.partner_id === NO_COUNTRY_PARTNER) &&
+  !(record.type === 'monument' && record.country_id === 'pse' && NO_COUNTRY_MONUMENTS.test(record.mwnf_reference ?? ''))
+const locationWithCountry = (c) =>
+  [c.text.location, c.text.province]
+    .map((part) => removeEndingPoint(part ?? ''))
+    .concat(namesCountry(c.record) ? c.translations('countries')[c.record.country_id]?.name ?? '' : '')
+    .filter(Boolean)
+    .join(', ')
+
 // Each sheet opens with the record's name, under legacy's own label
 // (db_name_monument, db_name_object): the page has no other title.
 const monumentFacts = [
   { key: 'name', label: 'islamicart.item.nameOfMonument', value: 'name' },
   { key: 'alsoKnownAs', label: 'sheet.field.alsoKnownAs', value: 'alternate_name' },
-  { key: 'location', label: 'sheet.field.location', value: 'location' },
+  { key: 'location', label: 'sheet.field.location', value: locationWithCountry },
   { key: 'date', label: 'sheet.field.dateOfMonument', value: 'dates' },
   { key: 'architects', label: 'sheet.field.architects', value: 'architects' },
   { key: 'dynasty', label: 'sheet.field.periodDynasty', value: periodDynasty },
@@ -38,7 +55,7 @@ const monumentFacts = [
 const objectFacts = [
   { key: 'name', label: 'islamicart.item.nameOfObject', value: 'name' },
   { key: 'alsoKnownAs', label: 'sheet.field.alsoKnownAs', value: 'alternate_name' },
-  { key: 'location', label: 'sheet.field.location', value: 'location' },
+  { key: 'location', label: 'sheet.field.location', value: locationWithCountry },
   // The holder text, then the partner it refers to (`PartnerPanel`'s summary),
   // rendered by ItemDetail.vue's `holder` slot (decision D3).
   { key: 'holder', label: 'sheet.field.holdingMuseum', value: 'holder', render: 'custom' },
@@ -93,7 +110,7 @@ const isMonument = (ctx) => ctx.record?.type === 'monument'
 
 export const itemSheetSpec = {
   entity: 'items',
-  translations: ['dynasties', 'glossary'],
+  translations: ['dynasties', 'glossary', 'countries'],
   fields: (ctx) => (isMonument(ctx) ? monumentFacts : objectFacts),
   sections: (ctx) => (isMonument(ctx) ? monumentSections : objectSections),
   // Legacy's sheet: each label over its value (modules/database_item.php's
