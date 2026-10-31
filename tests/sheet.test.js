@@ -38,6 +38,25 @@ describe('item sheet spec', () => {
     expect(row(fieldsOf(object), 'artists').value).toBe('artist')
   })
 
+  it("prints the location, the province and the country's name, as legacy's Location line", () => {
+    const countries = (entity) => (entity === 'countries' ? { gbr: { name: 'United Kingdom' }, pse: { name: 'Palestine' } } : {})
+    const value = (record, text) => row(fieldsOf(record), 'location').value({ record, translations: countries, text })
+    expect(value({ ...object, country_id: 'gbr' }, { location: 'London, England.' })).toBe('London, England, United Kingdom')
+    expect(value({ ...monument, country_id: 'gbr' }, { location: 'Süleymaniye, Istanbul', province: 'Marmara' }))
+      .toBe('Süleymaniye, Istanbul, Marmara, United Kingdom')
+    // A country with no name in the sheet's language adds nothing.
+    expect(value({ ...object, country_id: 'xyz' }, { location: 'Somewhere' })).toBe('Somewhere')
+  })
+
+  it('names no country where legacy named none: the Palestinian museum, the listed Palestinian monuments', () => {
+    const countries = (entity) => (entity === 'countries' ? { pse: { name: 'Palestine' } } : {})
+    const value = (record) => row(fieldsOf(record), 'location').value({ record, translations: countries, text: { location: 'Jerusalem' } })
+    expect(value({ ...object, country_id: 'pse', partner_id: '325b7505-1527-5442-99ea-6a40f8c43d3f' })).toBe('Jerusalem')
+    expect(value({ ...object, country_id: 'pse', partner_id: 'another-partner' })).toBe('Jerusalem, Palestine')
+    expect(value({ ...monument, country_id: 'pse', mwnf_reference: 'PA 25' })).toBe('Jerusalem')
+    expect(value({ ...monument, country_id: 'pse', mwnf_reference: 'PA 12' })).toBe('Jerusalem, Palestine')
+  })
+
   it('closes both sheets with the rights line', () => {
     for (const record of [object, monument]) {
       expect(sectionsOf(record).at(-1)).toMatchObject({ key: 'copyright', label: 'sheet.field.copyrightInformation', value: 'copyright' })
