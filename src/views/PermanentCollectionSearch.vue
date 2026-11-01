@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useFacets, useI18n, I18nText } from '@museumwnf/viewer-core'
 import { useData } from '../composables/data.js'
-import { FACETS } from '../composables/catalogue.js'
+import { FACETS, centuries } from '../composables/catalogue.js'
 
 // The Permanent Collection entrance as legacy's pc_entrance.php: "Sort by"
 // and its lists on the left, each opening the results as soon as a value is
@@ -11,7 +11,7 @@ import { FACETS } from '../composables/catalogue.js'
 // right. Every word is legacy's own (islamicart.pc.*, its translation
 // table); the lists' values are the records' own.
 
-const { items, timelineEvents } = useData()
+const { items } = useData()
 const { t, locale } = useI18n()
 const router = useRouter()
 const options = useFacets(items, FACETS)
@@ -22,15 +22,6 @@ const byLabel = (list) => [...(list ?? [])].sort((a, b) => a.label.localeCompare
 const countries = computed(() => byLabel(options.value.country))
 const dynasties = computed(() => byLabel(options.value.dynasty))
 
-// Legacy's dates: every century from the timeline's earliest event to its
-// last ("AD 400" … "AD 1900" to start, a century later to end).
-const centuries = computed(() => {
-  const years = (timelineEvents.value ?? []).map((e) => e.year_from).filter((y) => Number.isFinite(y))
-  if (!years.length) return []
-  const list = []
-  for (let c = Math.floor(Math.min(...years) / 100) * 100; c < Math.max(...years); c += 100) list.push(c)
-  return list
-})
 // Legacy's "[DATE] A.D.": the year, then the era's own word.
 const ad = (year) => `${year} ${t('islamicart.pc.ad')}`
 

@@ -228,6 +228,8 @@
   --mwnf-standalone-menu-padding: 5px 0;
   --mwnf-standalone-bullet: url('./assets/legacy/next_arrow.png');
   --mwnf-standalone-back-arrow: url('./assets/legacy/back_arrow.png');
+  /* The Permanent Collection results' date lists (span.select_png). */
+  --islamicart-select-arrow: url('./assets/legacy/select.png');
   --mwnf-standalone-download-icon: url('./assets/legacy/download.png');
   /* The item sheet's language band (section.language_option). */
   --mwnf-standalone-language-bar: #e0b700;

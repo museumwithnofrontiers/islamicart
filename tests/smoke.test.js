@@ -55,26 +55,36 @@ describe('website smoke test', () => {
   // view (metanull/viewer-core#50, metanull/viewer-layout#33): the rows, the
   // filter panel and the Explore checkbox come from the catalogue spec, and
   // what only this website has — the heading suffix — fills the view's slot.
-  it('renders the Permanent Collection on the composed results view', async () => {
+  // Legacy's pclist_all.php: the heading with its count, the tiles, the
+  // "Change your selection" panel and legacy's pages, no filter form and no
+  // summary line of the composed view's own.
+  it("renders the Permanent Collection results as legacy's tiles, panel and pages", async () => {
     const { app, host } = await mountSite('#/permanent-collection/results')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelector('.mwnf-catalogue')).not.toBeNull()
-    expect(host.querySelector('.mwnf-filter')).not.toBeNull()
-    // No Explore opt-in: legacy's results always read both projects.
-    expect(host.querySelector('.mwnf-facet--checkbox input[type="checkbox"]')).toBeNull()
-    expect(host.querySelector('.mwnf-heading').textContent).toContain('Permanent Collection')
-    // Legacy's count, in its two halves: objects and monuments.
-    expect(host.querySelectorAll('.mwnf-summary__count').length).toBe(2)
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-results__tile')).not.toBeNull(), { timeout: 20000 })
+    expect(host.querySelectorAll('.mwnf-standalone-results__tile').length).toBe(20)
+    expect(host.querySelector('.islamicart-pcr__heading').textContent).toContain('Permanent Collection')
+    expect(host.querySelectorAll('.islamicart-pcr__panel select').length).toBe(4)
+    expect(host.querySelector('.mwnf-standalone-pages')).not.toBeNull()
+    expect(host.querySelector('.mwnf-filter')).toBeNull()
+    expect(host.querySelector('.mwnf-summary')).toBeNull()
+    expect(host.querySelector('.mwnf-pagination')).toBeNull()
     app.unmount()
   }, 60000)
 
   // Legacy's pclist_all.php always read the Discover Islamic Art and the
-  // Explore Islamic Art Collections records together. The row count alone
-  // would not show this — a page holds twenty rows regardless — so this reads
-  // the summary's total against the package.
+  // Explore Islamic Art Collections records together. The tile count alone
+  // would not show this — a page holds twenty regardless — so this reads the
+  // heading's "[N Objects, M Monuments]" against the package.
+  // The composed view's summary total, which the database search still shows.
   function summaryTotal(host) {
     return [...host.querySelectorAll('.mwnf-summary__count')]
       .reduce((sum, el) => sum + Number(el.textContent), 0)
+  }
+
+  function headingTotal(host) {
+    const [, objects = '0', monuments = '0'] = host.querySelector('.islamicart-pcr__count').textContent
+      .match(/\[(?:(\d+) Objects)?(?:, )?(?:(\d+) Monuments)?\]/) ?? []
+    return Number(objects) + Number(monuments)
   }
 
   it('lists both projects in the Permanent Collection, as legacy did', async () => {
@@ -84,11 +94,28 @@ describe('website smoke test', () => {
     expect(items.some((i) => i.project_id === PROJECTS.explore)).toBe(true)
 
     const { app, host } = await mountSite('#/permanent-collection/results')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 20000 })
-    const total = summaryTotal(host)
+    await vi.waitFor(() => expect(host.querySelector('.islamicart-pcr__count')).not.toBeNull(), { timeout: 20000 })
+    const total = headingTotal(host)
     app.unmount()
 
     expect(total).toBe(expected)
+  }, 60000)
+
+  // Legacy's panel replaced the selection: a dynasty picked on a country's
+  // results shows the dynasty alone; the country's results link its
+  // timeline.
+  it('names the country in the heading, links its timeline, and lets a dynasty replace it', async () => {
+    const { app, host } = await mountSite('#/permanent-collection/results?country=ita')
+    await vi.waitFor(() => expect(host.querySelector('.islamicart-pcr__related a')).not.toBeNull(), { timeout: 20000 })
+    expect(host.querySelector('.islamicart-pcr__heading b').textContent).toBe('Italy')
+    expect(host.querySelector('.islamicart-pcr__related a').textContent).toBe('Timeline | Italy')
+
+    const dynasty = host.querySelectorAll('.islamicart-pcr__panel select')[1]
+    dynasty.value = dynasty.options[1].value
+    dynasty.dispatchEvent(new Event('change'))
+    await vi.waitFor(() => expect(window.location.hash).toContain('dynasty='), { timeout: 20000 })
+    expect(window.location.hash).not.toContain('country=')
+    app.unmount()
   }, 60000)
 
   // The Timeline entrance and results move onto viewer-layout's composed
