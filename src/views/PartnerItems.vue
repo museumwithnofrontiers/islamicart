@@ -34,10 +34,10 @@ const list = (type, project) => ({ name: 'partners-results', query: { type, proj
 // two links wait for them.
 const backLinks = computed(() =>
   exploreOnly(partner.value)
-    ? [{ label: 'islamicart.pmi.allCountries', to: list('museum', PROJECTS.explore) }]
+    ? [{ label: t('islamicart.pmi.allCountries'), to: list('museum', PROJECTS.explore) }]
     : [
-        { label: 'islamicart.pmi.partnerMuseums', to: list('museum', PROJECTS.discover) },
-        { label: 'islamicart.pmi.otherPartners', to: list('institution', PROJECTS.discover) },
+        { label: t('islamicart.pmi.partnerMuseums'), to: list('museum', PROJECTS.discover) },
+        { label: t('islamicart.pmi.otherPartners'), to: list('institution', PROJECTS.discover) },
       ],
 )
 </script>
@@ -47,7 +47,7 @@ const backLinks = computed(() =>
     <template #before>
       <p class="mwnf-standalone-item__back islamicart-pcr__back">
         <button type="button" class="mwnf-standalone-item__back-link" @click="$router.back()">{{ t('islamicart.pcr.back') }}</button>
-        <RouterLink v-for="link in backLinks" :key="link.label" class="mwnf-standalone-item__back-link" :to="link.to">{{ t(link.label) }}</RouterLink>
+        <RouterLink v-for="link in backLinks" :key="link.label" class="mwnf-standalone-item__back-link" :to="link.to">{{ link.label }}</RouterLink>
       </p>
       <div class="islamicart-pmi__heading">
         <h3 class="islamicart-pcr__heading">{{ removeEndingPoint(text.name ?? partner?.internal_name ?? '') }}</h3>
