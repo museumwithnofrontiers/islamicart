@@ -48,6 +48,18 @@ describe('item sheet spec', () => {
     expect(value({ ...object, country_id: 'xyz' }, { location: 'Somewhere' })).toBe('Somewhere')
   })
 
+  // inventory-app#2429: the package carries a monument's address apart.
+  it("opens a monument's Location line with its address, each of its lines kept, as legacy's nl2br", () => {
+    const countries = (entity) => (entity === 'countries' ? { pse: { name: 'Palestine' } } : {})
+    const value = (record, text) => row(fieldsOf(record), 'location').value({ record, translations: countries, text })
+    const hebron = { ...monument, country_id: 'pse', mwnf_reference: 'PA 12' }
+    expect(value(hebron, { address: 'Near the south-west corner\r\nof the Old City.', location: 'Hebron' }))
+      .toBe('Near the south-west corner  \nof the Old City, Hebron, Palestine')
+    expect(value(hebron, { location: 'Hebron' })).toBe('Hebron, Palestine')
+    // An object's line never had an address.
+    expect(value({ ...object, country_id: 'pse' }, { address: 'Street 1', location: 'Hebron' })).toBe('Hebron, Palestine')
+  })
+
   it('names no country where legacy named none: the Palestinian museum, the listed Palestinian monuments', () => {
     const countries = (entity) => (entity === 'countries' ? { pse: { name: 'Palestine' } } : {})
     const value = (record) => row(fieldsOf(record), 'location').value({ record, translations: countries, text: { location: 'Jerusalem' } })

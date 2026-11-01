@@ -40,6 +40,14 @@ const locationWithCountry = (c) =>
     .filter(Boolean)
     .join(', ')
 
+// A monument's Location line opens with its address, each of its lines on a
+// line of its own (legacy's nl2br), then the same parts as an object's. The
+// package carries the address apart since inventory-app#2429; a package
+// without it prints the line as before.
+const addressLines = (address) =>
+  removeEndingPoint(String(address ?? '').trim().replace(/\r\n?/g, '\n').replace(/[ \t]*\n/g, '  \n'))
+const monumentLocation = (c) => [addressLines(c.text.address), locationWithCountry(c)].filter(Boolean).join(', ')
+
 // The sheet's rows in legacy modules/database_item.php's two orders, each
 // under the word legacy printed for it: its `db_` term, word for word in
 // every language (islamicart.sheet.*, from legacy's translation table). Each
@@ -47,7 +55,7 @@ const locationWithCountry = (c) =>
 const monumentFacts = [
   { key: 'name', label: 'islamicart.sheet.nameOfMonument', value: 'name' },
   { key: 'alsoKnownAs', label: 'islamicart.sheet.alsoKnownAs', value: 'alternate_name' },
-  { key: 'location', label: 'islamicart.sheet.location', value: locationWithCountry },
+  { key: 'location', label: 'islamicart.sheet.location', value: monumentLocation },
   { key: 'date', label: 'islamicart.sheet.dateOfMonument', value: 'dates' },
   { key: 'architects', label: 'islamicart.sheet.architects', value: 'architects' },
   { key: 'dynasty', label: 'islamicart.sheet.periodDynasty', value: periodDynasty },
