@@ -5,7 +5,7 @@ import {
 } from '@museumwnf/viewer-layout/content'
 import { StandaloneItemSheet } from '@museumwnf/viewer-layout/standalone'
 import { useData } from '../composables/data.js'
-import { artIntroHref, artIntroLinksForItem } from '../composables/artIntro.js'
+import { artIntroHref } from '../composables/artIntro.js'
 import { exhibitionLinksForItem, minisiteHref } from '../composables/exhibitions.js'
 import { partnerViewOf } from '../composables/partner.js'
 import { itemSheetSpec } from '../composables/sheet.js'
@@ -15,7 +15,7 @@ import { itemSheetSpec } from '../composables/sheet.js'
 // composables/sheet.js. What is this website's fills its slots: the holding
 // museum's partner line in the sheet, a monument's special features under
 // it, and, in the Related Content column, legacy's blocks in legacy's order
-// — the Artistic Introduction themes, the timeline for this item, the
+// — the link to the Artistic Introduction, the timeline for this item, the
 // dynasties, the related videos, then where the item is on display (the
 // exhibitions and the THG galleries).
 
@@ -65,22 +65,19 @@ function itemDynasties(record, language) {
     .filter((dynasty) => dynasty && translations('dynasties', language)[dynasty.id]?.name)
 }
 
-// Each Artistic Introduction theme whose page places the item, at that page
-// on the Artistic Introduction's own website (its mini-site), in the site's
-// language.
-const artIntroGroups = (record) => [{
-  links: artIntroLinksForItem(record.id).map((l) => ({
-    id: l.themeId,
-    label: mdInline(l.label),
-    href: artIntroHref(locale.value, l.at) ?? undefined,
-  })),
-}]
+// Legacy's link to the Artistic Introduction (database_item.php,
+// `home_artistic_intro`): on every sheet, to its home page — now its own
+// website (its mini-site), in the site's language.
+const artIntroHome = () => artIntroHref(locale.value)
 
 // Each exhibition page that places the item, on the exhibition's own website
-// (its mini-site), in the site's language.
+// (its mini-site), in the site's language, under legacy's heading for the
+// Discover Islamic Art exhibitions (`gn_rel_exhibition`) and read as legacy
+// read it: "Exhibition | *Theme*".
 const onDisplayInGroups = (record) => [{
+  heading: 'islamicart.item.relExhibition',
   links: exhibitionLinksForItem(record.id).map((l) => ({
-    label: mdInline(l.label),
+    label: `${mdInline(l.label)} | <i>${mdInline(l.theme)}</i>`,
     href: minisiteHref(l.exhibitionId, locale.value, l.at) ?? undefined,
   })),
 }]
@@ -117,7 +114,9 @@ const thgGalleryGroups = (record) => [{
     </template>
 
     <template #sidebar="{ record, language, dir }">
-      <OnDisplayIn heading="islamicart.nav.artisticIntroduction" :groups="artIntroGroups(record)" :dir="dir" />
+      <p v-if="artIntroHome()" class="islamicart-artintro-link">
+        <a :href="artIntroHome()">{{ $t('islamicart.nav.artisticIntroduction') }}</a>
+      </p>
       <p v-if="timelineLink(record)" class="islamicart-timeline-link">
         <RouterLink :to="timelineLink(record)">{{ $t('islamicart.item.timeline') }}</RouterLink>
       </p>

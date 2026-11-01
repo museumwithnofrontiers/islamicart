@@ -40,70 +40,81 @@ const locationWithCountry = (c) =>
     .filter(Boolean)
     .join(', ')
 
-// Each sheet opens with the record's name, under legacy's own label
-// (db_name_monument, db_name_object): the page has no other title.
+// The sheet's rows in legacy modules/database_item.php's two orders, each
+// under the word legacy printed for it: its `db_` term, word for word in
+// every language (islamicart.sheet.*, from legacy's translation table). Each
+// sheet opens with the record's name: the page has no other title.
 const monumentFacts = [
-  { key: 'name', label: 'islamicart.item.nameOfMonument', value: 'name' },
-  { key: 'alsoKnownAs', label: 'sheet.field.alsoKnownAs', value: 'alternate_name' },
-  { key: 'location', label: 'sheet.field.location', value: locationWithCountry },
-  { key: 'date', label: 'sheet.field.dateOfMonument', value: 'dates' },
-  { key: 'architects', label: 'sheet.field.architects', value: 'architects' },
-  { key: 'dynasty', label: 'sheet.field.periodDynasty', value: periodDynasty },
-  { key: 'patrons', label: 'sheet.field.patrons', value: (c) => c.text.patrons ?? c.text.initial_owner },
+  { key: 'name', label: 'islamicart.sheet.nameOfMonument', value: 'name' },
+  { key: 'alsoKnownAs', label: 'islamicart.sheet.alsoKnownAs', value: 'alternate_name' },
+  { key: 'location', label: 'islamicart.sheet.location', value: locationWithCountry },
+  { key: 'date', label: 'islamicart.sheet.dateOfMonument', value: 'dates' },
+  { key: 'architects', label: 'islamicart.sheet.architects', value: 'architects' },
+  { key: 'dynasty', label: 'islamicart.sheet.periodDynasty', value: periodDynasty },
+  { key: 'patrons', label: 'islamicart.sheet.patrons', value: (c) => c.text.patrons ?? c.text.initial_owner },
 ]
 
 const objectFacts = [
-  { key: 'name', label: 'islamicart.item.nameOfObject', value: 'name' },
-  { key: 'alsoKnownAs', label: 'sheet.field.alsoKnownAs', value: 'alternate_name' },
-  { key: 'location', label: 'sheet.field.location', value: locationWithCountry },
+  { key: 'name', label: 'islamicart.sheet.nameOfObject', value: 'name' },
+  { key: 'alsoKnownAs', label: 'islamicart.sheet.alsoKnownAs', value: 'alternate_name' },
+  { key: 'location', label: 'islamicart.sheet.location', value: locationWithCountry },
   // The holder text, then the partner it refers to (`PartnerPanel`'s summary),
   // rendered by ItemDetail.vue's `holder` slot (decision D3).
-  { key: 'holder', label: 'sheet.field.holdingMuseum', value: 'holder', render: 'custom' },
-  { key: 'date', label: 'sheet.field.dateOfObject', value: 'dates' },
+  { key: 'holder', label: 'islamicart.sheet.holdingMuseum', value: 'holder', render: 'custom' },
+  { key: 'originalOwner', label: 'islamicart.sheet.originalOwner', value: 'initial_owner' },
+  { key: 'currentOwner', label: 'islamicart.sheet.currentOwner', value: 'owner' },
+  { key: 'date', label: 'islamicart.sheet.dateOfObject', value: 'dates' },
   // The artist line as the page's language writes it, or none: legacy printed
   // each language's own line, and `artist_names` come from one language's.
-  { key: 'artists', label: 'sheet.field.artists', value: 'artist' },
-  { key: 'scribe', label: 'sheet.field.scribe', value: 'scriber' },
-  { key: 'inventoryNumber', label: 'sheet.field.inventoryNumber', value: (c) => c.record.owner_reference },
+  { key: 'artists', label: 'islamicart.sheet.artists', value: 'artist' },
+  { key: 'scribe', label: 'islamicart.sheet.scribe', value: 'scriber' },
+  { key: 'inventoryNumber', label: 'islamicart.sheet.inventoryNumber', value: (c) => c.record.owner_reference },
   // Legacy's Material(s) / Technique(s) line is the record's own materials
   // text, which the package splits at its semicolons (inventory-app#2233,
   // C6). The type of object was never on this sheet.
-  { key: 'materials', label: 'sheet.field.materials', value: (c) => c.text.materials, join: '; ' },
-  { key: 'dimensions', label: 'sheet.field.dimensions', value: 'dimensions' },
-  { key: 'dynasty', label: 'sheet.field.periodDynasty', value: periodDynasty },
-  { key: 'provenance', label: 'sheet.field.provenance', value: 'provenance' },
-  { key: 'workshop', label: 'sheet.field.workshop', value: 'workshop' },
-  { key: 'binding', label: 'sheet.field.binding', value: 'binding_desc' },
-  { key: 'currentOwner', label: 'sheet.field.currentOwner', value: 'owner' },
-  { key: 'originalOwner', label: 'sheet.field.originalOwner', value: 'initial_owner' },
-  { key: 'placeOfProduction', label: 'sheet.field.placeOfProduction', value: 'place_of_production' },
+  { key: 'materials', label: 'islamicart.sheet.materials', value: (c) => c.text.materials, join: '; ' },
+  { key: 'dimensions', label: 'islamicart.sheet.dimensions', value: 'dimensions' },
+  { key: 'dynasty', label: 'islamicart.sheet.periodDynasty', value: periodDynasty },
+  { key: 'placeOfProduction', label: 'islamicart.sheet.placeOfProduction', value: 'place_of_production' },
+  { key: 'workshop', label: 'islamicart.sheet.workshop', value: 'workshop' },
+  { key: 'provenance', label: 'islamicart.sheet.provenance', value: 'provenance' },
+  { key: 'patrons', label: 'islamicart.sheet.patrons', value: 'patrons' },
+  { key: 'binding', label: 'islamicart.sheet.binding', value: 'binding_desc' },
 ]
 
 // The prose under the facts, in legacy's order and under its headings. The
 // item's rights line (`notice_b`, the package's `copyright`) closes both.
-const copyright = { key: 'copyright', label: 'sheet.field.copyrightInformation', value: 'copyright' }
+const copyright = { key: 'copyright', label: 'islamicart.sheet.copyrightInformation', value: 'copyright' }
 
 const monumentSections = [
-  { key: 'history', label: 'sheet.field.history', value: 'history' },
-  { key: 'description', label: 'sheet.field.description', value: 'description' },
-  { key: 'datation', label: 'sheet.field.monumentDatationMethod', value: 'method_for_datation' },
-  { key: 'provenanceMethod', label: 'sheet.field.provenanceMethod', value: 'method_for_provenance' },
-  { key: 'bibliography', label: 'sheet.field.bibliography', value: 'bibliography' },
+  { key: 'history', label: 'islamicart.sheet.history', value: 'history' },
+  { key: 'description', label: 'islamicart.sheet.description', value: 'description' },
+  { key: 'datation', label: 'islamicart.sheet.monumentDatationMethod', value: 'method_for_datation' },
+  { key: 'bibliography', label: 'islamicart.sheet.bibliography', value: 'bibliography' },
   copyright,
 ]
 
 const objectSections = [
-  { key: 'description', label: 'sheet.field.description', value: 'description' },
-  { key: 'datation', label: 'sheet.field.datationMethod', value: 'method_for_datation' },
-  { key: 'obtention', label: 'sheet.field.obtentionMethod', value: 'obtention' },
-  { key: 'provenanceMethod', label: 'sheet.field.provenanceMethod', value: 'method_for_provenance' },
-  { key: 'bibliography', label: 'sheet.field.bibliography', value: 'bibliography' },
+  { key: 'description', label: 'islamicart.sheet.description', value: 'description' },
+  { key: 'datation', label: 'islamicart.sheet.datationMethod', value: 'method_for_datation' },
+  { key: 'obtention', label: 'islamicart.sheet.obtentionMethod', value: 'obtention' },
+  { key: 'provenanceMethod', label: 'islamicart.sheet.provenanceMethod', value: 'method_for_provenance' },
   {
     key: 'catalogue',
-    label: 'sheet.field.catalogue',
+    label: 'islamicart.sheet.catalogue',
     value: (c) => (c.text.catalogue_holding_link ? `[${c.text.catalogue_holding_link}](${c.text.catalogue_holding_link})` : ''),
   },
+  { key: 'bibliography', label: 'islamicart.sheet.bibliography', value: 'bibliography' },
   copyright,
+]
+
+// The credits as legacy printed them: each author type's `db_` word, then the
+// citation under its own, then the working number under its.
+const credits = [
+  { field: 'author', label: 'islamicart.sheet.preparedBy' },
+  { field: 'copy_editor', label: 'islamicart.sheet.copyeditedBy' },
+  { field: 'translator', label: 'islamicart.sheet.translationBy' },
+  { field: 'translation_copy_editor', label: 'islamicart.sheet.translationCopyeditedBy' },
 ]
 
 const isMonument = (ctx) => ctx.record?.type === 'monument'
@@ -121,6 +132,9 @@ export const itemSheetSpec = {
   shortDescription: 'short_description',
   shortDescriptionAfter: 'description',
   related: { variant: 'list', heading: 'record.related.items' },
+  credits,
+  citation: { heading: 'islamicart.sheet.citation' },
+  workingNumberLabel: 'islamicart.sheet.workingNumber',
   route: 'item',
   // Legacy's gap under the pictures and under the sheet.
   spaced: true,

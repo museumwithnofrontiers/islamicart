@@ -52,6 +52,8 @@ export function exhibitionLinksForItem(itemId) {
       exhibitionId: exhibition.id,
       at: { theme: position(exhibition.id, theme.id), page: position(theme.id, node.id) },
       label: tr('collections', exhibition.id).title ?? exhibition.internal_name,
+      // Legacy's link read "Exhibition | *Theme*": the theme's title too.
+      theme: tr('collections', theme.id).title ?? theme.internal_name,
     })
   }
   return links
