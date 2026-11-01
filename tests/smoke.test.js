@@ -60,35 +60,35 @@ describe('website smoke test', () => {
     await vi.waitFor(() => expect(host.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 20000 })
     expect(host.querySelector('.mwnf-catalogue')).not.toBeNull()
     expect(host.querySelector('.mwnf-filter')).not.toBeNull()
-    expect(host.querySelector('.mwnf-facet--checkbox input[type="checkbox"]')).not.toBeNull()
+    // No Explore opt-in: legacy's results always read both projects.
+    expect(host.querySelector('.mwnf-facet--checkbox input[type="checkbox"]')).toBeNull()
     expect(host.querySelector('.mwnf-heading').textContent).toContain('Permanent Collection')
     // Legacy's count, in its two halves: objects and monuments.
     expect(host.querySelectorAll('.mwnf-summary__count').length).toBe(2)
     app.unmount()
   }, 60000)
 
-  // The Explore checkbox writes the same URL key legacy's opt-in checkbox
-  // did (`epm`), so the entrance's link keeps working: checking it must
-  // widen the results beyond the always-searched Discover Islamic Art
-  // project. The row count alone would not show this — a page holds twenty
-  // rows regardless — so this reads the summary's total instead.
+  // Legacy's pclist_all.php always read the Discover Islamic Art and the
+  // Explore Islamic Art Collections records together. The row count alone
+  // would not show this — a page holds twenty rows regardless — so this reads
+  // the summary's total against the package.
   function summaryTotal(host) {
     return [...host.querySelectorAll('.mwnf-summary__count')]
       .reduce((sum, el) => sum + Number(el.textContent), 0)
   }
 
-  it('widens the Permanent Collection when Explore is set in the URL', async () => {
-    const { app: withoutEpm, host: hostWithoutEpm } = await mountSite('#/permanent-collection/results')
-    await vi.waitFor(() => expect(hostWithoutEpm.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 20000 })
-    const totalWithoutEpm = summaryTotal(hostWithoutEpm)
-    withoutEpm.unmount()
+  it('lists both projects in the Permanent Collection, as legacy did', async () => {
+    const [items] = await loadEntities(['items'])
+    const projects = [PROJECTS.discover, PROJECTS.explore]
+    const expected = items.filter((i) => !i.project_id || projects.includes(i.project_id)).length
+    expect(items.some((i) => i.project_id === PROJECTS.explore)).toBe(true)
 
-    const { app: withEpm, host: hostWithEpm } = await mountSite('#/permanent-collection/results?epm=1')
-    await vi.waitFor(() => expect(hostWithEpm.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 20000 })
-    const totalWithEpm = summaryTotal(hostWithEpm)
-    withEpm.unmount()
+    const { app, host } = await mountSite('#/permanent-collection/results')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 20000 })
+    const total = summaryTotal(host)
+    app.unmount()
 
-    expect(totalWithEpm).not.toBe(totalWithoutEpm)
+    expect(total).toBe(expected)
   }, 60000)
 
   // The Timeline entrance and results move onto viewer-layout's composed
@@ -233,17 +233,23 @@ describe('website smoke test', () => {
     app.unmount()
   }, 30000)
 
-  // The Permanent Collection entrance moved onto the composed
-  // `SearchFormView` (`mode: 'radio'`); its facet options are the values the
-  // records actually carry (composables/catalogue.js's `FACETS`), the same
-  // derivation the results page's own filter panel uses.
-  it('renders the Permanent Collection entrance on the composed radio search form', async () => {
-    const { app, host } = await mountSite('#/permanent-collection')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-search-form__radio-row')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelectorAll('.mwnf-search-form__radio-row').length).toBe(5)
-    expect(host.textContent).toContain('Holding institution')
+  // The Permanent Collection entrance as legacy's pc_entrance.php: "Sort by"
+  // and its five lists, "About" and legacy's text; picking a value opens the
+  // results at once, as legacy's onchange did. The lists' values are the
+  // records' own (composables/catalogue.js's `FACETS`).
+  it("renders the Permanent Collection entrance as legacy's, opening the results on a pick", async () => {
+    const { app, host } = await mountSite('#/permanent-collection?lang=en')
+    await vi.waitFor(() => expect(host.querySelectorAll('.islamicart-pc select').length).toBe(5), { timeout: 20000 })
+    const headings = [...host.querySelectorAll('.islamicart-pc__heading')].map((h) => h.textContent.trim())
+    expect(headings).toEqual(['Sort by', 'About'])
+    expect(host.querySelector('.islamicart-pc__text').textContent).toContain('four ways to sort')
+    const country = host.querySelector('.islamicart-pc select')
+    await vi.waitFor(() => expect(country.options.length).toBeGreaterThan(2), { timeout: 20000 })
+    country.value = country.options[2].value
+    country.dispatchEvent(new Event('change'))
+    await vi.waitFor(() => expect(window.location.hash).toContain(`/permanent-collection/results?country=${country.value}`), { timeout: 20000 })
     app.unmount()
-  }, 20000)
+  }, 30000)
   // The holding museum (decision D3, inventory-app#2035): the holder text,
   // then the partner as viewer-layout's `PartnerPanel` summary — "About
   // {name}, {city}, {country}" — linking to the partner's page; none for an

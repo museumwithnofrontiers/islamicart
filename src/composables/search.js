@@ -30,27 +30,6 @@ export const databaseSearchSpec = {
   howTo: false,
 }
 
-// `options` is `useFacets(items, FACETS)`'s own result (composables/catalogue.js),
-// read by PermanentCollectionSearch.vue — the radio facets' own values,
-// sourced from the records the way every other facet on this site is, never
-// invented here.
-export function permanentCollectionSearchSpec(options) {
-  return {
-    mode: 'radio',
-    facets: [
-      { key: 'country', label: 'catalogue.facet.country', options: options.country ?? [] },
-      { key: 'dynasty', label: 'catalogue.facet.periodDynasty', options: options.dynasty ?? [] },
-      { key: 'partner', label: 'catalogue.facet.holdingInstitution', options: options.partner ?? [] },
-      { key: 'begin', label: 'catalogue.facet.startDate', type: 'year' },
-      { key: 'end', label: 'catalogue.facet.endDate', type: 'year' },
-    ],
-    // Writes the exact keys `permanentCollectionResultsSpec` (composables/catalogue.js)
-    // already reads.
-    extras: [{ key: 'epm', type: 'checkbox', label: 'islamicart.filter.includeEpm' }],
-    target: 'permanent-collection-results',
-  }
-}
-
 // The index behind the results page: one for the site's life, its search
 // language following the query's. It searches every item regardless of
 // scope; `narrow` keeps its rank order over what `scope` (ISL/EPM) let
