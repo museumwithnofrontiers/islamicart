@@ -16,9 +16,11 @@ const { t, locale } = useI18n()
 const router = useRouter()
 const options = useFacets(items, FACETS)
 
+// Both lists by name, as legacy's were (its dynasty list too: Abbasids,
+// Afsharid, Aghlabids…).
 const byLabel = (list) => [...(list ?? [])].sort((a, b) => a.label.localeCompare(b.label, locale.value))
 const countries = computed(() => byLabel(options.value.country))
-const dynasties = computed(() => options.value.dynasty ?? [])
+const dynasties = computed(() => byLabel(options.value.dynasty))
 
 // Legacy's dates: every century from the timeline's earliest event to its
 // last ("AD 400" … "AD 1900" to start, a century later to end).
