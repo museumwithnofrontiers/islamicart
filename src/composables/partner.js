@@ -1,10 +1,10 @@
-import { CATALOGUE_PAGE_SIZE, partnerView } from '@museumwnf/viewer-core'
+import { CATALOGUE_PAGE_SIZE, partnerView, removeEndingPoint } from '@museumwnf/viewer-core'
 import { PROJECTS } from '../dataset.config.js'
 import { inScope, legacyOrder, resultTile } from './catalogue.js'
 import { useData } from './data.js'
 
 // The partner specs: what viewer-layout's `PartnerListView` renders on
-// `/partners/results` and `RecordView` on `/partner/:id`. The engine —
+// `/partners/results` and the partner profile on `/partner/:id`. The engine —
 // country grouping, the main/associated tiers, the associated-under-parent
 // nesting (G.1's `level`/`parent_id`), the record language switcher, the
 // glossary — is the platform's; what is declared here is only what is this
@@ -54,6 +54,41 @@ export function partnerListGroups(type) {
   return [...groups.values()].sort((a, b) => legacyCompare(a.label, b.label))
 }
 
+// Explore Islamic Art Collections' list (PartnerListEiac.vue), as legacy's
+// pm_partner_list_eiac.php read it, in English only: per country by its
+// English name, the main partners of Discover Islamic Art, then those of
+// Explore, each followed by its associated partners by city, the "Further
+// Associated" entries left out. Legacy joined the English names, so a
+// partner without one is not listed. Its main partners came in no stated
+// order within a project: they keep the package's.
+export function eiacListGroups(type) {
+  const list = partners.value ?? []
+  const english = (partner) => tr('partners', partner.id, 'en')
+  const named = (partner) => Boolean(english(partner).name)
+  const inDiscover = (partner) => (partner.project_uuids ?? []).includes(PROJECTS.discover)
+  const main = list.filter(
+    (p) => p.type === type && p.level === 'partner' && named(p)
+      && (inDiscover(p) || (p.project_uuids ?? []).includes(PROJECTS.explore)),
+  )
+  const entry = (partner, associated) => ({
+    partner,
+    associated,
+    name: removeEndingPoint(english(partner).name ?? ''),
+    city: english(partner).city ?? '',
+    image: [...(partner.images ?? [])].sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))[0]?.url ?? '',
+  })
+  const groups = new Map()
+  for (const partner of [...main.filter(inDiscover), ...main.filter((p) => !inDiscover(p))]) {
+    const label = countryLabel(partner.country_id, 'en')
+    if (!groups.has(label)) groups.set(label, { label, entries: [] })
+    const own = list
+      .filter((p) => p.parent_id === partner.id && named(p) && !furtherAssociated(p))
+      .sort((a, b) => legacyCompare(english(a).city ?? '', english(b).city ?? ''))
+    groups.get(label).entries.push(entry(partner, false), ...own.map((p) => entry(p, true)))
+  }
+  return [...groups.values()].sort((a, b) => legacyCompare(a.label, b.label))
+}
+
 // Both `filterType`/`project` come from the entrance's own link
 // (PartnersEntrance.vue) and stay on the URL PartnersResults.vue reads, so
 // the spec is rebuilt whenever that query changes rather than read once.
@@ -80,30 +115,42 @@ export function partnersResultsSpec(filterType, project) {
   }
 }
 
-// The partner page (PartnerDetail.vue): `RecordView` carries the record's
-// language, its load and the not-found case; the page's body is viewer-
-// layout's `PartnerPanel` (inventory-app#2035), rendering the partner's
-// view-model — the About/Contact/Logo tabs, the homepage link, the pictures
-// and the map. So the sheet itself declares nothing: no field, no section,
-// no media gallery of its own (the pictures are the panel's), no citation
-// (legacy printed none on a partner profile), and no `related` — the held
-// items are a reverse reference (`item.partner_id`), which PartnerDetail.vue's
-// `related` slot lists itself.
-export const partnerSheetSpec = {
-  entity: 'partners',
-  fields: [],
-  shortDescription: false,
-  media: () => [],
-  citation: false,
-  related: false,
-}
-
 // Where a partner's "View Objects"/"View Monuments" lands: legacy's
 // pm_museum_items.php / pm_institution_items.php, the partner's own page of
 // tiles.
 export function partnerObjectsLink(partner) {
   return { name: 'partner-items', params: { id: partner.id } }
 }
+
+// The partner profile's pill to that page (PartnerDetail.vue): a museum's
+// objects, an institution's monuments, for a partner that holds any.
+export function partnerItemsLink(partner) {
+  if (!partner?.item_count) return null
+  return {
+    label: partner.type === 'institution' ? 'islamicart.pp.viewMonuments' : 'islamicart.pp.viewObjects',
+    to: partnerObjectsLink(partner),
+  }
+}
+
+// The profile's view-model, read as legacy's pm_partner.php printed it: the
+// name, the city and the contact lines without their ending period.
+const plain = (value) => (value ? removeEndingPoint(String(value)) : value)
+export function partnerProfileView(partner, text) {
+  const own = text ?? {}
+  const view = partnerViewOf(partner, {
+    ...own,
+    ...Object.fromEntries(['name', 'city', 'address', 'phone', 'fax', 'email'].map((key) => [key, plain(own[key])])),
+  })
+  view.persons = view.persons.map((person) =>
+    Object.fromEntries(Object.entries(person).map(([key, value]) => [key, typeof value === 'string' ? plain(value) : value])),
+  )
+  return view
+}
+
+// Legacy listed no About tab for its "Further Associated Museums" entries,
+// by their name in the three languages it checked.
+const FURTHER_ASSOCIATED = ['Further Associated Museums', 'Otros museos asociados', 'Autres musées associés']
+export const listsAbout = (partner, text) => !FURTHER_ASSOCIATED.includes(String(text?.name ?? '').trim())
 
 // That page's records (PartnerItems.vue), as legacy's two queries read them:
 // a museum's objects of both projects, an institution's monuments of every

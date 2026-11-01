@@ -475,24 +475,6 @@ describe('website smoke test', () => {
     app.unmount()
   }, 60000)
 
-  // #1727 phase 4: the project heading reads the data package's own manifest
-  // (`useProjects().label()`, dataset.config.js's `PROJECTS`), and the
-  // partner scope reads `project_uuids` — never the legacy `project_ids`
-  // key array. The Explore project (unlike Discover) offers no
-  // institutions panel, so this exercises the second, narrower entry of
-  // `partnerEntrance`.
-  it('renders the Explore Islamic Art Collections partner list by its manifest name and project UUID scope', async () => {
-    const { app, host } = await mountSite(`#/partners/results?type=museum&project=${PROJECTS.explore}`)
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-partner-list__row')).not.toBeNull(), { timeout: 20000 })
-
-    // The manifest's own name for this project (manifest.json's
-    // `projects['928f5e0d-...'].name.en`), not a site-authored text.
-    expect(host.querySelector('.mwnf-heading').textContent).toContain('Explore Islamic Art Collections')
-    expect(host.textContent).toContain('Aga Khan Museum')
-
-    app.unmount()
-  }, 60000)
-
   // #1727 phase 4: the entrance's two panels route on `dataset.config.js`'s
   // `PROJECTS` (project UUIDs) rather than a legacy key — Discover offers
   // museums and institutions, Explore (legacy never had an institutions page
@@ -514,41 +496,63 @@ describe('website smoke test', () => {
     app.unmount()
   }, 30000)
 
-  // The partner profile is the composed `RecordView` with viewer-layout's
-  // `PartnerPanel` as its body (inventory-app#2035): the About/Contact/Logo
-  // tabs, the homepage link, the pictures and the map are the panel's; the
-  // type badge, the "View Objects" action and the held items are this
-  // website's. Ajlun Castle Museum is picked because the package carries an
-  // image, a logo, coordinates, contact details and two held items for it,
-  // exercising every part at once.
-  it('renders a partner profile with its contact details, logo, map and held items', async () => {
+  // The partner profile as legacy's pm_partner.php (viewer-layout's
+  // `StandalonePartnerPage`): the ways back, the name over its place, the
+  // About | Contact | Logo | homepage pill beside "View Objects", the map
+  // under legacy's heading; no related items, which legacy never listed.
+  // Ajlun Castle Museum is picked because the package carries an image, a
+  // logo, coordinates and contact details for it, exercising every part at
+  // once; the Jordanian department of antiquities, an institution, offers no
+  // languages and no map, as on legacy.
+  it("renders a partner profile as legacy's pm_partner.php", async () => {
     const [partners] = await loadEntities(['partners'])
     const museum = partners.find((p) => p.id === 'c9284900-9055-5081-9abe-863fad506cdc')
-    const { app, host } = await mountSite(`#/partner/${encodeURIComponent(museum.id)}`)
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-partner-panel--full')).not.toBeNull(), { timeout: 20000 })
+    const { app, host } = await mountSite(`#/partner/${encodeURIComponent(museum.id)}?lang=en`)
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-partner__name')?.textContent).toContain('Ajlun Castle Museum'), { timeout: 20000 })
 
-    expect(host.querySelector('h1.mwnf-partner-panel__name').textContent).toContain('Ajlun Castle Museum')
-    // The badge is the entry name `partner.info.typeMuseum`/`typeInstitution`
-    // resolves to, not the record's own `type` value.
-    expect(host.querySelector('.detail-type-badge').textContent.trim()).toBe('Museum')
-
-    // The action's own count is the package's `item_count`, never a scan of
-    // every item in it.
-    const viewItems = host.querySelector('.mwnf-partner-panel__actions a')
-    expect(viewItems.textContent).toContain(`(${museum.item_count})`)
-
-    const tabs = [...host.querySelectorAll('[role="tab"]')].map((tab) => tab.textContent)
+    expect([...host.querySelectorAll('.mwnf-standalone-item__back-link')].map((link) => link.textContent.trim()))
+      .toEqual(['Back', 'Partner Museums', 'Other Partners'])
+    expect(host.querySelector('.mwnf-standalone-partner__location').textContent).toContain('Jordan')
+    const tabs = [...host.querySelectorAll('[role="tab"]')].map((tab) => tab.textContent.trim())
     expect(tabs).toEqual(['About', 'Contact', 'Logo'])
-    expect(host.querySelector('.mwnf-partner-panel__logos img')).not.toBeNull()
-    // A museum is mapped; the map's heading is the map's own, shown once.
-    expect(host.querySelector('.mwnf-partner-map')).not.toBeNull()
-    expect(host.querySelectorAll('.mwnf-partner-map__title').length).toBe(1)
-
-    expect(host.textContent).toContain('Related items')
-    expect(host.querySelectorAll('.mwnf-list__row').length).toBe(museum.item_count)
-    // "View Objects" opens the partner's own page of tiles.
+    expect(host.querySelector('.mwnf-standalone-partner__logos img')).not.toBeNull()
+    const viewItems = host.querySelector('.mwnf-standalone-partner__items')
+    expect(viewItems.textContent.trim()).toBe('View Objects')
     expect(viewItems.getAttribute('href')).toContain(`#/partner/${museum.id}/items`)
+    expect(host.querySelector('.mwnf-standalone-partner__map-heading').textContent).toBe('The Partner on Google Maps')
+    expect(host.querySelector('.mwnf-partner-map__embed').getAttribute('src')).toContain('https://maps.google.com/maps?q=')
+    expect(host.querySelector('.mwnf-standalone-item__top')).not.toBeNull()
+    expect(host.querySelector('.mwnf-list__row')).toBeNull()
+    app.unmount()
 
+    const institution = partners.find((p) => p.id === '804de1a6-e288-5381-8982-10883c9b8fcb')
+    const second = await mountSite(`#/partner/${institution.id}?lang=en`)
+    await vi.waitFor(() => expect(second.host.querySelector('.mwnf-standalone-partner__name')).not.toBeNull(), { timeout: 20000 })
+    expect(second.host.querySelector('.mwnf-standalone-partner__items').textContent.trim()).toBe('View Monuments')
+    expect(second.host.querySelector('.mwnf-standalone-item__top')).toBeNull()
+    expect(second.host.querySelector('.mwnf-standalone-partner__map')).toBeNull()
+    second.app.unmount()
+  }, 60000)
+
+  // Legacy's pm_partner_list_eiac.php, in English whatever the language:
+  // Discover's and Explore's museums by country, the first country open, a
+  // click opening another; the project's old address still reaches it.
+  it("renders Explore Islamic Art Collections' partner list as legacy's, in English", async () => {
+    const { app, host } = await mountSite(`#/partners/results?type=museum&project=${PROJECTS.explore}&lang=fr`)
+    await vi.waitFor(() => expect(host.querySelectorAll('.islamicart-eiac__head').length).toBeGreaterThan(20), { timeout: 20000 })
+    expect(host.querySelector('.islamicart-eiac__subtitle').textContent).toContain('Discover the world of Islam')
+    const heads = [...host.querySelectorAll('.islamicart-eiac__head')]
+    expect(heads[0].textContent.trim()).toBe('Algeria')
+    expect(heads[0].classList.contains('islamicart-eiac__head--active')).toBe(true)
+    const contents = [...host.querySelectorAll('.islamicart-eiac__content')]
+    expect(contents[0].style.display).toBe('')
+    expect(contents[1].style.display).toBe('none')
+    expect(contents[0].textContent).toContain('National Museum of Antiquities and Islamic Art')
+
+    heads[1].querySelector('a').click()
+    await vi.waitFor(() => expect(contents[1].style.display).toBe(''))
+    expect(contents[0].style.display).toBe('none')
+    expect(contents[1].textContent).toContain('Kunsthistorisches Museum')
     app.unmount()
   }, 60000)
 

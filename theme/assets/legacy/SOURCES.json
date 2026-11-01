@@ -14,6 +14,7 @@
     "theme/assets/legacy/download.png": { "source": "https://islamicart.museumwnf.org/images/download.png", "sha256": "deecfdf87ceb247256e8a45464bd4a9ee050a6ee2522f09aaa4aa4ccc66f8175" },
     "theme/assets/legacy/down_arrow.png": { "source": "https://islamicart.museumwnf.org/images/down_arrow.png", "sha256": "0cf88ce0e38c15adce6a8d89a69bb4b512b43c907dd810f0b999af1b160dff37" },
     "theme/assets/legacy/up_arrow.png": { "source": "https://islamicart.museumwnf.org/images/up_arrow.png", "sha256": "6b04b198d3040246075ae13fd26f48a03053a6dd7251af1659dbf82eb0e0e518" },
+    "theme/assets/legacy/fontawesome-webfont.woff2": { "source": "https://islamicart.museumwnf.org/fonts/fontawesome-webfont.woff2?v=4.4.0", "sha256": "3c4a1bb7ce3234407184f0d80cc4dec075e4ad616b44dcc5778e1cfb1bc24019" },
     "theme/assets/legacy/select.png": { "source": "https://islamicart.museumwnf.org/images/select.png", "sha256": "e372df9b8949d509dd6eac8054c944d59ff89e0146049184febf52cd2dbb42be" },
     "public/favicon.ico": { "source": "https://www.museumwnf.org/favicon.ico", "sha256": "35ee0786acc6fd844652b764fc5f58be3c664ce299c70a754b40f5d8a89c7496" },
     "theme/assets/legacy/random_image/DIA_new/1.jpg": { "source": "https://islamicart.museumwnf.org/random_image/DIA_new/1.jpg", "sha256": "4b317d6deae443578a2b93a03c0fcf2d2c01a0e40a1520ee143002ae7c8f6cdd" },

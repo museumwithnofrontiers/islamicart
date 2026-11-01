@@ -80,6 +80,9 @@ export default {
       { label: 'islamicart.nav.home', to: { name: 'home' }, on: 'inner' },
     ],
     banner: { home: 'legacy/banner.jpg', inner: 'legacy/banner_inside.jpg' },
+    // Explore Islamic Art Collections' partner list titles its band in
+    // italics (pm_partner_list_eiac.php's EIAC_page_head).
+    areas: { eiac: { class: 'islamicart-eiac-area' } },
     copyright: 'islamicart.footer.copyright',
     // "Discover Islamic Art was set up with the support of:", the European
     // Union (its logo opens legacy's explanation) and the Gulbenkian
@@ -167,6 +170,7 @@ export default {
       exhibitions: 'islamicart.nav.exhibitions',
       'artistic-introduction': 'islamicart.nav.artisticIntroduction',
       partners: 'islamicart.section.partners',
+      eiac: 'islamicart.section.eiac',
       timeline: 'islamicart.nav.timeline',
       dynasties: 'islamicart.dynasties.title',
       'mission-statement': 'islamicart.missionStatement.title',
@@ -283,6 +287,19 @@ export default {
       name: 'partners-results',
       component: () => import('./views/PartnersResults.vue'),
       meta: meta('partners', 'partners', 'countries'),
+      // Explore Islamic Art Collections' list is a page of its own, with its
+      // own band; the links that name the project still reach it.
+      beforeEnter: (to) =>
+        to.query.project === PROJECTS.explore
+          ? { name: 'partners-explore', query: { type: to.query.type, lang: to.query.lang } }
+          : true,
+    },
+    {
+      // pm_partner_list_eiac.php, in a section of its own: its band's title.
+      path: '/partners/explore',
+      name: 'partners-explore',
+      component: () => import('./views/PartnerListEiac.vue'),
+      meta: meta('eiac', 'partners', 'countries'),
     },
     {
       path: '/partner/:id',

@@ -238,6 +238,9 @@
   --mwnf-standalone-language-bar: #e0b700;
   --mwnf-standalone-language-color: #000000;
   --mwnf-standalone-language-active: #ffd600;
+  /* The partner profile's pills and headings (.tabs-menu, .short_heading). */
+  --mwnf-standalone-pill: #e0b700;
+  --mwnf-standalone-heading-color: rgb(33 26 0);
   --mwnf-standalone-home-link: #222222;
   --mwnf-standalone-home-text-size: 16px;
   --mwnf-standalone-related-background: #ffd600;
