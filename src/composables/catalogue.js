@@ -14,7 +14,7 @@ import { namesCountry } from './sheet.js'
 // read this one declaration.
 
 const {
-  countries, dynasties, dynastyLabel, countryLabel, itemRoute, itemRow, partnerLabel, partners, timelineEvents,
+  countries, dynasties, dynastyLabel, countryLabel, itemRoute, itemRow, languageOf, partnerLabel, partners, timelineEvents,
 } = useData()
 
 /**
@@ -125,13 +125,15 @@ export function legacyOrder(list) {
 
 // Legacy's tile (pclist_all.php): the name; the date and the free-text
 // dynasty; the holding museum; the location, the province and the country's
-// name, each without its ending period.
+// name, each without its ending period. The country is named in the language
+// the item is shown in: the display language when the item has text there,
+// English otherwise, as legacy printed "Turin, Italy" on its French page.
 function resultTile(item, { tr, renderInline }) {
   const text = tr('items', item.id)
   const plain = (value) => removeEndingPoint(String(value ?? '').replace(/[\r\n]/g, ''))
   const dates = [plain(text.dates), plain(text.dynasty)].filter(Boolean).join(', ')
   const location = [plain(text.location), plain(text.province)]
-    .concat(namesCountry(item) ? countryLabel(item.country_id) : '')
+    .concat(namesCountry(item) ? countryLabel(item.country_id, languageOf('items', item.id)) : '')
     .filter(Boolean)
     .join(', ')
   return {

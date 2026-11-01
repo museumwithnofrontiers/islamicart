@@ -12,10 +12,9 @@ import { useCatalogue } from '@museumwnf/viewer-core'
 // `useCollectionTree`; which projects are in scope for search and the partner
 // entrance is `dataset.config.js`'s own (#1727 phase 4).
 
-// English is the base language of every catalogue in the platform: every
-// list, label and fallback reads it. A record the visitor reads in another
-// language is resolved on the sheet itself, by viewer-core's
-// `useRecordLanguage`.
+// Lists, labels and reference names follow the display language and fall
+// back to English record by record (viewer-core 2.11). A record sheet decides
+// its own language, through viewer-core's `useRecordLanguage`.
 const defaultLang = 'en'
 
 const catalogue = useCatalogue({

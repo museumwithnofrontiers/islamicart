@@ -121,6 +121,23 @@ describe('website smoke test', () => {
     app.unmount()
   }, 60000)
 
+  // Displayed data follows the display language, reference data included
+  // (inventory-app#2414). As on legacy's pclist_all.php?lng=fr: the country
+  // is named in French, and a tile whose item has no French text stays
+  // English, its country too ("Turin, Italy" beside "Rome, Italie").
+  it('names countries in the display language, and in English beside an item left in English', async () => {
+    const { app, host } = await mountSite('#/permanent-collection/results?country=ita&lang=fr')
+    await vi.waitFor(() => expect(host.querySelector('.islamicart-pcr__heading b')?.textContent).toBe('Italie'), { timeout: 20000 })
+    const places = () => [...host.querySelectorAll('.mwnf-standalone-results__panel')]
+      .map((panel) => [...panel.querySelectorAll('p')].map((p) => p.textContent.trim()))
+    await vi.waitFor(() => expect(places().some((lines) => lines.includes('Rome, Italie'))).toBe(true), { timeout: 20000 })
+    expect(places().some((lines) => lines.includes('Turin, Italy'))).toBe(true)
+    expect(places().flat()).not.toContain('Turin, Italie')
+    app.unmount()
+    // The visit remembers its language; the tests after this one read English.
+    localStorage.removeItem('mwnf.language')
+  }, 60000)
+
   // The Timeline entrance and results move onto viewer-layout's composed
   // `TimelineResultsView` (metanull/islamicart#47): the country/period axis,
   // the rows and the pagination come from the spec in
