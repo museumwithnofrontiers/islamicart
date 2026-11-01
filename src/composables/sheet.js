@@ -168,6 +168,9 @@ export const itemSheetSpec = {
   shortDescriptionAfter: 'description',
   related: { variant: 'list', heading: 'record.related.items' },
   credits,
+  // Each credited person apart, their biography over their name where they
+  // have one in the sheet's language (legacy's su_tooltip).
+  creditPeople: { entity: 'authors' },
   citation: { heading: 'islamicart.sheet.citation', format: legacyCitation },
   workingNumberLabel: 'islamicart.sheet.workingNumber',
   route: 'item',

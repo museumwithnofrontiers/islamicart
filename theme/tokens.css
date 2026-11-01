@@ -95,6 +95,21 @@
   --mwnf-sheet-heading-color: #4c420e;
   --mwnf-credits-border: 2px solid #4c420e;
   --mwnf-credits-color: #4c4000;
+  /* A credited person's biography as legacy's su_tooltip_1: a 400×300
+     yellow box, scrolling, its text 16px light on 22px. */
+  --mwnf-credits-biography-width: 400px;
+  --mwnf-credits-biography-height: 300px;
+  --mwnf-credits-biography-padding: 30px 10px;
+  --mwnf-credits-biography-size: 16px;
+  --mwnf-credits-biography-weight: 300;
+  --mwnf-credits-biography-line-height: 22px;
+  --mwnf-credits-biography-text: #000000;
+  --mwnf-credits-biography-background: #ffd600;
+  --mwnf-credits-biography-border: 0;
+  --mwnf-credits-biography-heading-weight: 500;
+  /* The name that opens it, as legacy's a.su_tooltip_1: the sheet's link. */
+  --mwnf-credits-person-color: rgb(1 141 206);
+  --mwnf-credits-person-decoration: underline;
   --mwnf-languages-button-border: 1px solid #a19869;
   --mwnf-languages-active-background: #ffd600;
   --mwnf-languages-active-text: #4c4214;
