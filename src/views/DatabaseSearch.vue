@@ -11,11 +11,11 @@ import { I18nTextInline, SEARCH_LANGUAGE_KEY, centuryPresets, useI18n, useSearch
 // for the form, col-md-3) is laid out as a grid, mirrored in Arabic as
 // legacy's own Arabic form was. Go writes the query the results page reads
 // (DatabaseResults.vue, composables/search.js). Every word is legacy's own
-// (islamicart.db.*, its translation table). Legacy's "Glossary & Spelling"
-// waits for the glossary page.
+// (islamicart.db.*, its translation table). "Glossary & Spelling", in the
+// last column, opens legacy's window (GlossarySpelling.vue) at its size.
 
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { languages, language } = useSearchLanguage('items')
 
 const FIELDS = computed(() => [
@@ -75,6 +75,13 @@ function go() {
 }
 
 const LISTING = 'https://www.museumwnf.org/database_searchform.php'
+
+// Legacy's openWindow('glossarysearch.php', 'languagepolicies', …): one
+// window, reused, 700 by 600.
+const glossaryHref = computed(() => router.resolve({ name: 'glossary-spelling', query: { lang: locale.value } }).href)
+function openGlossary() {
+  window.open(glossaryHref.value, 'languagepolicies', 'scrollbars=no,resizable=no,width=700,height=600')?.focus()
+}
 </script>
 
 <template>
@@ -82,6 +89,9 @@ const LISTING = 'https://www.museumwnf.org/database_searchform.php'
     <h3 class="islamicart-db__criteria">{{ t('islamicart.db.criteria') }}</h3>
     <p class="islamicart-db__head islamicart-db__head--keywords">{{ t('islamicart.db.keywords') }}</p>
     <p class="islamicart-db__head islamicart-db__head--category">{{ t('islamicart.db.category') }}</p>
+    <p class="islamicart-db__glossary">
+      <a :href="glossaryHref" :title="t('islamicart.glossary.tooltip')" @click.prevent="openGlossary">{{ t('islamicart.glossary.heading') }}</a>
+    </p>
 
     <template v-for="(row, index) in rows" :key="index">
       <select

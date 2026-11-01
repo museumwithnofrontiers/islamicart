@@ -289,6 +289,14 @@
   --mwnf-standalone-related-margin: 0 -15px 0 -7.5px;
   --mwnf-standalone-related-reach-top: 20px;
   --mwnf-standalone-related-reach-right: 167%;
+  /* Legacy's windows (#hcr_timeline): the Glossary & Spelling tool. */
+  --mwnf-standalone-window-background: #ffd600;
+  --mwnf-standalone-window-header: #e0b700;
+  --mwnf-standalone-window-header-image: url('./assets/legacy/hcr_header.jpg');
+  --mwnf-standalone-window-heading-color: #fff;
+  --mwnf-standalone-window-close: #febe40;
+  --mwnf-standalone-window-panel: #f0ede4;
+  --mwnf-standalone-window-input-border: rgb(245 241 188);
   /* The item sheet's labels, values and their links (.center_contents). */
   --mwnf-standalone-sheet-label-color: #000000;
   --mwnf-standalone-sheet-value-color: #222222;
