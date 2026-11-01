@@ -445,28 +445,32 @@ describe('website smoke test', () => {
     app.unmount()
   }, 60000)
 
-  // The partner list moved onto viewer-layout's composed `PartnerListView`
-  // (metanull/islamicart#48): the country grouping and the associated tier
-  // come from the spec in composables/partner.js. Jordan is picked because
-  // the data package nests an associated museum ('Ajlun Castle Museum)
-  // under a main one (Jordan Archaeological Museum) there (G.1's
-  // `level`/`parent_id`), so the nesting is visible rather than merely
-  // configured.
-  it('renders the partner list grouped by country, nesting an associated partner under its own parent', async () => {
-    const { app, host } = await mountSite(`#/partners/results?type=museum&project=${PROJECTS.discover}`)
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-partner-list__row')).not.toBeNull(), { timeout: 20000 })
+  // Discover Islamic Art's partner museums as legacy's pm_partner_list.php
+  // (PartnerList.vue): a row a country with its main museums, and "See
+  // Associated Museums" opening that country's associated ones, the "Further
+  // Associated" entry last, and closing any other. Jordan is picked because
+  // the data package nests associated museums under its main one (G.1's
+  // `level`/`parent_id`).
+  it("renders Discover's partner museums as legacy's list, a country's associated museums behind its toggle", async () => {
+    const { app, host } = await mountSite(`#/partners/results?type=museum&project=${PROJECTS.discover}&lang=en`)
+    await vi.waitFor(() => expect(host.querySelector('.islamicart-pl__country')).not.toBeNull(), { timeout: 20000 })
 
-    expect(host.querySelector('.mwnf-heading').textContent).toContain('Partner Museums')
+    expect([...host.querySelectorAll('.islamicart-pl__heads h3')].map((h) => h.textContent)).toEqual(['Partner Museums', 'Associated Museums'])
+    const countries = [...host.querySelectorAll('.islamicart-pl__country')]
+    expect(countries.map((c) => c.querySelector('h3').textContent)[0]).toBe('Algeria')
+    const jordan = countries.find((c) => c.querySelector('h3').textContent === 'Jordan')
+    expect(jordan.querySelector('.islamicart-pl__main').textContent).toBe('Jordan Archaeological Museum')
 
-    const jordanGroup = [...host.querySelectorAll('.mwnf-partner-list__group')].find((el) =>
-      el.querySelector('.mwnf-partner-list__group-title')?.textContent.includes('Jordan')
-    )
-    expect(jordanGroup).not.toBeUndefined()
-    expect(jordanGroup.textContent).toContain('Jordan Archaeological Museum')
-
-    const nested = jordanGroup.querySelector('.mwnf-partner-list__children')
-    expect(nested).not.toBeNull()
-    expect(nested.textContent).toContain('Ajlun Castle Museum')
+    const associated = jordan.querySelector('.islamicart-pl__associated')
+    expect(associated.style.display).toBe('none')
+    jordan.querySelector('.islamicart-pl__toggle').click()
+    await vi.waitFor(() => expect(associated.style.display).toBe(''))
+    const names = [...associated.querySelectorAll('p')].map((p) => p.textContent)
+    expect(names.at(-1)).toBe('Further Associated Museums')
+    expect(names).toContain('Al-Saraya Museum')
+    // Opening Italy closes Jordan.
+    countries.find((c) => c.querySelector('h3').textContent === 'Italy').querySelector('.islamicart-pl__toggle').click()
+    await vi.waitFor(() => expect(associated.style.display).toBe('none'))
 
     app.unmount()
   }, 60000)

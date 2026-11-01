@@ -230,6 +230,9 @@
   --mwnf-standalone-back-arrow: url('./assets/legacy/back_arrow.png');
   /* The Permanent Collection results' date lists (span.select_png). */
   --islamicart-select-arrow: url('./assets/legacy/select.png');
+  /* The partner lists' accordion (pm_partner_list.php), closed and open. */
+  --islamicart-accordion-closed: url('./assets/legacy/down_arrow.png');
+  --islamicart-accordion-open: url('./assets/legacy/up_arrow.png');
   --mwnf-standalone-download-icon: url('./assets/legacy/download.png');
   /* The item sheet's language band (section.language_option). */
   --mwnf-standalone-language-bar: #e0b700;

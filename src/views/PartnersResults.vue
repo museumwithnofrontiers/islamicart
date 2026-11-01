@@ -5,8 +5,11 @@ import { useI18n, useProjects } from '@museumwnf/viewer-core'
 import { PartnerListView } from '@museumwnf/viewer-layout/views'
 import { PROJECTS } from '../dataset.config.js'
 import { partnersResultsSpec } from '../composables/partner.js'
+import PartnerList from './PartnerList.vue'
 
-// The partner results page is the platform's composed partner list,
+// Discover Islamic Art's two lists are legacy's pm_partner_list.php
+// (PartnerList.vue). Explore Islamic Art Collections' list is, for now, the
+// platform's composed partner list,
 // rendering the spec in composables/partner.js. What is this website's is
 // the heading — the type and project the entrance's own link chose — and
 // the toggle between museums and institutions.
@@ -42,7 +45,8 @@ const otherTypeLabel = computed(() =>
 </script>
 
 <template>
-  <div>
+  <PartnerList v-if="project === PROJECTS.discover" :type="filterType" />
+  <div v-else>
     <RouterLink :to="{ name: 'partners' }" class="mwnf-back-bar mwnf-back-bar--link">‹ {{ $t('partner.nav.back') }}</RouterLink>
 
     <h1 class="mwnf-heading">

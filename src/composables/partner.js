@@ -13,7 +13,46 @@ import { useData } from './data.js'
 // `dataset.config.js`'s `partnerEntrance`/`PROJECTS`), and the partner's
 // view-model with this website's routes.
 
-const { countryLabel, md, mdInline } = useData()
+const { countryLabel, md, mdInline, partnerLabel, partners, tr } = useData()
+
+// Discover Islamic Art's own partner lists (PartnerList.vue), as legacy's
+// pm_partner_list.php read them: per country, by the country's name in the
+// page's language, the project's partners of one type by name, and under
+// them every associated partner of theirs by name, the "Further Associated"
+// entries (legacy's base name) last.
+const furtherAssociated = (partner) => /^further associated /i.test(tr('partners', partner.id, 'en').name ?? '')
+// Legacy's ORDER BY, as MySQL's utf8_general_ci compares: case and accents
+// folded, then character by character, so "‘Ajlun" comes after the letters.
+const folded = (text) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+const legacyCompare = (a, b) => {
+  const x = folded(a)
+  const y = folded(b)
+  return x < y ? -1 : x > y ? 1 : 0
+}
+export function partnerListGroups(type) {
+  const list = partners.value ?? []
+  const byName = (a, b) => legacyCompare(partnerLabel(a.id), partnerLabel(b.id))
+  const main = list.filter(
+    (p) => p.type === type && p.level === 'partner' && (p.project_uuids ?? []).includes(PROJECTS.discover),
+  )
+  const groups = new Map()
+  for (const partner of main) {
+    const label = countryLabel(partner.country_id)
+    if (!groups.has(label)) groups.set(label, { label, main: [], associated: [] })
+    groups.get(label).main.push(partner)
+  }
+  for (const group of groups.values()) {
+    group.main.sort(byName)
+    for (const parent of group.main) {
+      const own = list.filter((p) => p.parent_id === parent.id)
+      group.associated.push(
+        ...own.filter((p) => !furtherAssociated(p)).sort(byName),
+        ...own.filter(furtherAssociated).sort(byName),
+      )
+    }
+  }
+  return [...groups.values()].sort((a, b) => legacyCompare(a.label, b.label))
+}
 
 // Both `filterType`/`project` come from the entrance's own link
 // (PartnersEntrance.vue) and stay on the URL PartnersResults.vue reads, so
