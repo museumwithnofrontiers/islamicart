@@ -229,14 +229,16 @@ export default {
     {
       path: '/permanent-collection',
       name: 'permanent-collection',
+      // 'timeline_events' gives the Start and End Date lists their centuries
+      // (composables/catalogue.js), as legacy read them from its timeline.
       component: () => import('./views/PermanentCollectionSearch.vue'),
-      meta: meta('permanent-collection', 'items', 'countries', 'dynasties', 'partners'),
+      meta: meta('permanent-collection', 'items', 'countries', 'dynasties', 'partners', 'timeline_events'),
     },
     {
       path: '/permanent-collection/results',
       name: 'permanent-collection-results',
       component: () => import('./views/PermanentCollectionResults.vue'),
-      meta: meta('permanent-collection', 'items', 'countries', 'dynasties', 'partners'),
+      meta: meta('permanent-collection', 'items', 'countries', 'dynasties', 'partners', 'timeline_events'),
     },
     {
       path: '/database',

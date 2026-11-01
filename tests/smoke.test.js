@@ -64,6 +64,9 @@ describe('website smoke test', () => {
     expect(host.querySelectorAll('.mwnf-standalone-results__tile').length).toBe(20)
     expect(host.querySelector('.islamicart-pcr__heading').textContent).toContain('Permanent Collection')
     expect(host.querySelectorAll('.islamicart-pcr__panel select').length).toBe(4)
+    // Legacy's centuries, read from the timeline: "400 A.D." to start.
+    await vi.waitFor(() => expect(host.querySelectorAll('.islamicart-pcr__date select')[0].options.length).toBeGreaterThan(1), { timeout: 20000 })
+    expect(host.querySelectorAll('.islamicart-pcr__date select')[0].options[1].textContent).toMatch(/^\d+ A\.D\.$/)
     expect(host.querySelector('.mwnf-standalone-pages')).not.toBeNull()
     expect(host.querySelector('.mwnf-filter')).toBeNull()
     expect(host.querySelector('.mwnf-summary')).toBeNull()
