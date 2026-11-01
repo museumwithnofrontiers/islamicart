@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { itemSheetSpec } from '../src/composables/sheet.js'
+import { itemSheetSpec, legacyCitation } from '../src/composables/sheet.js'
+import { PROJECTS } from '../src/dataset.config.js'
 
 // The item sheet's own rows, over a hand-built record and translation: the
 // fields the legacy-parity story (inventory-app#2233) added to the package —
@@ -91,5 +92,15 @@ describe('item sheet spec, languages', () => {
   it('prints no linked dynasty name in a language the dynasty has no text in', () => {
     const none = () => ({})
     expect(row(fieldsOf(object), 'dynasty').value({ record: object, translations: none, text: {} })).toBe('')
+  })
+
+  it("cites as legacy: the name without its ending period, the project's phrase, the year, the address", () => {
+    const words = { 'islamicart.sheet.citationIsl': 'in *Discover Islamic Art*, MWNF,', 'islamicart.sheet.citationEpm': 'in *Explore*. MWNF,' }
+    const t = (key) => words[key]
+    const c = { record: { id: 'x1', project_id: 'other' }, text: { name: 'Bowl & cup.' }, t }
+    expect(legacyCitation(c, { permalink: 'https://example.org/#/item/x1', year: 2026 }))
+      .toBe('"Bowl &amp; cup" in <em>Discover Islamic Art</em>, MWNF, 2026. <br><i>https://example.org/#/item/x1</i>')
+    const explore = { ...c, record: { id: 'x2', project_id: PROJECTS.explore } }
+    expect(legacyCitation(explore, { year: 2026 })).toBe('"Bowl &amp; cup" in <em>Explore</em>. MWNF, 2026.')
   })
 })
