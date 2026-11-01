@@ -20,11 +20,13 @@ const chrome = import.meta.glob('../theme/assets/**/*.{jpg,jpeg,png,gif,svg}', {
 
 const { manifest } = useDataPackage()
 
-// The languages the package declares for this site, kept where the item
-// translations actually carry them. An item sheet may offer more — whatever
-// languages the record itself carries — from its own switcher, without
-// touching the site language.
-const languages = offeredLanguages()
+// Legacy's language select, in its order: the four languages its pages are
+// written in (decision of 2026-10-20, inventory-app#2233), kept where the
+// package declares them and the items carry them. An item sheet may offer
+// more — whatever languages the record itself carries — from its own band,
+// without touching the site language.
+export const SITE_LANGUAGES = ['en', 'es', 'fr', 'ar']
+const languages = offeredLanguages({ declared: SITE_LANGUAGES })
 
 // A route says what section it is (kebab-case, matching the nav entry
 // below), and the shell reads it through viewer-core's `useSection()`
