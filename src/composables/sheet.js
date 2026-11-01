@@ -30,7 +30,7 @@ const periodDynasty = (c) => removeEndingPoint(c.text.dynasty) || dynastyNames(c
 // objects (Mus01;pa, this partner) nor for these Palestinian monuments.
 const NO_COUNTRY_PARTNER = '325b7505-1527-5442-99ea-6a40f8c43d3f'
 const NO_COUNTRY_MONUMENTS = /^PA (01|02|03|04|05|06|07|08|09|10|11|14|18|19|20|21|24|25|26|27|28|29|30|31|32|33|34|35)$/
-const namesCountry = (record) =>
+export const namesCountry = (record) =>
   !(record.type === 'object' && record.country_id === 'pse' && record.partner_id === NO_COUNTRY_PARTNER) &&
   !(record.type === 'monument' && record.country_id === 'pse' && NO_COUNTRY_MONUMENTS.test(record.mwnf_reference ?? ''))
 const locationWithCountry = (c) =>
