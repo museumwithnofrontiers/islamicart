@@ -532,19 +532,16 @@ describe('website smoke test', () => {
   // The Artistic Introduction is a website of its own too (a mini-site,
   // inventory-app#2359): an item sheet links the page that places the item,
   // on the mini-site.
-  it('links an item to the Artistic Introduction page that places it, on its mini-site', async () => {
-    const [collections] = await loadEntities(['collections'])
+  it("links every item to the Artistic Introduction's home page, on its mini-site, as legacy's sheet did", async () => {
+    const [collections, items] = await loadEntities(['collections', 'items'])
     const marker = collections.find((c) => c.purpose === 'artistic-introduction-root')
     const root = collections.find((c) => c.parent_id === marker.id)
     expect(minisites[root.id]).toMatch(/^https:\/\//)
-    const themes = new Set(collections.filter((c) => c.parent_id === root.id).map((c) => c.id))
-    const page = collections.find((c) => themes.has(c.parent_id) && (c.items?.length ?? 0) > 0)
-    expect(page).toBeTruthy()
 
-    const { app, host } = await mountSite(`#/item/${encodeURIComponent(page.items[0].id)}?lang=en`)
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-on-display a[href*="#/page/"]')).not.toBeNull(), { timeout: 20000 })
-    const link = host.querySelector('.mwnf-on-display a[href*="#/page/"]')
-    expect(link.getAttribute('href')).toMatch(/^https:\/\/museumwithnofrontiers\.github\.io\/islamicart-artistic-introduction\/#\/page\/\d+\/\d+\?lang=en$/)
+    const { app, host } = await mountSite(`#/item/${encodeURIComponent(items[0].id)}?lang=en`)
+    await vi.waitFor(() => expect(host.querySelector('.islamicart-artintro-link a')).not.toBeNull(), { timeout: 20000 })
+    const link = host.querySelector('.islamicart-artintro-link a')
+    expect(link.getAttribute('href')).toBe(`${minisites[root.id]}#/?lang=en`)
     app.unmount()
   }, 30000)
 
