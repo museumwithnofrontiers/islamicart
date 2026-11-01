@@ -31,7 +31,8 @@ const centuries = computed(() => {
   for (let c = Math.floor(Math.min(...years) / 100) * 100; c < Math.max(...years); c += 100) list.push(c)
   return list
 })
-const ad = (year) => t('islamicart.pc.ad', { date: year })
+// Legacy's "[DATE] A.D.": the year, then the era's own word.
+const ad = (year) => `${year} ${t('islamicart.pc.ad')}`
 
 function open(key, value) {
   if (value) router.push({ name: 'permanent-collection-results', query: { [key]: String(value), lang: locale.value } })
