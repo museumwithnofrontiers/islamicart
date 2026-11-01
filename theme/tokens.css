@@ -284,6 +284,11 @@
   --mwnf-standalone-related-background: #ffd600;
   --mwnf-standalone-related-text: #222222;
   --mwnf-standalone-related-link: #222222;
+  /* Legacy's column: a .col-lg-3 of a row 15px wider than the container on
+     each side, its yellow up to the band and out to the page's right. */
+  --mwnf-standalone-related-margin: 0 -15px 0 -7.5px;
+  --mwnf-standalone-related-reach-top: 20px;
+  --mwnf-standalone-related-reach-right: 167%;
   /* The item sheet's labels, values and their links (.center_contents). */
   --mwnf-standalone-sheet-label-color: #000000;
   --mwnf-standalone-sheet-value-color: #222222;
