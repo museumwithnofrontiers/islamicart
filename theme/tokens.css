@@ -259,6 +259,13 @@
   --mwnf-standalone-highlight-image-width: 320px;
   --mwnf-standalone-highlight-line-height: 24px;
   --mwnf-standalone-highlight-paragraph-gap: 10px;
+  /* The item sheet's pictures as legacy's slider (.sp-wrap): the "medium"
+     rendition's 320×240 box, the 50px thumbnails 10px apart. */
+  --mwnf-standalone-item-picture-width: 320px;
+  --mwnf-standalone-item-picture-height: 240px;
+  --mwnf-standalone-item-thumb-size: 50px;
+  --mwnf-standalone-item-thumb-gap: 10px;
+  --mwnf-standalone-item-thumb-margin: 10px 0;
   --mwnf-standalone-related-background: #ffd600;
   --mwnf-standalone-related-text: #222222;
   --mwnf-standalone-related-link: #222222;

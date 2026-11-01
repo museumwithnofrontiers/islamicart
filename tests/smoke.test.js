@@ -3,7 +3,7 @@ import { loadEntities, mergeMessages, projectLabel, useDataPackage } from '@muse
 import { checkOfferedLanguages, checkRoutes, checkSectionMeta, checkTextsRendered, mountSite as mountOn } from '@museumwnf/viewer-core/testing'
 import { catalogues as sharedTexts } from '@museumwnf/viewer-i18n/standalone'
 import ownTexts from '../locales/en.json'
-import config, { PROJECTS } from '../src/dataset.config.js'
+import config, { PROJECTS, SITE_LANGUAGES } from '../src/dataset.config.js'
 import { useData } from '../src/composables/data.js'
 import minisites from '../src/minisites.json'
 
@@ -700,9 +700,9 @@ describe('website smoke test', () => {
     expect(itemById.value.get(items[0].id)).toBe(items[0])
   }, 20000)
 
-  it('offers the languages the package declares for the site, where the items carry them', () => {
-    expect(checkOfferedLanguages(config)).toEqual([])
-    expect(config.languages).toContain('en')
+  it("offers legacy's four languages in its order, where the package declares them and the items carry them", () => {
+    expect(checkOfferedLanguages(config, { declared: SITE_LANGUAGES })).toEqual([])
+    expect(config.languages).toEqual(['en', 'es', 'fr', 'ar'])
     // Languages declared in the manifest but with zero translation files
     // (fa, he, ru, ch as of data package 1.0.26) must not be offered.
     for (const phantom of ['fa', 'he', 'ru', 'ch']) {
