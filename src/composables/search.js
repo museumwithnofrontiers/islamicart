@@ -1,5 +1,5 @@
 import {
-  CATALOGUE_DATE_MODE, CATALOGUE_PAGE_SIZE, searchRowKeys, searchSummary, useFieldSearch,
+  CATALOGUE_DATE_MODE, CATALOGUE_PAGE_SIZE, SEARCH_LANGUAGE_KEY, searchRowKeys, searchSummary, useFieldSearch,
 } from '@museumwnf/viewer-core'
 import { useData } from './data.js'
 import { SEARCH_FIELDS, inScope } from './catalogue.js'
@@ -25,7 +25,7 @@ const explore = (filters, t) => (filters.epm === '1' ? `+ ${t('core.project.expl
 
 export const databaseResultsSpec = {
   entity: 'items',
-  keys: [...searchRowKeys(), 'from', 'to', 'lang', 'epm'],
+  keys: [...searchRowKeys(), 'from', 'to', SEARCH_LANGUAGE_KEY, 'epm'],
   scope: (item, filters) => inScope(item, filters.epm === '1'),
   narrow,
   dates: { mode: CATALOGUE_DATE_MODE, begin: 'from', end: 'to' },

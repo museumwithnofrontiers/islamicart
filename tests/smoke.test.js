@@ -237,9 +237,16 @@ describe('website smoke test', () => {
     cond2.value = 'OR'
     cond2.dispatchEvent(new Event('change'))
     host.querySelector('.islamicart-db__epm input').click()
+    // The search language is its own key: the page stays in English.
+    await vi.waitFor(() => expect(host.querySelectorAll('.islamicart-db__language option').length).toBeGreaterThan(1))
+    const language = host.querySelector('.islamicart-db__language select')
+    language.value = 'fr'
+    language.dispatchEvent(new Event('change'))
     host.querySelector('form.islamicart-db').dispatchEvent(new Event('submit', { cancelable: true }))
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('database-results'), { timeout: 20000 })
-    expect(router.currentRoute.value.query).toMatchObject({ q: 'bowl', field: 'keyword', q2: 'Cairo', field2: 'location', op2: 'OR', epm: '1' })
+    expect(router.currentRoute.value.query).toMatchObject({
+      q: 'bowl', field: 'keyword', q2: 'Cairo', field2: 'location', op2: 'OR', epm: '1', searchlanguage: 'fr', lang: 'en',
+    })
     app.unmount()
   }, 30000)
 

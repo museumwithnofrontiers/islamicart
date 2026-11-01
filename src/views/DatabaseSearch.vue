@@ -1,7 +1,7 @@
 <script setup>
 import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { I18nTextInline, centuryPresets, useI18n, useSearchLanguage } from '@museumwnf/viewer-core'
+import { I18nTextInline, SEARCH_LANGUAGE_KEY, centuryPresets, useI18n, useSearchLanguage } from '@museumwnf/viewer-core'
 
 // The Database entrance as legacy's database.php: three keyword rows, each
 // searched in a category, the second and third joined by "and"/"or"; the
@@ -69,7 +69,7 @@ function go() {
   })
   if (form.from) query.from = String(form.from)
   if (form.to) query.to = String(form.to)
-  if (language.value) query.lang = language.value
+  if (language.value) query[SEARCH_LANGUAGE_KEY] = language.value
   if (form.epm) query.epm = '1'
   return router.push({ name: 'database-results', query })
 }

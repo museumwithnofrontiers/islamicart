@@ -1,7 +1,7 @@
 <script setup>
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useSearchFieldOptions } from '@museumwnf/viewer-core'
+import { SEARCH_LANGUAGE_KEY, useSearchFieldOptions } from '@museumwnf/viewer-core'
 import { CatalogueResultsView } from '@museumwnf/viewer-layout/views'
 import { useData } from '../composables/data.js'
 import { SEARCH_FIELDS } from '../composables/catalogue.js'
@@ -20,7 +20,7 @@ const fieldOptions = useSearchFieldOptions(SEARCH_FIELDS)
 // The search language is read straight off the URL, not the composed
 // view's own staged filters, so a language chosen on the entrance loads
 // before this page's first render rather than after an Apply click.
-watch(() => route.query.lang, (lang) => { if (lang) loadTranslations('items', lang) }, { immediate: true })
+watch(() => route.query[SEARCH_LANGUAGE_KEY], (lang) => { if (lang) loadTranslations('items', lang) }, { immediate: true })
 </script>
 
 <template>
