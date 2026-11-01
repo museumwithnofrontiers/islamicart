@@ -137,6 +137,8 @@
   "islamicart.sheet.binding": "Reliure:",
   "islamicart.sheet.catalogue": "Lien vers le catalogue / la numérisation dans la base de données du musée conservant l'objet:",
   "islamicart.sheet.citation": "Citation de cette page web:",
+  "islamicart.sheet.citationEpm": "dans *Explore Islamic Art Collections*. Museum With No Frontiers,",
+  "islamicart.sheet.citationIsl": "dans *Discover Islamic Art*. Museum With No Frontiers,",
   "islamicart.sheet.copyeditedBy": "Édition:",
   "islamicart.sheet.copyrightInformation": "Information supplémentaire concernant le copyright:",
   "islamicart.sheet.currentOwner": "Current Owner:",

@@ -1,4 +1,5 @@
-import { removeEndingPoint } from '@museumwnf/viewer-core'
+import { removeEndingPoint, renderInline, renderPlain, useDataPackage } from '@museumwnf/viewer-core'
+import { PROJECTS } from '../dataset.config.js'
 
 // The item sheet, as a spec: what viewer-layout's `RecordView` renders on
 // `/item/:id`. The mechanics — which language the record is read in, what is
@@ -134,6 +135,25 @@ const credits = [
 
 const isMonument = (ctx) => ctx.record?.type === 'monument'
 
+// Legacy's citation (modules/database_item.php): the writers' names as their
+// English record spells them, the name without its ending period in quotes,
+// the phrase legacy's table words for the project in each language (Explore
+// Islamic Art Collections has its own), the year, then the page's address in
+// italics on a line of its own. Legacy printed the year twice on a monument;
+// that slip is not kept.
+const escapeHtml = (value) =>
+  String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+export function legacyCitation(c, { permalink, year }) {
+  const english = useDataPackage().tr('items', c.record.id, 'en')
+  const writers = removeEndingPoint(renderPlain(String(english.author ?? ''))).trim()
+  const name = removeEndingPoint(renderPlain(String(c.text.name ?? c.record.internal_name ?? ''))).trim()
+  const phrase = renderInline(
+    c.t(c.record.project_id === PROJECTS.explore ? 'islamicart.sheet.citationEpm' : 'islamicart.sheet.citationIsl'),
+  )
+  const sentence = `${[escapeHtml(writers), `"${escapeHtml(name)}"`].filter(Boolean).join(' ')} ${phrase} ${year}.`
+  return permalink ? `${sentence} <br><i>${escapeHtml(permalink)}</i>` : sentence
+}
+
 export const itemSheetSpec = {
   entity: 'items',
   translations: ['dynasties', 'glossary', 'countries'],
@@ -148,7 +168,7 @@ export const itemSheetSpec = {
   shortDescriptionAfter: 'description',
   related: { variant: 'list', heading: 'record.related.items' },
   credits,
-  citation: { heading: 'islamicart.sheet.citation' },
+  citation: { heading: 'islamicart.sheet.citation', format: legacyCitation },
   workingNumberLabel: 'islamicart.sheet.workingNumber',
   route: 'item',
   // Legacy's gap under the pictures and under the sheet.
