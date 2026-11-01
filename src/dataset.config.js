@@ -291,6 +291,15 @@ export default {
       props: (route) => ({ id: decodeURIComponent(route.params.id) }),
       meta: meta('partners', 'partners', 'items', 'countries'),
     },
+    {
+      // pm_museum_items.php / pm_institution_items.php: the partner's
+      // objects or monuments.
+      path: '/partner/:id/items',
+      name: 'partner-items',
+      component: () => import('./views/PartnerItems.vue'),
+      props: (route) => ({ id: decodeURIComponent(route.params.id) }),
+      meta: meta('partners', 'partners', 'items', 'countries'),
+    },
     // The Artistic Introduction is a website of its own now
     // (src/minisites.json): the addresses this site gave its pages lead there.
     {

@@ -1,4 +1,6 @@
-import { partnerView } from '@museumwnf/viewer-core'
+import { CATALOGUE_PAGE_SIZE, partnerView } from '@museumwnf/viewer-core'
+import { PROJECTS } from '../dataset.config.js'
+import { inScope, legacyOrder, resultTile } from './catalogue.js'
 import { useData } from './data.js'
 
 // The partner specs: what viewer-layout's `PartnerListView` renders on
@@ -57,11 +59,36 @@ export const partnerSheetSpec = {
   related: false,
 }
 
-// Where a partner's "View Objects"/"View Monuments" lands: the Permanent
-// Collection, filtered on the partner.
+// Where a partner's "View Objects"/"View Monuments" lands: legacy's
+// pm_museum_items.php / pm_institution_items.php, the partner's own page of
+// tiles.
 export function partnerObjectsLink(partner) {
-  return { name: 'permanent-collection-results', query: { partner: partner.id } }
+  return { name: 'partner-items', params: { id: partner.id } }
 }
+
+// That page's records (PartnerItems.vue), as legacy's two queries read them:
+// a museum's objects of both projects, an institution's monuments of every
+// project but Baroque Art (the package carries no other); in the
+// Permanent Collection's order and tile, twenty a page.
+export function partnerItemsSpec(partnerId, type) {
+  const kind = type === 'institution' ? 'monument' : 'object'
+  return {
+    entity: 'items',
+    keys: [],
+    scope: (item) => item.partner_id === partnerId && item.type === kind && (kind === 'monument' || inScope(item, true)),
+    sort: legacyOrder,
+    pageSize: CATALOGUE_PAGE_SIZE,
+    record: resultTile,
+    summary: () => [],
+    empty: 'islamicart.pcr.empty',
+  }
+}
+
+// Legacy's way back from that page follows the list the visitor came from
+// (its `link` parameter); a partner only Explore Islamic Art Collections
+// holds is reached from that project's list alone.
+export const exploreOnly = (partner) =>
+  !(partner?.project_uuids ?? []).includes(PROJECTS.discover) && (partner?.project_uuids ?? []).includes(PROJECTS.explore)
 
 // The partner's view-model, which `PartnerPanel` renders on the partner page
 // and under an item's holder text: this website's country label, its

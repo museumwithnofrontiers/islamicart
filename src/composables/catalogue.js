@@ -128,7 +128,7 @@ export function legacyOrder(list) {
 // name, each without its ending period. The country is named in the language
 // the item is shown in: the display language when the item has text there,
 // English otherwise, as legacy printed "Turin, Italy" on its French page.
-function resultTile(item, { tr, renderInline }) {
+export function resultTile(item, { tr, renderInline }) {
   const text = tr('items', item.id)
   const plain = (value) => removeEndingPoint(String(value ?? '').replace(/[\r\n]/g, ''))
   const dates = [plain(text.dates), plain(text.dynasty)].filter(Boolean).join(', ')
