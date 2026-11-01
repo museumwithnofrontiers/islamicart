@@ -1,34 +1,18 @@
 import {
-  CATALOGUE_DATE_MODE, CATALOGUE_PAGE_SIZE, centuryPresets, searchFieldOptions, searchRowKeys, searchSummary, useFieldSearch,
+  CATALOGUE_DATE_MODE, CATALOGUE_PAGE_SIZE, searchRowKeys, searchSummary, useFieldSearch,
 } from '@museumwnf/viewer-core'
 import { useData } from './data.js'
 import { SEARCH_FIELDS, inScope } from './catalogue.js'
 
-// The search specs: what viewer-layout's `SearchFormView` renders on
-// `/database` (`mode: 'rows'`, legacy `database.php`'s three keyword rows)
-// and `/permanent-collection` (`mode: 'radio'`, legacy's one-filter-at-a-time
-// form), and what `CatalogueResultsView` renders on `/database/results`. The
+// The search spec: what `CatalogueResultsView` renders on
+// `/database/results`, from the query legacy's form writes on `/database`
+// (DatabaseSearch.vue, legacy `database.php`'s three keyword rows). The
 // field grammar, the keyword rows, the index and the "searched for" line are
 // viewer-core's field search; decision D3 turns on its `rank: 'hits'`
 // (legacy's `ORDER BY nn DESC, pkdate ASC`) and the glossary/country
 // expansions (`database_results.php`'s two lookup rules).
 
 const { itemRow } = useData()
-
-export const databaseSearchSpec = {
-  mode: 'rows',
-  fields: searchFieldOptions(SEARCH_FIELDS),
-  dates: { presets: centuryPresets() },
-  // The search language is a record-level filter (which language the
-  // keyword is matched against), never the site's own display language.
-  language: 'items',
-  extras: [{ key: 'epm', type: 'checkbox', label: 'islamicart.filter.includeEpm' }],
-  target: 'database-results',
-  showAllLabel: 'catalogue.search.showAll',
-  // Legacy's field grammar takes no operators (`+`, `-`, `*`, quoted
-  // phrases); there is no search-syntax essay to link to.
-  howTo: false,
-}
 
 // The index behind the results page: one for the site's life, its search
 // language following the query's. It searches every item regardless of

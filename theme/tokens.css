@@ -72,8 +72,11 @@
   --mwnf-footer-padding: 0.625rem;
   --mwnf-footer-background: #e0b700;
   --mwnf-footer-text-color: #4c4214;
-  --mwnf-footer-text-size: 0.75rem;
+  /* Legacy's p.cookie_footer: 14px medium; #social-media's dark gold icons. */
+  --mwnf-footer-text-size: 14px;
   --mwnf-footer-justify: center;
+  --mwnf-standalone-footer-weight: 500;
+  --mwnf-footer-social-color: rgb(113 88 0 / 0.97);
 
   /* ---------- Content: the record page ---------- */
   /* The sheet as the legacy site set it: a bordered table with gold-tinted
@@ -243,6 +246,19 @@
   --mwnf-standalone-heading-color: rgb(33 26 0);
   --mwnf-standalone-home-link: #222222;
   --mwnf-standalone-home-text-size: 16px;
+  /* The home page as legacy's index.php drew it (section.partnet_galery):
+     col-md-3's links 43px down, 40px in, 22px apart; col-md-9's record of
+     the day 48px down, its 320px picture beside 24px lines 10px apart. */
+  --mwnf-standalone-home-padding: 0 16px;
+  --mwnf-standalone-home-gap: 21px;
+  --mwnf-standalone-home-links-margin: 43px 0 0;
+  --mwnf-standalone-home-links-inset: 40px;
+  --mwnf-standalone-home-links-line-height: 22px;
+  --mwnf-standalone-home-links-gap: 0;
+  --mwnf-standalone-highlight-offset: 48px;
+  --mwnf-standalone-highlight-image-width: 320px;
+  --mwnf-standalone-highlight-line-height: 24px;
+  --mwnf-standalone-highlight-paragraph-gap: 10px;
   --mwnf-standalone-related-background: #ffd600;
   --mwnf-standalone-related-text: #222222;
   --mwnf-standalone-related-link: #222222;
@@ -251,6 +267,8 @@
   --mwnf-standalone-sheet-value-color: #222222;
   --mwnf-standalone-sheet-link-color: rgb(1 141 206);
   --mwnf-standalone-sponsors-background: #eec201;
+  /* Legacy's sponsor logos at their own size (Barakat's is 81px high). */
+  --mwnf-standalone-sponsors-logo-height: none;
   --mwnf-standalone-drop-cap-color: #4c420e;
 
   /* ---------- This site's own ---------- */
