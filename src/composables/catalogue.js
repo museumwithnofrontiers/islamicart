@@ -28,10 +28,44 @@ export function inScope(item, includeEpm) {
   return !item.project_id || scoped.includes(item.project_id)
 }
 
-// The nine fields of database.php: Islamic Art's form is the one with the
-// dynasty field. Decision D3's country expansion reads the raw ids the
-// keyword and location fields carry.
-export const SEARCH_FIELDS = searchFields({ dynastyLabel })
+// The nine fields of database.php, each searching what database_results.php
+// searched (decision D3), in the package's fields: Keywords every column of
+// the object or monument, the other fields theirs. Legacy's Provenance,
+// Material and Patron searches dropped their condition for the type the
+// column did not belong to, and Other had none at all, so each listed
+// everything; those fields search their own columns here, and Other the
+// descriptive fields.
+const LEGACY_COLUMNS = (item, text) => [
+  text.name, text.alternate_name, text.location, text.province, text.dates, text.dynasty, text.initial_owner,
+  text.artist, text.keywords, text.materials, text.description, text.short_description, item.mwnf_reference,
+  text.method_for_datation, item.owner_reference, text.type, item.start_date, item.end_date, text.owner,
+  text.provenance, text.dimensions, text.artist_birthdate, text.artist_birthplace, text.artist_deathdate,
+  text.artist_deathplace, text.place_of_production, text.workshop, text.method_for_provenance, text.obtention,
+  text.bibliography, text.author, text.holder,
+  text.architects, text.patrons, text.address, text.history,
+]
+
+export const SEARCH_FIELDS = {
+  keyword: LEGACY_COLUMNS,
+  name: (item, text) => [text.name, text.alternate_name],
+  location: (item, text) => [text.location, text.province],
+  provenance: (item, text) => (item.type === 'monument' ? null : text.provenance),
+  dynasty: (item, text) => [text.dynasty, text.architects],
+  patron: (item, text) => (item.type === 'monument' ? text.patrons : null),
+  artist: (item, text) => (item.type === 'monument' ? [text.architects, text.dynasty] : text.artist),
+  material: (item, text) => (item.type === 'monument' ? null : text.materials),
+  other: searchFields().other,
+}
+
+// Legacy's relevance (`nn`): the word in the keywords or the working number
+// counts twice, in the name or the second name once, and so does the record's
+// country when the word names it; a Name or a Location search counts the name.
+export const SEARCH_SCORE = {
+  keyword: (like, item, text, inCountry) => 2 * like(text.keywords) + 2 * like(item.mwnf_reference)
+    + like(text.name) + like(text.alternate_name) + (inCountry ? 1 : 0),
+  name: (like, item, text) => Number(like(text.name)),
+  location: (like, item, text) => Number(like(text.name)),
+}
 
 // ── The facets of the Permanent Collection ─────────────────────────────────
 //

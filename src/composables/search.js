@@ -1,24 +1,28 @@
 import {
-  CATALOGUE_DATE_MODE, CATALOGUE_PAGE_SIZE, SEARCH_LANGUAGE_KEY, searchRowKeys, searchSummary, useFieldSearch,
+  CATALOGUE_DATE_MODE, CATALOGUE_PAGE_SIZE, SEARCH_LANGUAGE_KEY, searchRowKeys, searchSummary, useLegacySearch,
 } from '@museumwnf/viewer-core'
 import { useData } from './data.js'
-import { SEARCH_FIELDS, inScope } from './catalogue.js'
+import { SEARCH_FIELDS, SEARCH_SCORE, inScope } from './catalogue.js'
 
 // The search spec: what `CatalogueResultsView` renders on
 // `/database/results`, from the query legacy's form writes on `/database`
 // (DatabaseSearch.vue, legacy `database.php`'s three keyword rows). The
-// field grammar, the keyword rows, the index and the "searched for" line are
-// viewer-core's field search; decision D3 turns on its `rank: 'hits'`
-// (legacy's `ORDER BY nn DESC, pkdate ASC`) and the glossary/country
-// expansions (`database_results.php`'s two lookup rules).
+// search is legacy's (decision D3, viewer-core's `useLegacySearch`): every
+// language unless one is chosen, the columns `database_results.php`
+// searched, a country's records for a word naming it in Keywords and
+// Location, a glossary term's spellings in Keywords, legacy's relevance and
+// then the start date.
 
 const { itemRow } = useData()
 
-// The index behind the results page: one for the site's life, its search
-// language following the query's. It searches every item regardless of
-// scope; `narrow` keeps its rank order over what `scope` (ISL/EPM) let
-// through.
-const { narrow } = useFieldSearch({ fields: SEARCH_FIELDS })
+// `narrow` searches what `scope` (ISL, EPM when asked) let through; the
+// results page waits for `prepare()`, which loads every language searched.
+export const databaseSearch = useLegacySearch({
+  fields: SEARCH_FIELDS,
+  score: SEARCH_SCORE,
+  countryFields: ['keyword', 'location'],
+  glossaryFields: ['keyword'],
+})
 
 // Legacy's recap line names the Explore opt-in after the keyword rows.
 const explore = (filters, t) => (filters.epm === '1' ? `+ ${t('core.project.explorePartners')}` : '')
@@ -27,10 +31,10 @@ export const databaseResultsSpec = {
   entity: 'items',
   keys: [...searchRowKeys(), 'from', 'to', SEARCH_LANGUAGE_KEY, 'epm'],
   scope: (item, filters) => inScope(item, filters.epm === '1'),
-  narrow,
+  narrow: databaseSearch.narrow,
   dates: { mode: CATALOGUE_DATE_MODE, begin: 'from', end: 'to' },
-  // `rank: 'hits'` already ordered the matches (or the entity order stood,
-  // on an empty query); resorting here would discard that order.
+  // The search already put the matches in legacy's order; resorting here
+  // would discard it.
   sort: false,
   pageSize: CATALOGUE_PAGE_SIZE,
   variant: 'list',

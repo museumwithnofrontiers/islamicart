@@ -1,26 +1,19 @@
 <script setup>
-import { watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { SEARCH_LANGUAGE_KEY, useSearchFieldOptions } from '@museumwnf/viewer-core'
+import { useSearchFieldOptions } from '@museumwnf/viewer-core'
 import { CatalogueResultsView } from '@museumwnf/viewer-layout/views'
-import { useData } from '../composables/data.js'
 import { SEARCH_FIELDS } from '../composables/catalogue.js'
-import { databaseResultsSpec } from '../composables/search.js'
+import { databaseResultsSpec, databaseSearch } from '../composables/search.js'
 
 // The database results is the platform's composed catalogue results view,
 // rendering the spec in composables/search.js. What is this website's is
-// the heading, the search-language translations watch (a side effect the
-// spec itself has no lifecycle to run), and the refine row's field/operator
-// selects — not a record facet the view can derive options for itself.
+// the heading, the wait for the search's translations (every language is
+// searched, so the count is drawn once they are all there), and the refine
+// row's field/operator selects — not a record facet the view can derive
+// options for itself.
 
-const route = useRoute()
-const { loadTranslations } = useData()
 const fieldOptions = useSearchFieldOptions(SEARCH_FIELDS)
-
-// The search language is read straight off the URL, not the composed
-// view's own staged filters, so a language chosen on the entrance loads
-// before this page's first render rather than after an Apply click.
-watch(() => route.query[SEARCH_LANGUAGE_KEY], (lang) => { if (lang) loadTranslations('items', lang) }, { immediate: true })
+const { prepare, ready } = databaseSearch
+prepare()
 </script>
 
 <template>
@@ -28,7 +21,7 @@ watch(() => route.query[SEARCH_LANGUAGE_KEY], (lang) => { if (lang) loadTranslat
     <h1 class="mwnf-heading">{{ $t('standalone.nav.database') }} — {{ $t('catalogue.results.heading') }}</h1>
 
     <div class="mwnf-panel">
-      <CatalogueResultsView :spec="databaseResultsSpec">
+      <CatalogueResultsView v-if="ready" :spec="databaseResultsSpec">
         <template #actions>
           <RouterLink :to="{ name: 'database' }" class="mwnf-button mwnf-button--secondary small">{{ $t('catalogue.search.newSearch') }}</RouterLink>
         </template>
