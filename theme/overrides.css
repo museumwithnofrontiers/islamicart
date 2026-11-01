@@ -4,3 +4,12 @@
  * is viewer-layout's standalone family stylesheet, themed by tokens.css;
  * nothing of it is left here.
  */
+
+/* Legacy's FontAwesome 4.4 (css/font-awesome.css), for the one glyph it
+   drew of it: the cog on Explore Islamic Art Collections' partner list. */
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('./assets/legacy/fontawesome-webfont.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}

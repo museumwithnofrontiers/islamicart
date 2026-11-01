@@ -260,3 +260,95 @@ a:hover {
 }
 .islamicart-pmi .mwnf-catalogue__aside { padding: 0; }
 .islamicart-pmi .islamicart-pcr__related a { margin-top: 0; }
+
+/* Explore Islamic Art Collections' partner list (PartnerListEiac.vue), as
+   legacy's pm_partner_list_eiac.php: the band's italic title; the page on
+   its yellow ground; the way back; the centred line in capitals; the
+   heading beside the Language Policy link; the countries in col-md-10, each
+   a white bar (gold while open) with its cog, which spins while open, over
+   its white box of partners, two a row, each picture in col-md-4 with the
+   city and the name beside it (style_inside.css's .color_bg_discover,
+   .pst-block-head, .add_dia_partns). */
+.islamicart-eiac-area .mwnf-standalone-banner__title span {
+  font-style: italic;
+  color: rgb(255 238 171);
+}
+.mwnf-content:has(.islamicart-eiac) { background: #f5da66; }
+/* Legacy's 30px under the list, of which the content area gives 20. */
+.islamicart-eiac { padding-bottom: 10px; }
+.islamicart-eiac__back { min-height: 22px; margin: 0 0 15px; }
+.islamicart-eiac__subtitle {
+  margin: 0 0 25px;
+  font: 500 16px/22px Roboto, sans-serif;
+  color: #222;
+  text-align: center;
+  text-transform: uppercase;
+}
+.islamicart-eiac__heads {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 0 0 15px;
+}
+.islamicart-eiac__heads h3 { margin: 0; font: 400 19px Roboto, sans-serif; color: rgb(33 26 0); }
+.islamicart-eiac__heads p { margin: 0 0 10px; font: 400 16px/22px Roboto, sans-serif; }
+.islamicart-eiac__heads a { color: #222; text-decoration: none; }
+.islamicart-eiac__heads a:hover { text-decoration: underline; }
+.islamicart-eiac__list { margin: 0 calc((100% + 30px) / 12); padding-bottom: 15px; }
+.islamicart-eiac__head,
+.islamicart-eiac__content {
+  margin: 0 0 7px;
+  padding: 14px 20px 13px;
+  background: #fff;
+}
+/* Each bar sits 4px higher than the next block, as legacy's inline-block bar did. */
+.islamicart-eiac__head { margin-bottom: 11px; }
+.islamicart-eiac__head--active { background: #e0b700; }
+.islamicart-eiac__toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  color: #222;
+  text-decoration: none;
+}
+.islamicart-eiac__toggle h3 { margin: 0; font: 400 18px Roboto, sans-serif; color: #000; }
+.islamicart-eiac__cog { line-height: 18px; }
+.islamicart-eiac__cog::before {
+  content: '\f013';
+  display: inline-block;
+  font: normal 16px/1 FontAwesome;
+}
+.islamicart-eiac__head--active .islamicart-eiac__cog::before { animation: islamicart-eiac-spin 900ms linear infinite; }
+@keyframes islamicart-eiac-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .islamicart-eiac__head--active .islamicart-eiac__cog::before { animation: none; }
+}
+.islamicart-eiac__content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-inline: 0;
+}
+.islamicart-eiac__cell {
+  display: flow-root;
+  margin: 0 0 10px;
+  font: 400 16px/19px Roboto, sans-serif;
+  color: #222;
+}
+.islamicart-eiac__content > .islamicart-eiac__cell:nth-child(odd) { margin-left: -15px; }
+.islamicart-eiac__content > .islamicart-eiac__cell:nth-child(even) { margin-right: -15px; }
+.islamicart-eiac__picture {
+  float: left;
+  box-sizing: border-box;
+  width: 33.333%;
+  padding: 0 15px;
+}
+.islamicart-eiac__picture img { display: block; max-width: 100%; height: auto; }
+.islamicart-eiac__cell--associated .islamicart-eiac__text { padding: 0 3px 0 30px; }
+.islamicart-eiac__text p { margin: 0; }
+.islamicart-eiac__text strong { font-weight: 500; }
+.islamicart-eiac__text a { color: #222; text-decoration: none; }
+.islamicart-eiac__text a:hover { text-decoration: underline; }
+@media (max-width: 62rem) {
+  .islamicart-eiac__list { margin: 0; }
+  .islamicart-eiac__content { grid-template-columns: 1fr; }
+}

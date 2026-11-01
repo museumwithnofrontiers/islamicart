@@ -8,11 +8,11 @@ import { partnersResultsSpec } from '../composables/partner.js'
 import PartnerList from './PartnerList.vue'
 
 // Discover Islamic Art's two lists are legacy's pm_partner_list.php
-// (PartnerList.vue). Explore Islamic Art Collections' list is, for now, the
-// platform's composed partner list,
-// rendering the spec in composables/partner.js. What is this website's is
-// the heading — the type and project the entrance's own link chose — and
-// the toggle between museums and institutions.
+// (PartnerList.vue). Explore Islamic Art Collections' list has a page of its
+// own (PartnerListEiac.vue), where the route sends that project. Any other
+// project keeps the platform's composed partner list, rendering the spec in
+// composables/partner.js, under the heading the entrance's own link chose
+// and the toggle between museums and institutions.
 
 const route = useRoute()
 const { t } = useI18n()
