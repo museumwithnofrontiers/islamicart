@@ -33,15 +33,29 @@ const back = [
   { label: 'islamicart.item.collectionStart', to: { name: 'permanent-collection' } },
 ]
 
-// Related Content's own parts: the related records by type, and Download,
-// which legacy offered as the browser's print ("As PDF").
+// Related Content's own parts: the related records by type, and Download:
+// the browser's print ("As PDF") and legacy's export.php ("As Word"), the
+// sheet's texts as a .doc named after the record's legacy key and language
+// (object;ISL;eg;Mus01;50;en → object_ISL_eg_Mus01_50_en.doc).
+const wordFile = (record, language) => {
+  const [, table, ...key] = String(record?.backward_compatibility ?? '').split(':')
+  const type = { objects: 'object', monuments: 'monument' }[table] ?? 'item'
+  return `${[type, ...key, language].join('_')}.doc`
+}
+
 const related = {
   heading: 'islamicart.item.relatedContent',
   groups: [
     { heading: 'islamicart.item.relatedObjects', type: 'object' },
     { heading: 'islamicart.item.relatedMonuments', type: 'monument' },
   ],
-  download: { heading: 'islamicart.item.download', print: 'islamicart.item.asPdf' },
+  download: {
+    heading: 'islamicart.item.download',
+    print: 'islamicart.item.asPdf',
+    word: 'islamicart.item.asWord',
+    title: 'islamicart.item.wordTitle',
+    wordFile,
+  },
 }
 
 // The holding museum (decision D3, inventory-app#2035): the item's holder

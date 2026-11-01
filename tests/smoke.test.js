@@ -697,6 +697,17 @@ describe('website smoke test', () => {
     app.unmount()
   }, 30000)
 
+  // Legacy's Download: "As PDF" the browser's print, "As Word" export.php's
+  // document of the sheet's texts.
+  it("offers legacy's two downloads under the Related Content", async () => {
+    const [items] = await loadEntities(['items'])
+    const { app, host } = await mountSite(`#/item/${encodeURIComponent(items[0].id)}?lang=en`)
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-related__word')).not.toBeNull(), { timeout: 20000 })
+    expect([...host.querySelectorAll('.mwnf-standalone-related__download button')].map((b) => b.textContent))
+      .toEqual(['As PDF (including images)', 'As Word (text only)'])
+    app.unmount()
+  }, 30000)
+
   it('declares every route by name, and leaves the catch-all to the router', () => {
     // This website has never been published under another URL shape, so
     // there is no legacy path to require here.
