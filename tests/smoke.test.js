@@ -250,14 +250,12 @@ describe('website smoke test', () => {
     app.unmount()
   }, 30000)
 
-  // The database results moved onto the composed `CatalogueResultsView`
-  // (metanull/islamicart#49): the field grammar, ranking and expansions run
-  // through `useKeywordIndex` in composables/search.js. Decision D3's
-  // country expansion (legacy's `getKeywordCountry`) is exercised directly:
-  // this Jordanian cross's own name/description/tags never say "Jordan" (the
-  // fixture was picked for that), so it is found only because the keyword
-  // field's haystack carries the raw country id and the expansion turns the
-  // typed country name into it.
+  // The database results run on the composed `CatalogueResultsView` with
+  // legacy's search (viewer-core's `useLegacySearch`, composables/search.js).
+  // Decision D3's country rule (legacy's `getKeywordCountry`) is exercised
+  // directly: this Jordanian cross's own texts never say "Jordan" (the
+  // fixture was picked for that), so it is found only because the word names
+  // its country.
   it('finds an item through the country-name expansion, not a literal text match', async () => {
     const [items] = await loadEntities(['items'])
     const cross = items.find((i) => i.id === '55ec1f26-ba55-52bc-a1b6-556c48ff41e4')
@@ -270,6 +268,25 @@ describe('website smoke test', () => {
     expect(host.textContent).toContain('Keyword(s): "Jordan"')
     app.unmount()
   }, 30000)
+
+  // Decision D3: the counts are legacy's, every language searched unless one
+  // is chosen. Measured on legacy's database_results.php on 2026-11-01
+  // (Discover Islamic Art only): "mosque" through its glossary spellings,
+  // "Iran" also in Turkish words with a dotless ı, "ذهب" with the site in
+  // Arabic and its vowel signs counting.
+  it.each([
+    ['mosque', '', 431],
+    ['bowl', '', 90],
+    ['Iran', '', 142],
+    ['ذهب', '&lang=ar', 273],
+  ])('finds as many records as legacy for %s', async (word, extra, count) => {
+    const { app, host } = await mountSite(`#/database/results?q=${encodeURIComponent(word)}&field=keyword${extra}`)
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 40000 })
+    expect(summaryTotal(host)).toBe(count)
+    app.unmount()
+    // The language a visitor picks is kept; the tests after this one read English.
+    localStorage.removeItem('mwnf.language')
+  }, 60000)
 
   // The Explore checkbox widens the database search the same way it widens
   // the Permanent Collection (composables/catalogue.js's `inScope`, shared
