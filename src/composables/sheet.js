@@ -24,6 +24,10 @@ const dynastyNames = (c) =>
 // and keep their own popouts (decision D5, inventory-app#2233).
 const periodDynasty = (c) => removeEndingPoint(c.text.dynasty) || dynastyNames(c)
 
+// A field legacy printed without its ending period (removeEndingPoint in
+// modules/database_item.php); the others it printed as written.
+const plain = (key) => (c) => removeEndingPoint(String(c.text[key] ?? ''))
+
 // Legacy's Location line: the location and the province without their ending
 // period, then the country's name in the sheet's language ("London, England,
 // United Kingdom"). Legacy named no country for the Palestinian museum's
@@ -53,37 +57,37 @@ const monumentLocation = (c) => [addressLines(c.text.address), locationWithCount
 // every language (islamicart.sheet.*, from legacy's translation table). Each
 // sheet opens with the record's name: the page has no other title.
 const monumentFacts = [
-  { key: 'name', label: 'islamicart.sheet.nameOfMonument', value: 'name' },
-  { key: 'alsoKnownAs', label: 'islamicart.sheet.alsoKnownAs', value: 'alternate_name' },
+  { key: 'name', label: 'islamicart.sheet.nameOfMonument', value: plain('name') },
+  { key: 'alsoKnownAs', label: 'islamicart.sheet.alsoKnownAs', value: plain('alternate_name') },
   { key: 'location', label: 'islamicart.sheet.location', value: monumentLocation },
-  { key: 'date', label: 'islamicart.sheet.dateOfMonument', value: 'dates' },
+  { key: 'date', label: 'islamicart.sheet.dateOfMonument', value: plain('dates') },
   { key: 'architects', label: 'islamicart.sheet.architects', value: 'architects' },
   { key: 'dynasty', label: 'islamicart.sheet.periodDynasty', value: periodDynasty },
   { key: 'patrons', label: 'islamicart.sheet.patrons', value: (c) => c.text.patrons ?? c.text.initial_owner },
 ]
 
 const objectFacts = [
-  { key: 'name', label: 'islamicart.sheet.nameOfObject', value: 'name' },
-  { key: 'alsoKnownAs', label: 'islamicart.sheet.alsoKnownAs', value: 'alternate_name' },
+  { key: 'name', label: 'islamicart.sheet.nameOfObject', value: plain('name') },
+  { key: 'alsoKnownAs', label: 'islamicart.sheet.alsoKnownAs', value: plain('alternate_name') },
   { key: 'location', label: 'islamicart.sheet.location', value: locationWithCountry },
   // The holder text, then the partner it refers to (`PartnerPanel`'s summary),
   // rendered by ItemDetail.vue's `holder` slot (decision D3).
-  { key: 'holder', label: 'islamicart.sheet.holdingMuseum', value: 'holder', render: 'custom' },
-  { key: 'originalOwner', label: 'islamicart.sheet.originalOwner', value: 'initial_owner' },
-  { key: 'currentOwner', label: 'islamicart.sheet.currentOwner', value: 'owner' },
-  { key: 'date', label: 'islamicart.sheet.dateOfObject', value: 'dates' },
+  { key: 'holder', label: 'islamicart.sheet.holdingMuseum', value: plain('holder'), render: 'custom' },
+  { key: 'originalOwner', label: 'islamicart.sheet.originalOwner', value: plain('initial_owner') },
+  { key: 'currentOwner', label: 'islamicart.sheet.currentOwner', value: plain('owner') },
+  { key: 'date', label: 'islamicart.sheet.dateOfObject', value: plain('dates') },
   // The artist line as the page's language writes it, or none: legacy printed
   // each language's own line, and `artist_names` come from one language's.
   { key: 'artists', label: 'islamicart.sheet.artists', value: 'artist' },
   { key: 'scribe', label: 'islamicart.sheet.scribe', value: 'scriber' },
-  { key: 'inventoryNumber', label: 'islamicart.sheet.inventoryNumber', value: (c) => c.record.owner_reference },
+  { key: 'inventoryNumber', label: 'islamicart.sheet.inventoryNumber', value: (c) => removeEndingPoint(String(c.record.owner_reference ?? '')) },
   // Legacy's Material(s) / Technique(s) line is the record's own materials
   // text, which the package splits at its semicolons (inventory-app#2233,
   // C6). The type of object was never on this sheet.
   { key: 'materials', label: 'islamicart.sheet.materials', value: (c) => c.text.materials, join: '; ' },
-  { key: 'dimensions', label: 'islamicart.sheet.dimensions', value: 'dimensions' },
+  { key: 'dimensions', label: 'islamicart.sheet.dimensions', value: plain('dimensions') },
   { key: 'dynasty', label: 'islamicart.sheet.periodDynasty', value: periodDynasty },
-  { key: 'placeOfProduction', label: 'islamicart.sheet.placeOfProduction', value: 'place_of_production' },
+  { key: 'placeOfProduction', label: 'islamicart.sheet.placeOfProduction', value: plain('place_of_production') },
   { key: 'workshop', label: 'islamicart.sheet.workshop', value: 'workshop' },
   { key: 'provenance', label: 'islamicart.sheet.provenance', value: 'provenance' },
   { key: 'patrons', label: 'islamicart.sheet.patrons', value: 'patrons' },
@@ -110,7 +114,10 @@ const objectSections = [
   {
     key: 'catalogue',
     label: 'islamicart.sheet.catalogue',
-    value: (c) => (c.text.catalogue_holding_link ? `[${c.text.catalogue_holding_link}](${c.text.catalogue_holding_link})` : ''),
+    value: (c) => {
+      const link = removeEndingPoint(String(c.text.catalogue_holding_link ?? ''))
+      return link ? `[${link}](${link})` : ''
+    },
   },
   { key: 'bibliography', label: 'islamicart.sheet.bibliography', value: 'bibliography' },
   copyright,
