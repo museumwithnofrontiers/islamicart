@@ -19,7 +19,7 @@ describe('item sheet spec', () => {
   it('prints the free-text Period / Dynasty line without its ending period, else the linked names', () => {
     for (const record of [object, monument]) {
       const field = row(fieldsOf(record), 'dynasty')
-      expect(field.label).toBe('sheet.field.periodDynasty')
+      expect(field.label).toBe('islamicart.sheet.periodDynasty')
       expect(field.value({ record, translations, text: { dynasty: 'Mamluk period.' } })).toBe('Mamluk period')
     }
     expect(row(fieldsOf(object), 'dynasty').value({ record: object, translations, text: {} })).toBe('Mamluks')
@@ -28,7 +28,7 @@ describe('item sheet spec', () => {
 
   it('prints the materials under Material(s) / Technique(s), not the type of object', () => {
     const field = row(fieldsOf(object), 'materials')
-    expect(field.label).toBe('sheet.field.materials')
+    expect(field.label).toBe('islamicart.sheet.materials')
     expect(field.value({ record: object, text: { materials: ['Brass', 'inlaid with silver'], type: 'Basin' } }))
       .toEqual(['Brass', 'inlaid with silver'])
     expect(field.join).toBe('; ')
@@ -59,7 +59,7 @@ describe('item sheet spec', () => {
 
   it('closes both sheets with the rights line', () => {
     for (const record of [object, monument]) {
-      expect(sectionsOf(record).at(-1)).toMatchObject({ key: 'copyright', label: 'sheet.field.copyrightInformation', value: 'copyright' })
+      expect(sectionsOf(record).at(-1)).toMatchObject({ key: 'copyright', label: 'islamicart.sheet.copyrightInformation', value: 'copyright' })
     }
   })
 })

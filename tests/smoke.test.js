@@ -383,12 +383,12 @@ describe('website smoke test', () => {
     const { app, host } = await mountSite(`#/item/${encodeURIComponent(monument.id)}`)
     await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet__label')).not.toBeNull(), { timeout: 20000 })
     const labels = [...host.querySelectorAll('.mwnf-sheet__label')].map((el) => el.textContent.trim())
-    // A monument's date reads "Date of monument", an object's "Date of
-    // object" — the two specs in composables/sheet.js name the same field
-    // differently, and neither reads a holding museum.
-    expect(labels).toContain('Date of monument')
-    expect(labels).not.toContain('Date of object')
-    expect(labels).not.toContain('Holding museum')
+    // A monument's date reads legacy's "Date of Monument:", an object's "Date
+    // of Object:" — the two specs in composables/sheet.js name the same field
+    // differently, and a monument reads no holding museum.
+    expect(labels).toContain('Date of Monument:')
+    expect(labels).not.toContain('Date of Object:')
+    expect(labels).not.toContain('Holding Museum:')
     app.unmount()
   }, 60000)
 

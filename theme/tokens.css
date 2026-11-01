@@ -228,11 +228,20 @@
   --mwnf-standalone-menu-padding: 5px 0;
   --mwnf-standalone-bullet: url('./assets/legacy/next_arrow.png');
   --mwnf-standalone-back-arrow: url('./assets/legacy/back_arrow.png');
+  --mwnf-standalone-download-icon: url('./assets/legacy/download.png');
+  /* The item sheet's language band (section.language_option). */
+  --mwnf-standalone-language-bar: #e0b700;
+  --mwnf-standalone-language-color: #000000;
+  --mwnf-standalone-language-active: #ffd600;
   --mwnf-standalone-home-link: #222222;
   --mwnf-standalone-home-text-size: 16px;
   --mwnf-standalone-related-background: #ffd600;
   --mwnf-standalone-related-text: #222222;
   --mwnf-standalone-related-link: #222222;
+  /* The item sheet's labels, values and their links (.center_contents). */
+  --mwnf-standalone-sheet-label-color: #000000;
+  --mwnf-standalone-sheet-value-color: #222222;
+  --mwnf-standalone-sheet-link-color: rgb(1 141 206);
   --mwnf-standalone-sponsors-background: #eec201;
   --mwnf-standalone-drop-cap-color: #4c420e;
 
