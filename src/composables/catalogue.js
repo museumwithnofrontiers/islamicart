@@ -62,10 +62,11 @@ export const FACETS = {
 //
 // What viewer-layout's `CatalogueResultsView` renders on
 // `/permanent-collection/results`: the three facets above over every record,
-// as legacy offered them, the scope rule, the two years, the Explore
-// checkbox, the standalone date rule, chronological order, twenty rows a
-// page, and legacy's count phrased as "[N objects, M monuments]". Every text
-// is an entry name; the check that every name resolves reads them here.
+// as legacy offered them, both projects (legacy's pclist_all.php always read
+// the Discover Islamic Art and the Explore Islamic Art Collections records),
+// the two years, the standalone date rule, chronological order, twenty rows
+// a page, and legacy's count phrased as "[N objects, M monuments]". Every
+// text is an entry name; the check that every name resolves reads them here.
 
 // The row: the thumbnail, the name, the country, the date, the dynasties and
 // the holder. Shared with the Timeline gallery (composables/timeline.js) and
@@ -75,17 +76,16 @@ export const itemRecord = (item) => itemRow(item, ['country', 'dates', 'dynastie
 
 export const permanentCollectionResultsSpec = {
   entity: 'items',
-  keys: ['country', 'dynasty', 'partner', 'begin', 'end', 'epm'],
+  keys: ['country', 'dynasty', 'partner', 'begin', 'end'],
   facets: FACETS,
   facetScope: 'all',
-  scope: (item, filters) => inScope(item, filters.epm === '1'),
+  scope: (item) => inScope(item, true),
   controls: [
     { key: 'country', label: 'catalogue.facet.country', anyLabel: 'catalogue.facet.any' },
     { key: 'dynasty', label: 'catalogue.facet.periodDynasty', anyLabel: 'catalogue.facet.any' },
     { key: 'partner', label: 'catalogue.facet.holdingInstitution', anyLabel: 'catalogue.facet.any' },
     { key: 'begin', type: 'year', label: 'catalogue.facet.fromYear', placeholder: 'timeline.form.fromYearHint' },
     { key: 'end', type: 'year', label: 'catalogue.facet.toYear', placeholder: 'timeline.form.toYearHint' },
-    { key: 'epm', type: 'checkbox', label: 'islamicart.filter.includeEpm' },
   ],
   filterMode: 'apply',
   filterTitle: 'catalogue.filter.heading',
