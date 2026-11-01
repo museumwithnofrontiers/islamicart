@@ -129,10 +129,18 @@ const thgGalleryGroups = (record) => [{
       />
       <RelatedMedia :media="record.media ?? []" :language="language" heading="islamicart.item.relatedVideos" :dir="dir" />
       <p v-if="onDisplayInGroups(record)[0].links.length || thgGalleryGroups(record)[0].links.length" class="islamicart-on-display">
-        <strong><u>{{ $t('islamicart.item.onDisplayIn') }}</u></strong>
+        <br><strong><u>{{ $t('islamicart.item.onDisplayIn') }}</u></strong>
       </p>
       <OnDisplayIn heading="islamicart.item.exhibitions" :groups="onDisplayInGroups(record)" :dir="dir" />
       <OnDisplayIn heading="islamicart.item.galleries" :groups="thgGalleryGroups(record)" :dir="dir" />
     </template>
   </StandaloneItemSheet>
 </template>
+
+<style scoped>
+/* Legacy's "On display in": a line break, then the words, 16px under the
+   block before them and 10px over the exhibitions. */
+.islamicart-on-display {
+  margin: 16px 0 10px;
+}
+</style>
