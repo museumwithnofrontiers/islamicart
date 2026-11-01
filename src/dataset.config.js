@@ -263,6 +263,14 @@ export default {
       meta: meta('database'),
     },
     {
+      // glossarysearch.php: the Glossary & Spelling window the Database
+      // entrance opens, drawn alone as legacy's window was.
+      path: '/glossary-spelling',
+      name: 'glossary-spelling',
+      component: () => import('./views/GlossarySpelling.vue'),
+      meta: { ...meta('database', 'glossary'), bare: true },
+    },
+    {
       path: '/database/results',
       name: 'database-results',
       component: () => import('./views/DatabaseResults.vue'),

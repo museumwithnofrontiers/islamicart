@@ -224,6 +224,9 @@ describe('website smoke test', () => {
       .toEqual(['Keyword(s)', 'Name', 'Location', 'Provenance', 'Period/Dynasty', 'Patron', 'Architect/Artist/Master', 'Material/Technique', 'Other'])
     expect(host.querySelector('.islamicart-db__epm').textContent).toContain('Include Explore Islamic Art Collections')
     expect(host.querySelector('.islamicart-db__go button').textContent).toBe('Go')
+    const glossary = host.querySelector('.islamicart-db__glossary a')
+    expect(glossary.textContent).toBe('Glossary & Spelling')
+    expect(glossary.getAttribute('href')).toBe('#/glossary-spelling?lang=en')
 
     const [first, second] = host.querySelectorAll('.islamicart-db__keyword')
     first.value = 'bowl'
@@ -247,6 +250,25 @@ describe('website smoke test', () => {
     expect(router.currentRoute.value.query).toMatchObject({
       q: 'bowl', field: 'keyword', q2: 'Cairo', field2: 'location', op2: 'OR', epm: '1', searchlanguage: 'fr', lang: 'en',
     })
+    app.unmount()
+  }, 30000)
+
+  // Legacy's glossarysearch.php: a window of its own, no chrome, where the
+  // first letters of a term bring its spellings, and a pick its definition.
+  it('opens the Glossary & Spelling window, a term found by its first letters', async () => {
+    const { app, host } = await mountSite('#/glossary-spelling?lang=en')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-glossary__input')).not.toBeNull(), { timeout: 20000 })
+    expect(host.querySelector('.mwnf-standalone-window__heading').textContent).toBe('Glossary & Spelling')
+    expect(host.querySelector('.mwnf-menu, footer')).toBeNull()
+    const input = host.querySelector('.mwnf-standalone-glossary__input')
+    input.value = 'kuf'
+    input.dispatchEvent(new Event('input'))
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-glossary__suggestion')).not.toBeNull(), { timeout: 20000 })
+    const kufic = [...host.querySelectorAll('.mwnf-standalone-glossary__suggestion')].find((s) => s.textContent === 'Kufic')
+    kufic.dispatchEvent(new Event('mousedown'))
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-glossary__definition')).not.toBeNull())
+    expect(host.querySelector('.mwnf-standalone-glossary__definition').textContent).toContain('An Arabic script of angular and stylised characters')
+    expect([...host.querySelectorAll('.mwnf-standalone-glossary__spellings li')].map((li) => li.textContent)).toContain('Coufique')
     app.unmount()
   }, 30000)
 
