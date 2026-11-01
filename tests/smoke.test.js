@@ -542,8 +542,36 @@ describe('website smoke test', () => {
 
     expect(host.textContent).toContain('Related items')
     expect(host.querySelectorAll('.mwnf-list__row').length).toBe(museum.item_count)
+    // "View Objects" opens the partner's own page of tiles.
+    expect(viewItems.getAttribute('href')).toContain(`#/partner/${museum.id}/items`)
 
     app.unmount()
+  }, 60000)
+
+  // Legacy's pm_museum_items.php / pm_institution_items.php: a museum's
+  // objects of both projects, an institution's monuments, in the Permanent
+  // Collection's order and tiles, under the partner's name and place, with
+  // the way back to its list and "Partner Profile" beside the tiles.
+  it("renders a partner's objects or monuments as legacy's own page", async () => {
+    const [items, partners] = await loadEntities(['items', 'partners'])
+    const rome = partners.find((p) => p.id === '2970af60-fdee-5b70-8e87-7b8865a0c88d')
+    const objects = items.filter((i) => i.partner_id === rome.id && i.type === 'object')
+    const { app, host } = await mountSite(`#/partner/${rome.id}/items?lang=en`)
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-results__tile')).not.toBeNull(), { timeout: 20000 })
+    expect(host.querySelector('.islamicart-pmi__heading h3').textContent).toBe('Museum of Civilisations | Museum of Oriental Art')
+    expect(host.querySelector('.islamicart-pmi__heading p').textContent).toBe('Rome, Italy')
+    expect([...host.querySelectorAll('.islamicart-pcr__back > *')].map((el) => el.textContent)).toEqual(['Back', 'Partner Museums', 'Other Partners'])
+    expect(host.querySelectorAll('.mwnf-standalone-results__tile').length).toBe(Math.min(20, objects.length))
+    expect(host.querySelector('.mwnf-standalone-results__name').textContent).toBe('Coin (dirham)')
+    expect(host.querySelector('.islamicart-pcr__related a').getAttribute('href')).toContain(`#/partner/${rome.id}`)
+    expect(host.querySelector('.mwnf-standalone-pages')).not.toBeNull()
+    app.unmount()
+
+    const jordan = partners.find((p) => p.id === '804de1a6-e288-5381-8982-10883c9b8fcb')
+    const second = await mountSite(`#/partner/${jordan.id}/items?lang=en`)
+    await vi.waitFor(() => expect(second.host.querySelector('.mwnf-standalone-results__tile')).not.toBeNull(), { timeout: 20000 })
+    expect(second.host.querySelector('.mwnf-standalone-results__name').textContent).toBe('Church of the Virgin Mary: mosaic floor')
+    second.app.unmount()
   }, 60000)
 
   // Each exhibition is a website of its own (a mini-site, inventory-app#2359):
