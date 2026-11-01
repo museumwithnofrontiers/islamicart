@@ -352,3 +352,96 @@ a:hover {
   .islamicart-eiac__list { margin: 0; }
   .islamicart-eiac__content { grid-template-columns: 1fr; }
 }
+
+/* The Database entrance (DatabaseSearch.vue), as legacy's database.php: its
+   Bootstrap row as five tracks (col-md-1, col-md-2 for the joins and the
+   labels, col-md-6's two halves for the keywords and the categories,
+   col-md-3), its rows at legacy's heights; the joins and the labels on
+   their column's right, in Arabic too (legacy floated them right); the
+   "in" labels and the 92% selects; the dates and the search language at
+   22.85% of the form; Go 20% in (style_inside.css's
+   section.db_start_page, .left_options, input.db_search_submit). A grid,
+   so the Arabic page mirrors as legacy's Arabic form did. */
+.islamicart-db {
+  display: grid;
+  grid-template-columns: 1fr 2fr 3fr 3fr 3fr;
+  grid-template-rows: 38px 37px 49px 49px 49px 49px 63px 31px 61px 36px;
+  align-items: start;
+  margin: 0 -15px;
+  /* Legacy's <br/> over the section, then its 30px under it (20 are the
+     content area's). */
+  padding: 18px 0 10px;
+}
+.islamicart-db > * { min-width: 0; margin: 0; padding: 0 15px; box-sizing: border-box; }
+.islamicart-db__criteria { grid-area: 1 / 3; font: 400 19px Roboto, sans-serif; color: rgb(33 26 0); }
+.islamicart-db__head,
+.islamicart-db__label,
+.islamicart-db__epm,
+.islamicart-db__listing { font: 400 16px/22px Roboto, sans-serif; color: #222; }
+.islamicart-db__head--keywords { grid-area: 2 / 3; }
+.islamicart-db__head--category { grid-area: 2 / 4; }
+.islamicart-db__row-1 { grid-row: 3; }
+.islamicart-db__row-2 { grid-row: 4; }
+.islamicart-db__row-3 { grid-row: 5; }
+.islamicart-db__cond { grid-column: 2; justify-self: right; }
+.islamicart-db__keyword { grid-column: 3; }
+.islamicart-db__field { grid-column: 4; display: flex; align-items: flex-start; }
+.islamicart-db__label { grid-column: 2; text-align: right; }
+.islamicart-db__label--date { grid-row: 6; margin-top: 5px; }
+.islamicart-db__label--language { grid-row: 7; margin-top: 2px; }
+.islamicart-db__dates { grid-area: 6 / 3 / auto / span 2; display: flex; }
+.islamicart-db__language { grid-area: 7 / 3 / auto / span 2; }
+.islamicart-db__epm { grid-area: 8 / 3 / auto / span 2; }
+.islamicart-db__go { grid-area: 9 / 3 / auto / span 2; }
+.islamicart-db__listing { grid-area: 10 / 3 / auto / span 2; }
+.islamicart-db select,
+.islamicart-db__keyword {
+  box-sizing: border-box;
+  height: 30px;
+  padding: 5px 10px;
+  border: 1px solid #767676;
+  border-radius: 0;
+  font: 500 14px Roboto, sans-serif;
+  color: #222;
+  background-color: #efefef;
+}
+/* The joins: 92% of their column, padding included. */
+.islamicart-db__cond { width: calc((100% - 30px) * 0.92); margin-right: 15px; padding: 5px 10px; }
+.islamicart-db__keyword {
+  margin-inline: 15px;
+  padding: 5px 10px;
+  border-color: #a9a9a9;
+  color: rgb(80 72 25);
+  background-color: transparent;
+}
+.islamicart-db__field span { flex: 0 0 4%; min-width: 0; margin: 5px 0 0; margin-inline-end: 10px; font: 400 16px/22px Roboto, sans-serif; color: #222; }
+.islamicart-db__field select { width: 92%; }
+.islamicart-db__dates select,
+.islamicart-db__language select { width: 22.85%; margin-inline-end: 10px; }
+.islamicart-db__epm label { cursor: pointer; }
+.islamicart-db__epm input { margin: 0; vertical-align: -1px; }
+.islamicart-db__go button {
+  margin-inline-start: 20%;
+  padding: 6px 20px;
+  border: 1px solid #a98e30;
+  border-radius: 20px;
+  font: 400 16px Roboto, sans-serif;
+  color: #fff;
+  background-color: #e0b700;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+.islamicart-db__go button:hover { border-color: #675517; background-color: #a98e30; }
+.islamicart-db__listing a {
+  padding-inline-start: 16px;
+  color: #222;
+  text-decoration: none;
+  background: var(--mwnf-standalone-bullet, none) no-repeat 0 5px;
+}
+.islamicart-db__listing a:hover { text-decoration: underline; }
+[dir='rtl'] .islamicart-db__listing a { background-position: right 0 top 5px; }
+@media (max-width: 48rem) {
+  .islamicart-db { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 10px; }
+  .islamicart-db > * { grid-column: 1 !important; grid-row: auto !important; justify-self: stretch; }
+  .islamicart-db__label { text-align: start; }
+}

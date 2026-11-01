@@ -1,7 +1,8 @@
-import { languageLabels, mwnfLinks, offeredLanguages, sectionMeta, useDataPackage } from '@museumwnf/viewer-core'
+import { languageLabels, mwnfLinks, offeredLanguages, removeEndingPoint, sectionMeta, useDataPackage } from '@museumwnf/viewer-core'
 import { mwnfSocialLinks } from '@museumwnf/viewer-layout'
 import { StandaloneShell } from '@museumwnf/viewer-layout/standalone'
 import homeItems from './home-items.json'
+import { namesCountry } from './composables/sheet.js'
 
 // The chrome is legacy's own pictures, kept in this repository under
 // theme/assets/ (decision D7; theme/assets/legacy/SOURCES.json names where
@@ -130,6 +131,15 @@ export default {
         // random_image/DIA_new/1.jpg to 171.jpg, a cycle of its own by the day
         // of the year, kept under theme/assets/legacy/.
         pictures: Array.from({ length: 171 }, (_, i) => `legacy/random_image/DIA_new/${i + 1}.jpg`),
+        // Legacy's place line (diaTemplates/randomText.php), as the item
+        // sheet's: the location and the province without their ending
+        // period, then the country, left out where the sheet leaves it out.
+        place: (record, text, country) =>
+          [text.location, text.province]
+            .map((part) => removeEndingPoint(part ?? ''))
+            .concat(namesCountry(record) ? country : '')
+            .filter(Boolean)
+            .join(', '),
       },
     },
   },

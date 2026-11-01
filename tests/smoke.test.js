@@ -211,20 +211,37 @@ describe('website smoke test', () => {
     app.unmount()
   }, 60000)
 
-  // The search entrance moved onto viewer-layout's composed `SearchFormView`
-  // (metanull/islamicart#49, `mode: 'rows'`): the three keyword rows, the
-  // century date selects and the search-language select come from the spec
-  // in composables/search.js; the Explore checkbox is the site's own
-  // `extras` entry.
-  it('renders the Database entrance on the composed search form', async () => {
-    const { app, host } = await mountSite('#/database')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-search-form__row')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelectorAll('.mwnf-search-form__row').length).toBe(3)
-    expect(host.textContent).toContain('Keyword 1')
-    expect(host.textContent).toContain('Search language')
-    expect(host.querySelector('.mwnf-facet--checkbox input[type="checkbox"]')).not.toBeNull()
+  // Legacy's database.php: three keyword rows in their categories, joined by
+  // and/or, the centuries, the search language, the Explore opt-in, Go; in
+  // legacy's words. Go writes the query the results page reads.
+  it("renders the Database entrance as legacy's database.php", async () => {
+    const { app, host, router } = await mountSite('#/database?lang=en')
+    await vi.waitFor(() => expect(host.querySelector('.islamicart-db__criteria')).not.toBeNull(), { timeout: 20000 })
+    expect(host.querySelector('.islamicart-db__criteria').textContent).toBe('Enter your criteria:')
+    expect(host.querySelectorAll('.islamicart-db__keyword')).toHaveLength(3)
+    expect(host.querySelectorAll('.islamicart-db__cond')).toHaveLength(2)
+    expect([...host.querySelectorAll('.islamicart-db__field select')[0].options].map((o) => o.textContent))
+      .toEqual(['Keyword(s)', 'Name', 'Location', 'Provenance', 'Period/Dynasty', 'Patron', 'Architect/Artist/Master', 'Material/Technique', 'Other'])
+    expect(host.querySelector('.islamicart-db__epm').textContent).toContain('Include Explore Islamic Art Collections')
+    expect(host.querySelector('.islamicart-db__go button').textContent).toBe('Go')
+
+    const [first, second] = host.querySelectorAll('.islamicart-db__keyword')
+    first.value = 'bowl'
+    first.dispatchEvent(new Event('input'))
+    second.value = 'Cairo'
+    second.dispatchEvent(new Event('input'))
+    const field2 = host.querySelectorAll('.islamicart-db__field select')[1]
+    field2.value = 'location'
+    field2.dispatchEvent(new Event('change'))
+    const cond2 = host.querySelector('.islamicart-db__cond')
+    cond2.value = 'OR'
+    cond2.dispatchEvent(new Event('change'))
+    host.querySelector('.islamicart-db__epm input').click()
+    host.querySelector('form.islamicart-db').dispatchEvent(new Event('submit', { cancelable: true }))
+    await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('database-results'), { timeout: 20000 })
+    expect(router.currentRoute.value.query).toMatchObject({ q: 'bowl', field: 'keyword', q2: 'Cairo', field2: 'location', op2: 'OR', epm: '1' })
     app.unmount()
-  }, 20000)
+  }, 30000)
 
   // The database results moved onto the composed `CatalogueResultsView`
   // (metanull/islamicart#49): the field grammar, ranking and expansions run
