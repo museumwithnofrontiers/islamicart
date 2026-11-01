@@ -16,7 +16,7 @@
     "namespace": "islamicart"
   },
   "dependencies": {
-    "@museumwnf/islamicart-data": "^1.0.61",
+    "@museumwnf/islamicart-data": "^1.0.62",
     "@museumwnf/viewer-core": "^2.11.0",
     "@museumwnf/viewer-i18n": "^6.5.0",
     "@museumwnf/viewer-layout": "^3.19.0",

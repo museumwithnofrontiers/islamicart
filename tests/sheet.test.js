@@ -26,6 +26,17 @@ describe('item sheet spec', () => {
     expect(row(fieldsOf(monument), 'dynasty').value({ record: monument, translations, text: {} })).toBe('')
   })
 
+  it('prints the fields legacy stripped without their ending period, the others as written', () => {
+    const text = { name: 'Madrasa.', dates: 'Hegira 770 / AD 1368.', holder: 'Museum.', dimensions: 'H. 10 cm.', patrons: 'Sultan.' }
+    const value = (record, key) => row(fieldsOf(record), key).value({ record, translations, text })
+    expect(value(monument, 'name')).toBe('Madrasa')
+    expect(value(monument, 'date')).toBe('Hegira 770 / AD 1368')
+    expect(value(object, 'holder')).toBe('Museum')
+    expect(value(object, 'dimensions')).toBe('H. 10 cm')
+    expect(value(object, 'inventoryNumber')).toBe('')
+    expect(row(fieldsOf(object), 'patrons').value).toBe('patrons')
+  })
+
   it('prints the materials under Material(s) / Technique(s), not the type of object', () => {
     const field = row(fieldsOf(object), 'materials')
     expect(field.label).toBe('islamicart.sheet.materials')
