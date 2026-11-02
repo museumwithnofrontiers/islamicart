@@ -63,89 +63,8 @@ a:hover {
   .islamicart-pc__lists, .islamicart-pc__about { grid-column: 1; }
 }
 
-/* The Permanent Collection results (PermanentCollectionResults.vue), as
-   legacy's pclist_all.php: the way back, the heading, then col-lg-10 for the
-   tiles and col-lg-2 for the panel, the pages under both
-   (style_inside.css's .short_heading, .as and span.select_png). */
-.islamicart-pcr { gap: 0; padding-bottom: 10px; }
-.islamicart-pcr__back { min-height: 22px; margin: 0 0 15px; }
-.islamicart-pcr__heading {
-  margin: 0 0 15px;
-  font: 400 19px Roboto, sans-serif;
-  color: rgb(33 26 0);
-}
-.islamicart-pcr__heading b { font-weight: 500; }
-.islamicart-pcr__count {
-  padding: 2px 5px;
-  font-size: 14px;
-  font-weight: 500;
-}
-.islamicart-pcr .mwnf-catalogue__body {
-  display: grid;
-  grid-template-columns: 10fr 2fr;
-  gap: 0;
-  margin: 0 -15px;
-}
-.islamicart-pcr .mwnf-catalogue__results,
-.islamicart-pcr .mwnf-catalogue__aside { min-width: 0; padding: 0 15px; }
-.islamicart-pcr .mwnf-catalogue__aside { flex: none; margin-top: -4px; }
-.islamicart-pcr .mwnf-standalone-results__empty { margin: 0 0 115px; }
-.islamicart-pcr__panel,
-.islamicart-pcr__related { margin: 0 0 15px; }
-.islamicart-pcr__panel p,
-.islamicart-pcr__related p {
-  margin: 0;
-  font: 400 16px/22px Roboto, sans-serif;
-  color: #222;
-}
-.islamicart-pcr__panel strong,
-.islamicart-pcr__related strong { font-weight: 500; }
-.islamicart-pcr__panel select {
-  display: block;
-  box-sizing: border-box;
-  width: 100%;
-  height: 30px;
-  margin-top: 5px;
-  padding: 5px 10px;
-  border: 1px solid #767676;
-  border-radius: 0;
-  font: italic 400 12px Roboto, sans-serif;
-  color: #222;
-  background-color: #efefef;
-}
-/* The two dates side by side, each a narrow box whose own arrow is legacy's
-   picture: the list inside is wider than its box. */
-.islamicart-pcr__date {
-  display: inline-block;
-  box-sizing: border-box;
-  width: 85px;
-  height: 29px;
-  margin-top: 5px;
-  overflow: hidden;
-  border: 1px solid #a9a9a9;
-  border-radius: 1px;
-  background: var(--islamicart-select-arrow, none) right no-repeat;
-}
-.islamicart-pcr__date:first-child { margin-right: 8px; }
-.islamicart-pcr__date:hover { border-color: #7f7f7f; }
-.islamicart-pcr__panel .islamicart-pcr__date select {
-  width: 120px;
-  margin: 0;
-  border: 0;
-  background: transparent;
-}
-.islamicart-pcr__related a {
-  display: block;
-  margin: 2px 0;
-  padding-left: 14px;
-  color: #222;
-  text-decoration: none;
-  background: var(--mwnf-standalone-bullet, none) no-repeat 0 4px;
-}
-.islamicart-pcr__related a:hover { text-decoration: underline; }
-@media (max-width: 62rem) {
-  .islamicart-pcr .mwnf-catalogue__body { grid-template-columns: 1fr; }
-}
+/* The Permanent Collection results (PermanentCollectionResults.vue) are the
+   standalone family's results page (viewer-layout's mwnf-standalone-pcr). */
 
 /* A partner's objects or monuments (PartnerItems.vue), as legacy's
    pm_museum_items.php: the results page's columns, under a heading of the
@@ -155,7 +74,7 @@ a:hover {
    .as div a). The place's 10px bottom margin falls inside the heading's
    15px, as legacy's collapsed: a flex item's margins do not. */
 .islamicart-pmi__heading { max-width: calc((100% + 30px) * 2 / 3 - 30px); margin: 0 0 15px; }
-.islamicart-pmi__heading .islamicart-pcr__heading { margin: 0; }
+.islamicart-pmi__heading .mwnf-standalone-pcr__heading { margin: 0; }
 .islamicart-pmi__heading p {
   margin: 0;
   font: 400 16px/22px Roboto, sans-serif;
@@ -259,7 +178,7 @@ a:hover {
   .islamicart-pl__heads, .islamicart-pl__head, .islamicart-pl__row { grid-template-columns: 1fr; }
 }
 .islamicart-pmi .mwnf-catalogue__aside { padding: 0; }
-.islamicart-pmi .islamicart-pcr__related a { margin-top: 0; }
+.islamicart-pmi .mwnf-standalone-pcr__related a { margin-top: 0; }
 
 /* Explore Islamic Art Collections' partner list (PartnerListEiac.vue), as
    legacy's pm_partner_list_eiac.php: the band's italic title; the page on
