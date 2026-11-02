@@ -272,6 +272,15 @@ export default {
       meta: { ...meta('database', 'glossary'), bare: true },
     },
     {
+      // hcr.php: the item's timeline window the item sheet opens, drawn alone
+      // as legacy's window was.
+      path: '/item/:id/timeline',
+      name: 'item-timeline',
+      component: () => import('./views/ItemTimeline.vue'),
+      props: (route) => ({ id: decodeURIComponent(route.params.id) }),
+      meta: { ...meta('timeline', 'items', 'timeline_events', 'countries'), bare: true },
+    },
+    {
       path: '/database/results',
       name: 'database-results',
       component: () => import('./views/DatabaseResults.vue'),
@@ -399,7 +408,8 @@ export default {
       name: 'item',
       component: () => import('./views/ItemDetail.vue'),
       props: (route) => ({ id: decodeURIComponent(route.params.id) }),
-      meta: meta('database', 'items', 'dynasties', 'collections', 'partners', 'countries'),
+      // 'timeline_events' decides whether the sheet offers the item's timeline.
+      meta: meta('database', 'items', 'dynasties', 'collections', 'partners', 'countries', 'timeline_events'),
     },
   ],
 

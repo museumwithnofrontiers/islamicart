@@ -338,7 +338,11 @@
   --mwnf-standalone-related-margin: 0 -15px;
   --mwnf-standalone-related-reach-top: 20px;
   --mwnf-standalone-related-reach-right: 167%;
-  /* Legacy's windows (#hcr_timeline): the Glossary & Spelling tool. */
+  /* Legacy's windows (#hcr_timeline): the Glossary & Spelling tool and the
+     item's timeline (hcr.php), whose years sit on their own orange band
+     over legacy's dashed rule. */
+  --mwnf-standalone-hcr-scale: #febe40;
+  --mwnf-standalone-hcr-dash: url('./assets/legacy/hcr_timeline_dash.gif');
   --mwnf-standalone-window-background: #ffd600;
   --mwnf-standalone-window-header: #e0b700;
   --mwnf-standalone-window-header-image: url('./assets/legacy/hcr_header.jpg');

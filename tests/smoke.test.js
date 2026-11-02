@@ -190,6 +190,35 @@ describe('website smoke test', () => {
     empty.app.unmount()
   }, 60000)
 
+  // Legacy's hcr.php ("Timeline for this item"): the sheet offers the window
+  // when the item's country has events; the window shows the item's country
+  // and period, the item, and legacy's events for it (this Cairo sword,
+  // 1450–1500: 1468 and 1492, measured on legacy's window on 2026-11-02),
+  // and another century when one is picked.
+  it("opens the item's timeline as legacy's hcr.php", async () => {
+    const sword = 'f30ef8ba-a67a-55f8-91cb-fa65f19de25e'
+    const sheet = await mountSite(`#/item/${sword}?lang=en`)
+    await vi.waitFor(() => expect(sheet.host.querySelector('.islamicart-timeline-link a')).not.toBeNull(), { timeout: 20000 })
+    const link = sheet.host.querySelector('.islamicart-timeline-link a')
+    expect(link.textContent).toBe(ownTexts['islamicart.item.timeline'])
+    expect(link.getAttribute('href')).toContain(`#/item/${sword}/timeline`)
+    sheet.app.unmount()
+
+    const { app, host, router } = await mountSite(`#/item/${sword}/timeline?lang=en`)
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-hcr__event')).not.toBeNull(), { timeout: 20000 })
+    expect(host.querySelector('.mwnf-standalone-hcr__main h3').textContent).toBe('Egypt - 1450 - 1500 A.D.')
+    expect([...host.querySelectorAll('.mwnf-standalone-hcr__event b')].map((b) => b.textContent)).toEqual(['1468 A.D.', '1492 A.D.'])
+    expect(host.querySelector('.mwnf-standalone-hcr__left strong').textContent).toBe('Sword')
+    expect(host.querySelector('.mwnf-standalone-hcr__year--active').textContent).toBe('1450')
+    const range = host.querySelectorAll('.mwnf-standalone-hcr select')[1]
+    range.value = '1600'
+    range.dispatchEvent(new Event('change'))
+    await vi.waitFor(() => expect(router.currentRoute.value.query.start).toBe('1600'))
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-hcr__main h3').textContent).toBe('Egypt - 1600 - 1700 A.D.'))
+    expect([...host.querySelectorAll('.mwnf-standalone-hcr__event b')].map((b) => b.textContent)).toEqual(['1603 A.D.', '1620 A.D.'])
+    app.unmount()
+  }, 60000)
+
   // Legacy's hcr_gallery.php: the period's records as the Permanent
   // Collection's tiles, the search in words with "Gallery", and the way
   // back to the events.
@@ -261,7 +290,8 @@ describe('website smoke test', () => {
     kufic.dispatchEvent(new Event('mousedown'))
     await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-glossary__definition')).not.toBeNull())
     expect(host.querySelector('.mwnf-standalone-glossary__definition').textContent).toContain('An Arabic script of angular and stylised characters')
-    expect([...host.querySelectorAll('.mwnf-standalone-glossary__spellings li')].map((li) => li.textContent)).toContain('Coufique')
+    // The other languages' spellings arrive with their own translations, after the definition.
+    await vi.waitFor(() => expect([...host.querySelectorAll('.mwnf-standalone-glossary__spellings li')].map((li) => li.textContent)).toContain('Coufique'), { timeout: 20000 })
     app.unmount()
   }, 30000)
 

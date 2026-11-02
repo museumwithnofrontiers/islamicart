@@ -150,3 +150,40 @@ export function gallerySpec(search) {
     empty: 'islamicart.tl.empty',
   }
 }
+
+// ── hcr.php: the item's timeline window ─────────────────────────────────────
+
+/** Whether the sheet offers the window: legacy's, when the item's country has events. */
+export function hasEvents(country) {
+  return Boolean(country) && (timelineEvents.value ?? []).some((event) => event.country_id === country)
+}
+
+// The window's search: the country and century it was changed to, else the
+// item's own country and dates; a chosen century runs a hundred years.
+export function itemTimelineSearch(item, query) {
+  const country = query.country || item?.country_id || ''
+  if (chosen(query.start)) return { country, start: Number(query.start), end: Number(query.start) + 100 }
+  return { country, start: Number(item?.start_date) || 0, end: Number(item?.end_date) || 0 }
+}
+
+// Its time range: the country's centuries, from its earliest event's to
+// the period, the period itself, then on from the period's end to its last
+// event, each "1400 - 1500 A.D.", as legacy listed them.
+export function rangeOptions(search, t) {
+  const years = (timelineEvents.value ?? [])
+    .filter((event) => event.country_id === search.country)
+    .map((event) => Number(event.year_from) || 0)
+  const min = years.length ? Math.min(...years) : 0
+  const max = years.length ? Math.max(...years) : 0
+  const option = (value, from, to) => ({ value, label: yearLabel(t, `${from} - ${to}`) })
+  const list = []
+  let year = Math.floor(min / 100) * 100
+  while (year + 100 < search.start) {
+    list.push(option(year, year, year + 100))
+    year += 100
+  }
+  list.push(option(year, year, search.start))
+  list.push(option(search.start, search.start, search.end))
+  for (year = search.end; year < max; year += 100) list.push(option(year, year, year + 100))
+  return list
+}
