@@ -220,36 +220,36 @@ describe('website smoke test', () => {
   // legacy's words. Go writes the query the results page reads.
   it("renders the Database entrance as legacy's database.php", async () => {
     const { app, host, router } = await mountSite('#/database?lang=en')
-    await vi.waitFor(() => expect(host.querySelector('.islamicart-db__criteria')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelector('.islamicart-db__criteria').textContent).toBe('Enter your criteria:')
-    expect(host.querySelectorAll('.islamicart-db__keyword')).toHaveLength(3)
-    expect(host.querySelectorAll('.islamicart-db__cond')).toHaveLength(2)
-    expect([...host.querySelectorAll('.islamicart-db__field select')[0].options].map((o) => o.textContent))
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-db__criteria')).not.toBeNull(), { timeout: 20000 })
+    expect(host.querySelector('.mwnf-standalone-db__criteria').textContent).toBe('Enter your criteria:')
+    expect(host.querySelectorAll('.mwnf-standalone-db__keyword')).toHaveLength(3)
+    expect(host.querySelectorAll('.mwnf-standalone-db__cond')).toHaveLength(2)
+    expect([...host.querySelectorAll('.mwnf-standalone-db__field select')[0].options].map((o) => o.textContent))
       .toEqual(['Keyword(s)', 'Name', 'Location', 'Provenance', 'Period/Dynasty', 'Patron', 'Architect/Artist/Master', 'Material/Technique', 'Other'])
-    expect(host.querySelector('.islamicart-db__epm').textContent).toContain('Include Explore Islamic Art Collections')
-    expect(host.querySelector('.islamicart-db__go button').textContent).toBe('Go')
-    const glossary = host.querySelector('.islamicart-db__glossary a')
+    expect(host.querySelector('.mwnf-standalone-db__options').textContent).toContain('Include Explore Islamic Art Collections')
+    expect(host.querySelector('.mwnf-standalone-db__go button').textContent).toBe('Go')
+    const glossary = host.querySelector('.mwnf-standalone-db__aside a')
     expect(glossary.textContent).toBe('Glossary & Spelling')
     expect(glossary.getAttribute('href')).toBe('#/glossary-spelling?lang=en')
 
-    const [first, second] = host.querySelectorAll('.islamicart-db__keyword')
+    const [first, second] = host.querySelectorAll('.mwnf-standalone-db__keyword')
     first.value = 'bowl'
     first.dispatchEvent(new Event('input'))
     second.value = 'Cairo'
     second.dispatchEvent(new Event('input'))
-    const field2 = host.querySelectorAll('.islamicart-db__field select')[1]
+    const field2 = host.querySelectorAll('.mwnf-standalone-db__field select')[1]
     field2.value = 'location'
     field2.dispatchEvent(new Event('change'))
-    const cond2 = host.querySelector('.islamicart-db__cond')
+    const cond2 = host.querySelector('.mwnf-standalone-db__cond')
     cond2.value = 'OR'
     cond2.dispatchEvent(new Event('change'))
-    host.querySelector('.islamicart-db__epm input').click()
+    host.querySelector('.islamicart-db-epm input').click()
     // The search language is its own key: the page stays in English.
-    await vi.waitFor(() => expect(host.querySelectorAll('.islamicart-db__language option').length).toBeGreaterThan(1))
-    const language = host.querySelector('.islamicart-db__language select')
+    await vi.waitFor(() => expect(host.querySelectorAll('.mwnf-standalone-db__language option').length).toBeGreaterThan(1))
+    const language = host.querySelector('.mwnf-standalone-db__language select')
     language.value = 'fr'
     language.dispatchEvent(new Event('change'))
-    host.querySelector('form.islamicart-db').dispatchEvent(new Event('submit', { cancelable: true }))
+    host.querySelector('form.mwnf-standalone-db').dispatchEvent(new Event('submit', { cancelable: true }))
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('database-results'), { timeout: 20000 })
     expect(router.currentRoute.value.query).toMatchObject({
       q: 'bowl', field: 'keyword', q2: 'Cairo', field2: 'location', op2: 'OR', epm: '1', searchlanguage: 'fr', lang: 'en',
