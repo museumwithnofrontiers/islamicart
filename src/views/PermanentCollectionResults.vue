@@ -73,15 +73,15 @@ const timelineLink = (country) => ({ name: 'timeline-results', query: { country,
 </script>
 
 <template>
-  <CatalogueResultsView :spec="permanentCollectionResultsSpec" class="islamicart-pcr">
+  <CatalogueResultsView :spec="permanentCollectionResultsSpec" class="mwnf-standalone-pcr">
     <template #before="{ filters, matching }">
-      <p class="mwnf-standalone-item__back islamicart-pcr__back">
+      <p class="mwnf-standalone-item__back mwnf-standalone-pcr__back">
         <button type="button" class="mwnf-standalone-item__back-link" @click="$router.back()">{{ t('islamicart.pcr.back') }}</button>
         <RouterLink class="mwnf-standalone-item__back-link" :to="{ name: 'permanent-collection', query: { lang: locale } }">{{ t('islamicart.pcr.startPage') }}</RouterLink>
       </p>
-      <h3 class="islamicart-pcr__heading">
+      <h3 class="mwnf-standalone-pcr__heading">
         {{ t('islamicart.pcr.title') }}<template v-for="part in selection(filters)" :key="part"> | <b>{{ part }}</b></template>
-        <template v-if="count(matching)">{{ ' ' }}<span class="islamicart-pcr__count">{{ count(matching) }}</span></template>
+        <template v-if="count(matching)">{{ ' ' }}<span class="mwnf-standalone-pcr__count">{{ count(matching) }}</span></template>
       </h3>
     </template>
 
@@ -93,7 +93,7 @@ const timelineLink = (country) => ({ name: 'timeline-results', query: { country,
     <template #pagination></template>
 
     <template #aside="{ filters, apply }">
-      <form class="islamicart-pcr__panel" @submit.prevent>
+      <form class="mwnf-standalone-pcr__panel" @submit.prevent>
         <p>
           <strong>{{ t('islamicart.pcr.changeSelection') }}</strong>
           <select :value="picked(filters, 'country')" @change="choose($event, apply, filters, 'country')">
@@ -105,14 +105,14 @@ const timelineLink = (country) => ({ name: 'timeline-results', query: { country,
             <option v-for="o in dynasties" :key="o.value" :value="o.value">{{ o.label }}</option>
           </select>
         </p>
-        <p class="islamicart-pcr__dates">
-          <span class="islamicart-pcr__date">
+        <p class="mwnf-standalone-pcr__dates">
+          <span class="mwnf-standalone-pcr__date">
             <select :value="picked(filters, 'begin')" @change="choose($event, apply, filters, 'begin')">
               <option value="">{{ t('islamicart.pc.startDate') }}</option>
               <option v-for="c in centuries" :key="c" :value="String(c)">{{ ad(c) }}</option>
             </select>
           </span>
-          <span class="islamicart-pcr__date">
+          <span class="mwnf-standalone-pcr__date">
             <select :value="picked(filters, 'end')" @change="choose($event, apply, filters, 'end')">
               <option value="">{{ t('islamicart.pc.endDate') }}</option>
               <option v-for="c in centuries" :key="c" :value="String(c + 100)">{{ ad(c + 100) }}</option>
@@ -120,7 +120,7 @@ const timelineLink = (country) => ({ name: 'timeline-results', query: { country,
           </span>
         </p>
       </form>
-      <div v-if="filters.country" class="islamicart-pcr__related">
+      <div v-if="filters.country" class="mwnf-standalone-pcr__related">
         <p><strong>{{ t('islamicart.pcr.related') }}</strong></p>
         <p><RouterLink :to="timelineLink(filters.country)">{{ t('islamicart.pcr.timeline') }} | {{ countryLabel(filters.country) }}</RouterLink></p>
       </div>

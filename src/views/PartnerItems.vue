@@ -43,14 +43,14 @@ const backLinks = computed(() =>
 </script>
 
 <template>
-  <CatalogueResultsView :spec="spec" class="islamicart-pcr islamicart-pmi">
+  <CatalogueResultsView :spec="spec" class="mwnf-standalone-pcr islamicart-pmi">
     <template #before>
-      <p class="mwnf-standalone-item__back islamicart-pcr__back">
+      <p class="mwnf-standalone-item__back mwnf-standalone-pcr__back">
         <button type="button" class="mwnf-standalone-item__back-link" @click="$router.back()">{{ t('islamicart.pcr.back') }}</button>
         <RouterLink v-for="link in backLinks" :key="link.label" class="mwnf-standalone-item__back-link" :to="link.to">{{ link.label }}</RouterLink>
       </p>
       <div class="islamicart-pmi__heading">
-        <h3 class="islamicart-pcr__heading">{{ removeEndingPoint(text.name ?? partner?.internal_name ?? '') }}</h3>
+        <h3 class="mwnf-standalone-pcr__heading">{{ removeEndingPoint(text.name ?? partner?.internal_name ?? '') }}</h3>
         <p><i>{{ place }}</i></p>
       </div>
     </template>
@@ -63,7 +63,7 @@ const backLinks = computed(() =>
     <template #pagination></template>
 
     <template #aside>
-      <div class="islamicart-pcr__related">
+      <div class="mwnf-standalone-pcr__related">
         <p><RouterLink :to="{ name: 'partner', params: { id }, query: { lang: locale } }">{{ t('islamicart.pmi.profile') }}</RouterLink></p>
       </div>
     </template>

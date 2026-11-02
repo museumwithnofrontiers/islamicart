@@ -62,11 +62,11 @@ describe('website smoke test', () => {
     const { app, host } = await mountSite('#/permanent-collection/results')
     await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-results__tile')).not.toBeNull(), { timeout: 20000 })
     expect(host.querySelectorAll('.mwnf-standalone-results__tile').length).toBe(20)
-    expect(host.querySelector('.islamicart-pcr__heading').textContent).toContain('Permanent Collection')
-    expect(host.querySelectorAll('.islamicart-pcr__panel select').length).toBe(4)
+    expect(host.querySelector('.mwnf-standalone-pcr__heading').textContent).toContain('Permanent Collection')
+    expect(host.querySelectorAll('.mwnf-standalone-pcr__panel select').length).toBe(4)
     // Legacy's centuries, read from the timeline: "400 A.D." to start.
-    await vi.waitFor(() => expect(host.querySelectorAll('.islamicart-pcr__date select')[0].options.length).toBeGreaterThan(1), { timeout: 20000 })
-    expect(host.querySelectorAll('.islamicart-pcr__date select')[0].options[1].textContent).toMatch(/^\d+ A\.D\.$/)
+    await vi.waitFor(() => expect(host.querySelectorAll('.mwnf-standalone-pcr__date select')[0].options.length).toBeGreaterThan(1), { timeout: 20000 })
+    expect(host.querySelectorAll('.mwnf-standalone-pcr__date select')[0].options[1].textContent).toMatch(/^\d+ A\.D\.$/)
     expect(host.querySelector('.mwnf-standalone-pages')).not.toBeNull()
     expect(host.querySelector('.mwnf-filter')).toBeNull()
     expect(host.querySelector('.mwnf-summary')).toBeNull()
@@ -85,7 +85,7 @@ describe('website smoke test', () => {
   }
 
   function headingTotal(host) {
-    const [, objects = '0', monuments = '0'] = host.querySelector('.islamicart-pcr__count').textContent
+    const [, objects = '0', monuments = '0'] = host.querySelector('.mwnf-standalone-pcr__count').textContent
       .match(/\[(?:(\d+) Objects)?(?:, )?(?:(\d+) Monuments)?\]/) ?? []
     return Number(objects) + Number(monuments)
   }
@@ -97,7 +97,7 @@ describe('website smoke test', () => {
     expect(items.some((i) => i.project_id === PROJECTS.explore)).toBe(true)
 
     const { app, host } = await mountSite('#/permanent-collection/results')
-    await vi.waitFor(() => expect(host.querySelector('.islamicart-pcr__count')).not.toBeNull(), { timeout: 20000 })
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-pcr__count')).not.toBeNull(), { timeout: 20000 })
     const total = headingTotal(host)
     app.unmount()
 
@@ -109,11 +109,11 @@ describe('website smoke test', () => {
   // timeline.
   it('names the country in the heading, links its timeline, and lets a dynasty replace it', async () => {
     const { app, host } = await mountSite('#/permanent-collection/results?country=ita')
-    await vi.waitFor(() => expect(host.querySelector('.islamicart-pcr__related a')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelector('.islamicart-pcr__heading b').textContent).toBe('Italy')
-    expect(host.querySelector('.islamicart-pcr__related a').textContent).toBe('Timeline | Italy')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-pcr__related a')).not.toBeNull(), { timeout: 20000 })
+    expect(host.querySelector('.mwnf-standalone-pcr__heading b').textContent).toBe('Italy')
+    expect(host.querySelector('.mwnf-standalone-pcr__related a').textContent).toBe('Timeline | Italy')
 
-    const dynasty = host.querySelectorAll('.islamicart-pcr__panel select')[1]
+    const dynasty = host.querySelectorAll('.mwnf-standalone-pcr__panel select')[1]
     dynasty.value = dynasty.options[1].value
     dynasty.dispatchEvent(new Event('change'))
     await vi.waitFor(() => expect(window.location.hash).toContain('dynasty='), { timeout: 20000 })
@@ -127,7 +127,7 @@ describe('website smoke test', () => {
   // English, its country too ("Turin, Italy" beside "Rome, Italie").
   it('names countries in the display language, and in English beside an item left in English', async () => {
     const { app, host } = await mountSite('#/permanent-collection/results?country=ita&lang=fr')
-    await vi.waitFor(() => expect(host.querySelector('.islamicart-pcr__heading b')?.textContent).toBe('Italie'), { timeout: 20000 })
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-pcr__heading b')?.textContent).toBe('Italie'), { timeout: 20000 })
     const places = () => [...host.querySelectorAll('.mwnf-standalone-results__panel')]
       .map((panel) => [...panel.querySelectorAll('p')].map((p) => p.textContent.trim()))
     await vi.waitFor(() => expect(places().some((lines) => lines.includes('Rome, Italie'))).toBe(true), { timeout: 20000 })
@@ -631,10 +631,10 @@ describe('website smoke test', () => {
     await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-results__tile')).not.toBeNull(), { timeout: 20000 })
     expect(host.querySelector('.islamicart-pmi__heading h3').textContent).toBe('Museum of Civilisations | Museum of Oriental Art')
     expect(host.querySelector('.islamicart-pmi__heading p').textContent).toBe('Rome, Italy')
-    expect([...host.querySelectorAll('.islamicart-pcr__back > *')].map((el) => el.textContent)).toEqual(['Back', 'Partner Museums', 'Other Partners'])
+    expect([...host.querySelectorAll('.mwnf-standalone-pcr__back > *')].map((el) => el.textContent)).toEqual(['Back', 'Partner Museums', 'Other Partners'])
     expect(host.querySelectorAll('.mwnf-standalone-results__tile').length).toBe(Math.min(20, objects.length))
     expect(host.querySelector('.mwnf-standalone-results__name').textContent).toBe('Coin (dirham)')
-    expect(host.querySelector('.islamicart-pcr__related a').getAttribute('href')).toContain(`#/partner/${rome.id}`)
+    expect(host.querySelector('.mwnf-standalone-pcr__related a').getAttribute('href')).toContain(`#/partner/${rome.id}`)
     expect(host.querySelector('.mwnf-standalone-pages')).not.toBeNull()
     app.unmount()
 
