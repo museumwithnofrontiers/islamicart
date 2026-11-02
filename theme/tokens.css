@@ -292,6 +292,14 @@
   --mwnf-standalone-db-go-border: #a98e30;
   --mwnf-standalone-db-go-hover-background: #a98e30;
   --mwnf-standalone-db-go-hover-border: #675517;
+  /* The Timeline results (hcr_result.php): the band under the banner, its
+     lists' pale border, the headings, the events' strips and the Related
+     Content column. */
+  --mwnf-standalone-tlr-band: #e0b700;
+  --mwnf-standalone-tlr-select-border: rgb(245 241 188);
+  --mwnf-standalone-tlr-heading-color: rgb(33 26 0);
+  --mwnf-standalone-tlr-strip: #e0b700;
+  --mwnf-standalone-tlr-related: #e0b700;
   --mwnf-standalone-download-icon: url('./assets/legacy/download.png');
   /* The item sheet's language band (section.language_option). */
   --mwnf-standalone-language-bar: #e0b700;

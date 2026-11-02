@@ -1,109 +1,152 @@
-import {
-  CATALOGUE_DATE_MODE, CATALOGUE_PAGE_SIZE, dateRange, effectiveYearTo, eventDateLabel, objectsAndMonumentsSummary,
-} from '@museumwnf/viewer-core'
+import { CATALOGUE_PAGE_SIZE } from '@museumwnf/viewer-core'
 import { useData } from './data.js'
-import { inScope, itemRecord } from './catalogue.js'
+import { centuries, inScope, legacyOrder, resultTile } from './catalogue.js'
 
-// The timeline spec: what viewer-layout's `TimelineResultsView` renders on
-// `/timeline` (the entrance, `entrance: true`) and `/timeline/results` — the
-// country/period axis over viewer-core's own chronology engine — and what
-// its `CatalogueResultsView` renders on `/timeline/gallery`, decision D1's
-// return of legacy `hcr_gallery.php`: the Permanent Collection's own items,
-// scoped to the country and period the timeline page was showing, offered
-// once that period actually has objects. Almost every text the engine needs
-// already lives in the shared `timeline.*` catalogue; what is declared here
-// is only the country/period axis, this website's own events-to-items link,
-// and the gallery's scope.
+// The Timeline, as legacy's hcr_home.php, hcr_result.php and hcr_gallery.php
+// read it, drawn by viewer-layout's standalone family (TimelineEntrance.vue,
+// TimelineResults.vue, TimelineGallery.vue). What is declared here is only
+// this website's: which events a search finds and in what order, the lists
+// the pages offer, the line that says the search in words, and the records
+// the gallery shows. Every word is legacy's own (islamicart.tl.*, its
+// translation table).
+//
+// The query: `country` (`none` when no country was chosen, empty for all
+// countries) and `start`/`end` (`none` for a list left on its first entry),
+// as legacy's own lists sent them; `page` for the results' pages. The item
+// sheet and the dynasty pages link with `begin` for the start and
+// `country=all`, which read the same.
 
-const { countryLabel, items, md, mdInline, tr } = useData()
+const { countryLabel, items, md, timelineEvents, tr } = useData()
 
-/** `useTimelineEvents`'s own `tr(id)` contract, bound to this site's `tr`. */
-const trEvents = (id) => tr('timeline_events', id)
+/** Legacy's period when a date was left on its first entry. */
+const DEFAULT_START = 400
+const DEFAULT_END = 2000
 
-// Free country and free year inputs — the same on the entrance and the
-// results, unlike the DXA family's century-bucketed selects.
-const controls = [{ key: 'country' }, { key: 'begin' }, { key: 'end' }]
+/** Fifteen events a page, as hcr_result.php showed them. */
+export const EVENTS_PAGE_SIZE = 15
 
-/** Fifteen rows a page, as the legacy events list showed. */
-const EVENTS_PAGE_SIZE = 15
+const chosen = (value) => value !== undefined && value !== null && value !== '' && value !== 'none'
 
-/** The "all countries" sentinel `useTimelineEvents.findEvents` also reads. */
-function countryMatches(item, countryId) {
-  return !countryId || countryId === 'all' || item.country_id === countryId
-}
-
-// The Permanent Collection results, scoped to a country and the interval an
-// event or a period covers — the per-event "View items from this period"
-// link and the gallery cross-link's own item count both build this query.
-function periodQuery(countryId, begin, end) {
-  const query = {}
-  if (countryId) query.country = countryId
-  if (begin != null) query.begin = String(begin)
-  if (end != null) query.end = String(end)
-  return query
-}
-
-function itemsFromEvent(event) {
-  const end = effectiveYearTo(event) ?? event.year_from
-  return { name: 'permanent-collection-results', query: periodQuery(event.country_id, event.year_from, end) }
-}
-
-function eventRow(event, ctx) {
+/** The search a query stands for: the country (empty for all) and the period. */
+export function timelineQuery(query) {
   return {
-    id: event.id,
-    date: eventDateLabel(event, event.text, ctx.t),
-    caption: event.country_id ? mdInline(countryLabel(event.country_id)) : '',
-    description: event.text?.description ? md(event.text.description) : '',
-    // `TimelineEventList` renders `action.label` as given — already resolved
-    // text, the same convention `caption`/`description` follow above.
-    actions: [{ label: ctx.t('timeline.action.viewItemsFromPeriod'), to: itemsFromEvent(event) }],
+    country: query.country === 'all' ? '' : query.country ?? '',
+    start: query.start ?? query.begin ?? 'none',
+    end: query.end ?? 'none',
   }
 }
 
-// The items a country/period covers, for the "See gallery" cross-link's own
-// count. Legacy's `hcr_gallery.php` never offered the Explore Islamic Art
-// Collections checkbox, so this stays ISL scope, unlike the Permanent
-// Collection and Database pages.
-function periodItems(filters) {
-  const inCountry = items.value.filter((item) => inScope(item, false) && countryMatches(item, filters.country))
-  return dateRange(inCountry, { begin: filters.begin, end: filters.end, mode: CATALOGUE_DATE_MODE })
+export function timelineSearch(raw) {
+  const query = timelineQuery(raw)
+  return {
+    country: query.country,
+    start: chosen(query.start) ? Number(query.start) : DEFAULT_START,
+    end: chosen(query.end) ? Number(query.end) : DEFAULT_END,
+  }
 }
 
-export const timelineEntranceSpec = {
-  entrance: true,
-  route: 'timeline-results',
-  controls,
-  countryLabel,
-  tr: trEvents,
+/** "[DATE] A.D.", legacy's `AD` word, for a year. */
+export const yearLabel = (t, year) => t('islamicart.tl.ad').replace('[DATE]', String(year))
+
+// HCRList::Search: an event with an end runs into the period, one without
+// falls inside it, both bounds left open; the country, when one is chosen;
+// in order of its first year.
+export function findEvents(search) {
+  const { country, start, end } = search
+  return (timelineEvents.value ?? [])
+    .filter((event) => {
+      const from = Number(event.year_from) || 0
+      const to = Number(event.year_to) || 0
+      const inPeriod = to ? to > start && from < end : from > start && from < end
+      return inPeriod && (!country || event.country_id === country)
+    })
+    .sort((a, b) => (a.year_from - b.year_from) || (a.display_order - b.display_order))
 }
 
-export const timelineResultsSpec = {
-  controls,
-  countryLabel,
-  tr: trEvents,
-  pageSize: EVENTS_PAGE_SIZE,
-  filterTitle: 'catalogue.filter.heading',
-  event: eventRow,
-  gallery: { route: 'timeline-gallery', items: ({ filters }) => periodItems(filters) },
-  pagination: { window: 7 },
+/** An event as hcr_result.php printed it: its years, its country, its description. */
+export function eventRow(event, t) {
+  const text = tr('timeline_events', event.id)
+  let years = event.year_from ? String(event.year_from) : ''
+  if (event.year_to) years += ` - ${event.year_to}`
+  return {
+    id: event.id,
+    date: yearLabel(t, years),
+    country: event.country_id ? countryLabel(event.country_id) : '',
+    html: text.description ? md(text.description) : '',
+  }
 }
 
-// The gallery: the Permanent Collection's own row and summary shapes
-// (composables/catalogue.js), scoped to the country and period the timeline
-// results page was showing when "See gallery" was followed.
-export const timelineGallerySpec = {
-  entity: 'items',
-  keys: ['country', 'begin', 'end'],
-  scope: (item, filters) => inScope(item, false) && countryMatches(item, filters.country),
-  dates: { mode: CATALOGUE_DATE_MODE },
-  sort: 'chronological',
-  pageSize: CATALOGUE_PAGE_SIZE,
-  variant: 'list',
-  recordRoute: 'item',
-  empty: 'catalogue.results.noResultsFilter',
-  pagination: { window: 7 },
-  record: itemRecord,
-  summary: objectsAndMonumentsSummary,
-  // In the site's content box, as every section's page is.
-  boxed: true,
+// The countries, by name in the page's language. The entrance lists those
+// with events and Discover Islamic Art objects, and France, as legacy's
+// query did; the results page every country with events.
+const byName = (list) => [...list].sort((a, b) => a.label.localeCompare(b.label))
+const eventCountries = () => new Set((timelineEvents.value ?? []).map((event) => event.country_id).filter(Boolean))
+
+export function entranceCountries() {
+  const withObjects = new Set(
+    (items.value ?? []).filter((item) => item.type === 'object' && inScope(item, false)).map((item) => item.country_id),
+  )
+  return byName(
+    [...eventCountries()].filter((id) => withObjects.has(id) || id === 'fra').map((id) => ({ value: id, label: countryLabel(id) })),
+  )
+}
+
+export function resultCountries() {
+  return byName([...eventCountries()].map((id) => ({ value: id, label: countryLabel(id) })))
+}
+
+/** The start and end lists: legacy's centuries, from the earliest event to the last. */
+export function dateOptions(t) {
+  return {
+    starts: centuries.value.map((year) => ({ value: year, label: yearLabel(t, year) })),
+    ends: centuries.value.map((year) => ({ value: year + 100, label: yearLabel(t, year + 100) })),
+  }
+}
+
+// hcr_result.php's line over the lists: the period ("De 1000 A.D. à …" in
+// French and Spanish), then the country in capitals, or all countries.
+export function searchLine(search, t, locale) {
+  const to = t('islamicart.tl.to').toLowerCase()
+  const period = locale === 'fr' || locale === 'es'
+    ? `${t('islamicart.tl.from')} ${yearLabel(t, search.start)} ${to} ${yearLabel(t, search.end)}`
+    : `${yearLabel(t, search.start)} ${to} ${yearLabel(t, search.end)}`
+  const country = search.country ? countryLabel(search.country) : t('islamicart.tl.allCountries')
+  return `${period} | ${country.toLocaleUpperCase(locale)}`
+}
+
+// export_hcr_content.php: its line ("TIMELINE | 1000 to 1200 | EGYPT") and
+// its file's name.
+export function wordLine(search, t, locale) {
+  const country = search.country ? countryLabel(search.country) : t('islamicart.tl.allCountries')
+  return `${t('islamicart.tl.title').toLocaleUpperCase(locale)} | ${search.start} to ${search.end} | ${country.toLocaleUpperCase(locale)}`
+}
+export const wordFile = (search, locale) => `DIA_${search.country}-${search.start}-${search.end}-${locale}.doc`
+
+// hcr_gallery.php: Discover Islamic Art's objects and monuments dated inside
+// the period, in the country when one is chosen, in legacy's order (the
+// start, then the end, then the record's key), twenty a page.
+const galleryScope = (search) => (item) =>
+  inScope(item, false)
+  && (!search.country || item.country_id === search.country)
+  && Number.isFinite(item.start_date) && item.start_date >= search.start
+  && Number.isFinite(item.end_date) && item.end_date <= search.end
+
+export function galleryItems(search) {
+  return (items.value ?? []).filter(galleryScope(search))
+}
+
+const galleryOrder = (list) =>
+  legacyOrder(list).sort((a, b) => (a.start_date - b.start_date) || (a.end_date - b.end_date))
+
+export function gallerySpec(search) {
+  return {
+    entity: 'items',
+    keys: [],
+    scope: galleryScope(search),
+    sort: galleryOrder,
+    pageSize: CATALOGUE_PAGE_SIZE,
+    record: resultTile,
+    summary: () => [],
+    empty: 'islamicart.tl.empty',
+  }
 }

@@ -142,78 +142,67 @@ describe('website smoke test', () => {
     localStorage.removeItem('mwnf.language')
   }, 60000)
 
-  // The Timeline entrance and results move onto viewer-layout's composed
-  // `TimelineResultsView` (metanull/islamicart#47): the country/period axis,
-  // the rows and the pagination come from the spec in
-  // composables/timeline.js, and what only this website has — the per-event
-  // "View items from this period" action into the Permanent Collection —
-  // fills the row through `spec.event`. Germany ('deu') is picked because
-  // the data package carries both timeline events and items for it, so the
-  // scoped results and the action's own target are both non-empty.
-  it('renders the Timeline results scoped to a country, with the per-event action into the Permanent Collection', async () => {
-    const { app, host } = await mountSite('#/timeline/results?country=deu')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-timeline__row')).not.toBeNull(), { timeout: 20000 })
-
-    expect(host.querySelector('.mwnf-heading').textContent).toContain('Timeline')
-    expect(host.querySelector('.mwnf-heading').textContent).toContain('Germany')
-
-    // Every row's caption is the filtered country's own name, not an id.
-    const captions = [...host.querySelectorAll('.mwnf-timeline__caption')].map((el) => el.textContent.trim())
-    expect(captions.length).toBeGreaterThan(0)
-    expect(captions.every((caption) => caption === 'Germany')).toBe(true)
-
-    const action = host.querySelector('.mwnf-timeline__action')
-    expect(action).not.toBeNull()
-    expect(action.textContent).toContain('View items from this period')
-    expect(action.getAttribute('href')).toContain('permanent-collection/results')
-    expect(action.getAttribute('href')).toContain('country=deu')
-
-    // The first row's date and description text match the fixture event.
-    const { default: timelineEventsData } = await import('@museumwnf/islamicart-data/timeline_events.json', { assert: { type: 'json' } })
-    const { default: timelineEventsTrans } = await import('@museumwnf/islamicart-data/translations/timeline_events.en.json', { assert: { type: 'json' } })
-    const firstDeuEvent = timelineEventsData.find((evt) => evt.country_id === 'deu')
-    if (firstDeuEvent && timelineEventsTrans[firstDeuEvent.id]) {
-      const trans = timelineEventsTrans[firstDeuEvent.id]
-      const firstRow = host.querySelector('.mwnf-timeline__row')
-      const rowDate = firstRow.querySelector('.mwnf-timeline__date')?.textContent.trim() ?? ''
-      const rowDescription = firstRow.querySelector('.mwnf-timeline__description')?.textContent.trim() ?? ''
-
-      // Verify date text matches the fixture.
-      const expectedDate = trans.date_to_description && trans.date_to_description !== trans.date_from_description
-        ? `${trans.date_from_description} – ${trans.date_to_description}`
-        : trans.date_from_description
-      expect(rowDate).toBe(expectedDate)
-
-      // Verify description contains the first six words of the fixture text.
-      const firstSixWords = trans.description.split(' ').slice(0, 6).join(' ')
-      expect(rowDescription).toContain(firstSixWords)
-    }
-
+  // Legacy's hcr_home.php: the country, the two centuries and Go, in
+  // legacy's words; Go writes the query the results page reads.
+  it("renders the Timeline entrance as legacy's hcr_home.php", async () => {
+    const { app, host, router } = await mountSite('#/timeline?lang=en')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-tle')).not.toBeNull(), { timeout: 20000 })
+    const [country, start, end] = host.querySelectorAll('.mwnf-standalone-tle select')
+    const options = (select) => [...select.options].map((o) => o.textContent)
+    expect(options(country).slice(0, 2)).toEqual(['Select a Country', 'All Countries'])
+    expect(options(country)).toContain('Egypt')
+    expect(options(start).slice(0, 2)).toEqual(['Start Date', '400 A.D.'])
+    expect(options(end).slice(0, 2)).toEqual(['End Date', '500 A.D.'])
+    country.value = 'egy'
+    country.dispatchEvent(new Event('change'))
+    start.value = '1000'
+    start.dispatchEvent(new Event('change'))
+    end.value = '1200'
+    end.dispatchEvent(new Event('change'))
+    host.querySelector('form.mwnf-standalone-tle').dispatchEvent(new Event('submit', { cancelable: true }))
+    await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('timeline-results'), { timeout: 20000 })
+    expect(router.currentRoute.value.query).toMatchObject({ country: 'egy', start: '1000', end: '1200' })
     app.unmount()
   }, 30000)
 
-  // Decision D1: the timeline gallery of objects legacy served from
-  // `hcr_gallery.php`, regained as `/timeline/gallery` — a `CatalogueResultsView`
-  // spec scoped to the timeline's own country and period. "See gallery" is
-  // offered once objects exist for it (Germany does) and withheld once they
-  // do not (France carries timeline events but no items in this package).
-  it('offers "See gallery" once the period has objects, and the gallery lists that country\'s items', async () => {
-    const withObjects = await mountSite('#/timeline/results?country=deu')
-    await vi.waitFor(() => expect(withObjects.host.querySelector('.mwnf-timeline__gallery')).not.toBeNull(), { timeout: 20000 })
-    expect(withObjects.host.querySelector('.mwnf-timeline__gallery').textContent).toContain('See Gallery')
-    withObjects.app.unmount()
-
-    const withoutObjects = await mountSite('#/timeline/results?country=fra')
-    await vi.waitFor(() => expect(withoutObjects.host.querySelector('.mwnf-timeline__row')).not.toBeNull(), { timeout: 20000 })
-    expect(withoutObjects.host.querySelector('.mwnf-timeline__gallery')).toBeNull()
-    withoutObjects.app.unmount()
-
-    const { app, host } = await mountSite('#/timeline/gallery?country=deu')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelector('.mwnf-heading').textContent).toContain('Timeline Gallery')
-    expect(host.querySelector('.mwnf-heading').textContent).toContain('Germany')
+  // Legacy's hcr_result.php: the search in words, the events legacy found for
+  // Egypt from 1000 to 1200 (eight, measured on its page on 2026-11-02), in
+  // order of their first year, "See Gallery" while the period has records,
+  // and the downloads.
+  it("renders the Timeline results as legacy's hcr_result.php", async () => {
+    const { app, host } = await mountSite('#/timeline/results?country=egy&start=1000&end=1200&lang=en')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-tlr__row')).not.toBeNull(), { timeout: 20000 })
+    expect(host.querySelector('.mwnf-standalone-tlr__summary').textContent).toBe('Timeline | 1000 A.D. to 1200 A.D. | EGYPT')
+    const dates = [...host.querySelectorAll('.mwnf-standalone-tlr__date span')].map((s) => s.textContent)
+    expect(dates).toEqual(['1087 A.D.', '1099 A.D.', '1168 A.D.', '1169 A.D.', '1171 A.D.', '1193 A.D.', '1193 A.D.', '1199 A.D.'])
+    expect(host.querySelector('.mwnf-standalone-tlr__content span').textContent).toBe('Egypt')
+    expect(host.querySelector('.mwnf-standalone-tlr__content div').textContent).toContain('Badr Al-Jamali')
+    const related = [...host.querySelectorAll('.mwnf-standalone-tlr__related a')]
+    expect(related.map((a) => a.textContent)).toEqual(['See Gallery', 'As PDF (including images)', 'As Word (text only)'])
+    expect(related[0].getAttribute('href')).toContain('#/timeline/gallery?country=egy&start=1000&end=1200')
     app.unmount()
+
+    // No Discover Islamic Art record falls in the period: no "See Gallery".
+    const empty = await mountSite('#/timeline/results?country=egy&start=400&end=500&lang=en')
+    await vi.waitFor(() => expect(empty.host.querySelector('.mwnf-standalone-tlr__related')).not.toBeNull(), { timeout: 20000 })
+    expect([...empty.host.querySelectorAll('.mwnf-standalone-tlr__related a')].map((a) => a.textContent))
+      .toEqual(['As PDF (including images)', 'As Word (text only)'])
+    empty.app.unmount()
   }, 60000)
+
+  // Legacy's hcr_gallery.php: the period's records as the Permanent
+  // Collection's tiles, the search in words with "Gallery", and the way
+  // back to the events.
+  it("renders the Timeline gallery as legacy's hcr_gallery.php", async () => {
+    const { app, host } = await mountSite('#/timeline/gallery?country=egy&start=1000&end=1200&lang=en')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-results__tile')).not.toBeNull(), { timeout: 20000 })
+    expect(host.querySelector('.mwnf-standalone-pcr__heading').textContent.replace(/\s+/g, ' ').trim())
+      .toBe('Timeline | 1000 A.D. to 1200 A.D. | Egypt | Gallery')
+    const seeTimeline = host.querySelector('.mwnf-standalone-pcr__related a')
+    expect(seeTimeline.textContent.replace(/\s+/g, ' ').trim()).toBe('See Timeline Egypt')
+    expect(seeTimeline.getAttribute('href')).toContain('#/timeline/results?country=egy&start=1000&end=1200')
+    app.unmount()
+  }, 30000)
 
   // Legacy's database.php: three keyword rows in their categories, joined by
   // and/or, the centuries, the search language, the Explore opt-in, Go; in
