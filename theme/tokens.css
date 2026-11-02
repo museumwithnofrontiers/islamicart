@@ -284,6 +284,14 @@
   --mwnf-standalone-accordion-open: url('./assets/legacy/up_arrow.png');
   /* The Sponsors page's heading (h3.time_line_con_title). */
   --mwnf-standalone-sp-heading-color: rgb(33 26 0);
+  /* The Database entrance (database.php, section.db_start_page): its
+     heading, the keywords typed, and Go (input.db_search_submit). */
+  --mwnf-standalone-db-heading-color: rgb(33 26 0);
+  --mwnf-standalone-db-keyword-color: rgb(80 72 25);
+  --mwnf-standalone-db-go-background: #e0b700;
+  --mwnf-standalone-db-go-border: #a98e30;
+  --mwnf-standalone-db-go-hover-background: #a98e30;
+  --mwnf-standalone-db-go-hover-border: #675517;
   --mwnf-standalone-download-icon: url('./assets/legacy/download.png');
   /* The item sheet's language band (section.language_option). */
   --mwnf-standalone-language-bar: #e0b700;

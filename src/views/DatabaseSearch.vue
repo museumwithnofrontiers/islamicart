@@ -1,22 +1,38 @@
 <script setup>
-import { computed, reactive } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { I18nTextInline, SEARCH_LANGUAGE_KEY, centuryPresets, useI18n, useSearchLanguage } from '@museumwnf/viewer-core'
+import { StandaloneDatabaseForm } from '@museumwnf/viewer-layout/standalone'
 
-// The Database entrance as legacy's database.php: three keyword rows, each
-// searched in a category, the second and third joined by "and"/"or"; the
-// century range; the search language; Explore Islamic Art Collections'
-// opt-in; Go; then the link to the portal's complete listing. Legacy's
-// Bootstrap row (col-md-1, col-md-2 for the joins and the labels, col-md-6
-// for the form, col-md-3) is laid out as a grid, mirrored in Arabic as
-// legacy's own Arabic form was. Go writes the query the results page reads
-// (DatabaseResults.vue, composables/search.js). Every word is legacy's own
-// (islamicart.db.*, its translation table). "Glossary & Spelling", in the
-// last column, opens legacy's window (GlossarySpelling.vue) at its size.
+// The Database entrance as legacy's database.php, the standalone family's
+// form (viewer-layout's `StandaloneDatabaseForm`): three keyword rows, each
+// searched in a category, the century range, the search language, Go and
+// the portal's complete listing. Islamic Art's own: Explore Islamic Art
+// Collections' opt-in under the language, and "Glossary & Spelling" in the
+// last column, which opens legacy's window (GlossarySpelling.vue) at its
+// size. Go writes the query the results page reads (DatabaseResults.vue,
+// composables/search.js). Every word is legacy's own (islamicart.db.*, its
+// translation table).
 
 const router = useRouter()
 const { t, locale } = useI18n()
 const { languages, language } = useSearchLanguage('items')
+
+const labels = computed(() => ({
+  criteria: t('islamicart.db.criteria'),
+  keywords: t('islamicart.db.keywords'),
+  category: t('islamicart.db.category'),
+  in: t('islamicart.db.in'),
+  and: t('islamicart.db.and'),
+  or: t('islamicart.db.or'),
+  date: t('islamicart.db.date'),
+  from: t('islamicart.db.from'),
+  to: t('islamicart.db.to'),
+  language: t('islamicart.db.language'),
+  go: t('islamicart.db.go'),
+  listing: t('islamicart.db.listing'),
+  listingTooltip: t('islamicart.db.listingTooltip'),
+}))
 
 const FIELDS = computed(() => [
   { value: 'keyword', label: t('islamicart.dbField.keyword') },
@@ -50,27 +66,21 @@ const searchLanguages = computed(() =>
 )
 
 const { from: FROM_YEARS, to: TO_YEARS } = centuryPresets()
+const epm = ref(false)
 
-const rows = reactive([
-  { keyword: '', field: 'keyword', cond: 'AND' },
-  { keyword: '', field: 'keyword', cond: 'AND' },
-  { keyword: '', field: 'keyword', cond: 'AND' },
-])
-const form = reactive({ from: '', to: '', epm: false })
-
-function go() {
+function go({ rows, from, to }) {
   const query = {}
   rows.forEach((row, index) => {
-    if (!row.keyword.trim()) return
+    if (!row.keyword) return
     const n = index === 0 ? '' : String(index + 1)
-    query[`q${n}`] = row.keyword.trim()
+    query[`q${n}`] = row.keyword
     query[`field${n}`] = row.field
     if (index) query[`op${n}`] = row.cond
   })
-  if (form.from) query.from = String(form.from)
-  if (form.to) query.to = String(form.to)
+  if (from) query.from = String(from)
+  if (to) query.to = String(to)
   if (language.value) query[SEARCH_LANGUAGE_KEY] = language.value
-  if (form.epm) query.epm = '1'
+  if (epm.value) query.epm = '1'
   return router.push({ name: 'database-results', query })
 }
 
@@ -85,68 +95,23 @@ function openGlossary() {
 </script>
 
 <template>
-  <form class="islamicart-db" @submit.prevent="go">
-    <h3 class="islamicart-db__criteria">{{ t('islamicart.db.criteria') }}</h3>
-    <p class="islamicart-db__head islamicart-db__head--keywords">{{ t('islamicart.db.keywords') }}</p>
-    <p class="islamicart-db__head islamicart-db__head--category">{{ t('islamicart.db.category') }}</p>
-    <p class="islamicart-db__glossary">
+  <StandaloneDatabaseForm
+    v-model:language="language"
+    :labels="labels"
+    :fields="FIELDS"
+    :from-years="FROM_YEARS"
+    :to-years="TO_YEARS"
+    :languages="searchLanguages"
+    :listing-href="LISTING"
+    @search="go"
+  >
+    <template #aside>
       <a :href="glossaryHref" :title="t('islamicart.glossary.tooltip')" @click.prevent="openGlossary">{{ t('islamicart.glossary.heading') }}</a>
-    </p>
-
-    <template v-for="(row, index) in rows" :key="index">
-      <select
-        v-if="index"
-        v-model="row.cond"
-        class="islamicart-db__cond"
-        :class="`islamicart-db__row-${index + 1}`"
-        :aria-label="`${t('islamicart.db.and')} / ${t('islamicart.db.or')}`"
-      >
-        <option value="AND">{{ t('islamicart.db.and') }}</option>
-        <option value="OR">{{ t('islamicart.db.or') }}</option>
-      </select>
-      <input
-        v-model="row.keyword"
-        type="text"
-        class="islamicart-db__keyword"
-        :class="`islamicart-db__row-${index + 1}`"
-        :aria-label="t('islamicart.db.keywords')"
-      />
-      <label class="islamicart-db__field" :class="`islamicart-db__row-${index + 1}`">
-        <span>{{ t('islamicart.db.in') }}</span>
-        <select v-model="row.field">
-          <option v-for="field in FIELDS" :key="field.value" :value="field.value">{{ field.label }}</option>
-        </select>
+    </template>
+    <template #options>
+      <label class="islamicart-db-epm" :title="t('islamicart.db.epmTooltip')">
+        <input v-model="epm" type="checkbox" />&nbsp;<I18nTextInline keypath="islamicart.db.epm" />
       </label>
     </template>
-
-    <span class="islamicart-db__label islamicart-db__label--date">{{ t('islamicart.db.date') }}</span>
-    <p class="islamicart-db__dates">
-      <select v-model="form.from" :aria-label="`${t('islamicart.db.date')} ${t('islamicart.db.from')}`">
-        <option value="">{{ t('islamicart.db.from') }}</option>
-        <option v-for="year in FROM_YEARS" :key="year" :value="year">{{ year }}</option>
-      </select>
-      <select v-model="form.to" :aria-label="`${t('islamicart.db.date')} ${t('islamicart.db.to')}`">
-        <option value="">{{ t('islamicart.db.to') }}</option>
-        <option v-for="year in TO_YEARS" :key="year" :value="year">{{ year }}</option>
-      </select>
-    </p>
-
-    <span class="islamicart-db__label islamicart-db__label--language">{{ t('islamicart.db.language') }}</span>
-    <p class="islamicart-db__language">
-      <select v-model="language" :aria-label="t('islamicart.db.language')">
-        <option value=""></option>
-        <option v-for="option in searchLanguages" :key="option.code" :value="option.code">{{ option.name }}</option>
-      </select>
-    </p>
-
-    <p class="islamicart-db__epm">
-      <label :title="t('islamicart.db.epmTooltip')">
-        <input v-model="form.epm" type="checkbox" />&nbsp;<I18nTextInline keypath="islamicart.db.epm" />
-      </label>
-    </p>
-    <p class="islamicart-db__go"><button type="submit">{{ t('islamicart.db.go') }}</button></p>
-    <p class="islamicart-db__listing">
-      <a :href="LISTING" :title="t('islamicart.db.listingTooltip')">{{ t('islamicart.db.listing') }}</a>
-    </p>
-  </form>
+  </StandaloneDatabaseForm>
 </template>
