@@ -311,6 +311,19 @@
   --mwnf-standalone-language-active: #ffd600;
   /* The partner profile's pills and headings (.tabs-menu, .short_heading). */
   --mwnf-standalone-pill: #e0b700;
+  /* On a phone (below 620px) the tabs are pills of their own; the words
+     34px under the thumbnails, which keep 10px under them. */
+  --mwnf-standalone-phone-pill: #ffd000;
+  --mwnf-standalone-phone-pill-active: #c5a203;
+  --mwnf-standalone-phone-partner-text-offset: 34px;
+  /* Below 750px the results keep their tile-wide frame and a blank line
+     before "See Database Entry"; no gap between them. */
+  --mwnf-standalone-phone-results-frame-width: 231px;
+  --mwnf-standalone-phone-results-panel-display: block;
+  --mwnf-standalone-phone-results-rule: rgba(238, 194, 1, 0.33);
+  --mwnf-standalone-phone-results-see-offset: 18px;
+  --mwnf-standalone-phone-results-gap: 0px;
+  --mwnf-standalone-phone-pcr-heading-gap: 21px;
   --mwnf-standalone-heading-color: rgb(33 26 0);
   --mwnf-standalone-home-link: #222222;
   --mwnf-standalone-home-text-size: 16px;
