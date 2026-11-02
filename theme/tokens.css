@@ -257,9 +257,14 @@
   --mwnf-standalone-refine-search-color: #000000;
   --mwnf-standalone-refine-new-background: #a7881e;
   --mwnf-standalone-refine-shadow: #795e00;
-  /* The partner lists' accordion (pm_partner_list.php), closed and open. */
-  --islamicart-accordion-closed: url('./assets/legacy/down_arrow.png');
-  --islamicart-accordion-open: url('./assets/legacy/up_arrow.png');
+  /* The partner lists (pm_partner_list.php, .yellow): the yellow ground,
+     the gold rules and band, its arrow closed and open. */
+  --mwnf-standalone-pl-ground: #f5da66;
+  --mwnf-standalone-pl-heading-color: rgb(33 26 0);
+  --mwnf-standalone-pl-rule: #e0b700;
+  --mwnf-standalone-pl-toggle-color: #2b2920;
+  --mwnf-standalone-accordion-closed: url('./assets/legacy/down_arrow.png');
+  --mwnf-standalone-accordion-open: url('./assets/legacy/up_arrow.png');
   --mwnf-standalone-download-icon: url('./assets/legacy/download.png');
   /* The item sheet's language band (section.language_option). */
   --mwnf-standalone-language-bar: #e0b700;

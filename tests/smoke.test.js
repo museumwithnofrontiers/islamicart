@@ -535,23 +535,23 @@ describe('website smoke test', () => {
   // `level`/`parent_id`).
   it("renders Discover's partner museums as legacy's list, a country's associated museums behind its toggle", async () => {
     const { app, host } = await mountSite(`#/partners/results?type=museum&project=${PROJECTS.discover}&lang=en`)
-    await vi.waitFor(() => expect(host.querySelector('.islamicart-pl__country')).not.toBeNull(), { timeout: 20000 })
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-pl__group')).not.toBeNull(), { timeout: 20000 })
 
-    expect([...host.querySelectorAll('.islamicart-pl__heads h3')].map((h) => h.textContent)).toEqual(['Partner Museums', 'Associated Museums'])
-    const countries = [...host.querySelectorAll('.islamicart-pl__country')]
+    expect([...host.querySelectorAll('.mwnf-standalone-pl__heads h3')].map((h) => h.textContent)).toEqual(['Partner Museums', 'Associated Museums'])
+    const countries = [...host.querySelectorAll('.mwnf-standalone-pl__group')]
     expect(countries.map((c) => c.querySelector('h3').textContent)[0]).toBe('Algeria')
     const jordan = countries.find((c) => c.querySelector('h3').textContent === 'Jordan')
-    expect(jordan.querySelector('.islamicart-pl__main').textContent).toBe('Jordan Archaeological Museum')
+    expect(jordan.querySelector('.mwnf-standalone-pl__main').textContent).toBe('Jordan Archaeological Museum')
 
-    const associated = jordan.querySelector('.islamicart-pl__associated')
+    const associated = jordan.querySelector('.mwnf-standalone-pl__associated')
     expect(associated.style.display).toBe('none')
-    jordan.querySelector('.islamicart-pl__toggle').click()
+    jordan.querySelector('.mwnf-standalone-pl__toggle').click()
     await vi.waitFor(() => expect(associated.style.display).toBe(''))
     const names = [...associated.querySelectorAll('p')].map((p) => p.textContent)
     expect(names.at(-1)).toBe('Further Associated Museums')
     expect(names).toContain('Al-Saraya Museum')
     // Opening Italy closes Jordan.
-    countries.find((c) => c.querySelector('h3').textContent === 'Italy').querySelector('.islamicart-pl__toggle').click()
+    countries.find((c) => c.querySelector('h3').textContent === 'Italy').querySelector('.mwnf-standalone-pl__toggle').click()
     await vi.waitFor(() => expect(associated.style.display).toBe('none'))
 
     app.unmount()

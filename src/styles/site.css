@@ -67,17 +67,9 @@ a:hover {
    partner's objects (PartnerItems.vue) are the standalone family's results
    pages (viewer-layout's mwnf-standalone-pcr and mwnf-standalone-pmi). */
 
-/* Discover Islamic Art's partner lists (PartnerList.vue), as legacy's
-   pm_partner_list.php: the page on its own yellow ground; Back and the
-   other list's link, with Explore's link on the right; the headings over
-   col-md-6 and col-md-3; each country a row of two col-md-6 halves under a
-   gold rule, the museums' right half the gold band that opens the
-   associated museums (style_inside.css's .yellow, .country_head,
-   .pm_partner_list, .pt.center_contents). */
-.mwnf-content:has(.islamicart-pl) { background: #f5da66; }
-/* Legacy's 30px under the list, of which the content area gives 20. */
-.islamicart-pl { padding-bottom: 10px; }
-.islamicart-pl__back { min-height: 16px; margin: 0 0 15px; }
+/* Discover Islamic Art's partner lists (PartnerList.vue) are the standalone
+   family's (viewer-layout's mwnf-standalone-pl, coloured in theme/tokens.css);
+   Explore's link sits on the right of the way back. */
 .islamicart-pl__eiac {
   margin: 0 0 5px auto;
   padding-left: 16px;
@@ -85,82 +77,6 @@ a:hover {
   color: #222;
   text-decoration: underline;
   background: var(--mwnf-standalone-bullet, none) no-repeat 0 3px;
-}
-.islamicart-pl__heads,
-.islamicart-pl__head,
-.islamicart-pl__row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 30px;
-}
-.islamicart-pl__heads { margin: 0 0 15px; }
-.islamicart-pl__heads h3:nth-child(2) { width: calc(50% - 15px); }
-.islamicart-pl__heads h3 { margin: 0; font: 400 19px Roboto, sans-serif; color: rgb(33 26 0); }
-.islamicart-pl__head h3 {
-  margin: 10px 0 0;
-  border-bottom: 2px solid #e0b700;
-  font: 500 15px/22px Roboto, sans-serif;
-  color: #222;
-}
-.islamicart-pl__toggle {
-  position: relative;
-  display: block;
-  padding-left: 20px;
-  font: 400 16px/22px Roboto, sans-serif;
-  color: #2b2920;
-  text-decoration: none;
-  background: #e0b700 var(--islamicart-accordion-closed, none) no-repeat 5px 8px / 10px 5px;
-}
-.islamicart-pl__toggle--active { background-image: var(--islamicart-accordion-open, none); }
-/* The rule runs on under the gap between the halves. */
-.islamicart-pl--museums .islamicart-pl__toggle::before {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: -50%;
-  width: 100%;
-  height: 2px;
-  background: #e0b700;
-}
-/* The institutions: legacy's plain accordion (.country_head h3 a), the
-   country the title, gold while open, the open section padded. */
-.islamicart-pl--institutions .islamicart-pl__head { grid-template-columns: 1fr; }
-.islamicart-pl--institutions .islamicart-pl__head h3 {
-  width: calc(50% - 15px);
-  border: 0;
-  font-size: 16px;
-  color: #000;
-}
-.islamicart-pl--institutions .islamicart-pl__toggle {
-  display: inline;
-  margin-left: 10px;
-  padding: 0 20px;
-  font-weight: 500;
-  color: #000;
-  background-color: transparent;
-  background-position: 0 8px;
-}
-.islamicart-pl--institutions .islamicart-pl__toggle--active { background-color: #e0b700; }
-.islamicart-pl--institutions .islamicart-pl__row { padding: 15px; }
-.islamicart-pl__associated { padding-left: 10px; }
-.islamicart-pl__row p {
-  margin: 0 0 3px 2px;
-  padding-right: 8px;
-  font: 400 16px/29px Roboto, sans-serif;
-  color: #222;
-}
-.islamicart-pl__associated p { margin-left: 11px; }
-.islamicart-pl__row a {
-  margin-left: 13px;
-  padding-left: 14px;
-  font: 400 16px/22px Roboto, sans-serif;
-  color: #222;
-  text-decoration: none;
-  background: var(--mwnf-standalone-bullet, none) no-repeat 0 3px;
-}
-.islamicart-pl__row a:hover { text-decoration: underline; }
-@media (max-width: 62rem) {
-  .islamicart-pl__heads, .islamicart-pl__head, .islamicart-pl__row { grid-template-columns: 1fr; }
 }
 
 /* Explore Islamic Art Collections' partner list (PartnerListEiac.vue), as
