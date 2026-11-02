@@ -21,47 +21,8 @@ a:hover {
   text-decoration: underline;
 }
 
-/* The Permanent Collection entrance (PermanentCollectionSearch.vue), as
-   legacy's pc_entrance.php: col-md-3 for the lists, col-md-2 empty, col-md-6
-   for About (style_inside.css's .short_heading h3, its p and its selects). */
-.islamicart-pc {
-  display: grid;
-  grid-template-columns: 3fr 2fr 6fr 1fr;
-  /* Bootstrap's row: the columns' 15px gutters reach past the content box,
-     whose own padding stands for legacy's section padding. */
-  margin: 0 -15px;
-  padding: 0 0 10px;
-}
-.islamicart-pc__lists { grid-column: 1; padding: 0 15px; }
-.islamicart-pc__about { grid-column: 3; padding: 0 15px; }
-.islamicart-pc__heading {
-  margin: 0 0 15px;
-  font: 400 19px Roboto, sans-serif;
-  color: rgb(33 26 0);
-}
-.islamicart-pc p {
-  margin: 0 0 10px;
-  font: 400 16px/22px Roboto, sans-serif;
-  color: #222;
-}
-.islamicart-pc__text a {
-  color: #222;
-  text-decoration: underline;
-}
-.islamicart-pc select {
-  width: 100%;
-  margin-top: 5px;
-  padding: 5px 10px;
-  border: 1px solid #767676;
-  border-radius: 0;
-  font: 500 14px Roboto, sans-serif;
-  color: #222;
-  background-color: #efefef;
-}
-@media (max-width: 62rem) {
-  .islamicart-pc { grid-template-columns: 1fr; }
-  .islamicart-pc__lists, .islamicart-pc__about { grid-column: 1; }
-}
+/* The Permanent Collection entrance (PermanentCollectionSearch.vue) is the
+   standalone family's (viewer-layout's mwnf-standalone-pc). */
 
 /* The Permanent Collection results (PermanentCollectionResults.vue) and a
    partner's objects (PartnerItems.vue) are the standalone family's results
