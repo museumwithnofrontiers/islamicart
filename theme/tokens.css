@@ -324,6 +324,25 @@
   --mwnf-standalone-phone-results-see-offset: 18px;
   --mwnf-standalone-phone-results-gap: 0px;
   --mwnf-standalone-phone-pcr-heading-gap: 21px;
+  /* Below 750px the Database's own phone form (database.php): rows 49px
+     apart, Glossary & Spelling right under the heading, Go centred, the
+     complete listing under it. */
+  --mwnf-standalone-phone-db-row-gap: 19px;
+  /* The Collections entrance's About under its lists, on a phone. */
+  --mwnf-standalone-phone-pc-about-gap: 41px;
+  --mwnf-standalone-phone-pc-bottom: 29px;
+  --mwnf-standalone-phone-db-top: 18px;
+  --mwnf-standalone-phone-db-bottom: 44px;
+  --mwnf-standalone-phone-db-aside-gap: 14px;
+  --mwnf-standalone-phone-db-aside-align: end;
+  --mwnf-standalone-phone-db-language-indent: 78px;
+  --mwnf-standalone-phone-db-language-width: 127px;
+  --mwnf-standalone-phone-db-go-width: 100%;
+  --mwnf-standalone-phone-db-listing-width: 100%;
+  --mwnf-standalone-phone-db-listing-gap: 0px;
+  --mwnf-standalone-phone-db-listing-offset: 10px;
+  --mwnf-standalone-phone-db-options-offset: 13px;
+  --mwnf-standalone-phone-db-go-offset: 11px;
   --mwnf-standalone-heading-color: rgb(33 26 0);
   --mwnf-standalone-home-link: #222222;
   --mwnf-standalone-home-text-size: 16px;
