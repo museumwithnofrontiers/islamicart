@@ -36,9 +36,9 @@ function openPartners(value) {
 </script>
 
 <template>
-  <div class="islamicart-pc">
-    <div class="islamicart-pc__lists">
-      <h3 class="islamicart-pc__heading">{{ t('islamicart.pc.sortBy') }}</h3>
+  <div class="mwnf-standalone-pc">
+    <div class="mwnf-standalone-pc__lists">
+      <h3 class="mwnf-standalone-pc__heading">{{ t('islamicart.pc.sortBy') }}</h3>
       <p>
         <select @change="open('country', $event.target.value)">
           <option value="">{{ t('islamicart.pc.country') }}</option>
@@ -71,9 +71,9 @@ function openPartners(value) {
         </select>
       </p>
     </div>
-    <div class="islamicart-pc__about">
-      <h3 class="islamicart-pc__heading">{{ t('islamicart.pc.about') }}</h3>
-      <I18nText tag="div" class="islamicart-pc__text" keypath="islamicart.pc.text" />
+    <div class="mwnf-standalone-pc__about">
+      <h3 class="mwnf-standalone-pc__heading">{{ t('islamicart.pc.about') }}</h3>
+      <I18nText tag="div" keypath="islamicart.pc.text" />
     </div>
   </div>
 </template>

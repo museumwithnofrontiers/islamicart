@@ -368,11 +368,11 @@ describe('website smoke test', () => {
   // records' own (composables/catalogue.js's `FACETS`).
   it("renders the Permanent Collection entrance as legacy's, opening the results on a pick", async () => {
     const { app, host } = await mountSite('#/permanent-collection?lang=en')
-    await vi.waitFor(() => expect(host.querySelectorAll('.islamicart-pc select').length).toBe(5), { timeout: 20000 })
-    const headings = [...host.querySelectorAll('.islamicart-pc__heading')].map((h) => h.textContent.trim())
+    await vi.waitFor(() => expect(host.querySelectorAll('.mwnf-standalone-pc select').length).toBe(5), { timeout: 20000 })
+    const headings = [...host.querySelectorAll('.mwnf-standalone-pc__heading')].map((h) => h.textContent.trim())
     expect(headings).toEqual(['Sort by', 'About'])
-    expect(host.querySelector('.islamicart-pc__text').textContent).toContain('four ways to sort')
-    const country = host.querySelector('.islamicart-pc select')
+    expect(host.querySelector('.mwnf-standalone-pc__about').textContent).toContain('four ways to sort')
+    const country = host.querySelector('.mwnf-standalone-pc select')
     await vi.waitFor(() => expect(country.options.length).toBeGreaterThan(2), { timeout: 20000 })
     country.value = country.options[2].value
     country.dispatchEvent(new Event('change'))
