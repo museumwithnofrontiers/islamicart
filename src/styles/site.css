@@ -63,24 +63,9 @@ a:hover {
   .islamicart-pc__lists, .islamicart-pc__about { grid-column: 1; }
 }
 
-/* The Permanent Collection results (PermanentCollectionResults.vue) are the
-   standalone family's results page (viewer-layout's mwnf-standalone-pcr). */
-
-/* A partner's objects or monuments (PartnerItems.vue), as legacy's
-   pm_museum_items.php: the results page's columns, under a heading of the
-   name and an italic place in col-md-8; the tiles float in the column
-   without pclist_all.php's col-lg-3 cells; the side column has no padding
-   and "Partner Profile" no top margin (style_inside.css's .short_heading,
-   .as div a). The place's 10px bottom margin falls inside the heading's
-   15px, as legacy's collapsed: a flex item's margins do not. */
-.islamicart-pmi__heading { max-width: calc((100% + 30px) * 2 / 3 - 30px); margin: 0 0 15px; }
-.islamicart-pmi__heading .mwnf-standalone-pcr__heading { margin: 0; }
-.islamicart-pmi__heading p {
-  margin: 0;
-  font: 400 16px/22px Roboto, sans-serif;
-  color: #222;
-}
-.islamicart-pmi .mwnf-standalone-results__cell { width: auto; padding: 0; }
+/* The Permanent Collection results (PermanentCollectionResults.vue) and a
+   partner's objects (PartnerItems.vue) are the standalone family's results
+   pages (viewer-layout's mwnf-standalone-pcr and mwnf-standalone-pmi). */
 
 /* Discover Islamic Art's partner lists (PartnerList.vue), as legacy's
    pm_partner_list.php: the page on its own yellow ground; Back and the
@@ -177,8 +162,6 @@ a:hover {
 @media (max-width: 62rem) {
   .islamicart-pl__heads, .islamicart-pl__head, .islamicart-pl__row { grid-template-columns: 1fr; }
 }
-.islamicart-pmi .mwnf-catalogue__aside { padding: 0; }
-.islamicart-pmi .mwnf-standalone-pcr__related a { margin-top: 0; }
 
 /* Explore Islamic Art Collections' partner list (PartnerListEiac.vue), as
    legacy's pm_partner_list_eiac.php: the band's italic title; the page on
