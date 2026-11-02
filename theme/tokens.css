@@ -74,6 +74,10 @@
   --mwnf-footer-text-color: #4c4214;
   /* Legacy's p.cookie_footer: 14px medium; #social-media's dark gold icons. */
   --mwnf-footer-text-size: 14px;
+  /* #social-media's icons: 3px apart on the inner pages (style_inside.css);
+     on a phone at the footer's foot, 25px in from the right. */
+  --mwnf-standalone-inner-footer-social-margin: 3px;
+  --mwnf-standalone-phone-footer-social-right: 25px;
   --mwnf-footer-justify: center;
   --mwnf-standalone-footer-weight: 500;
   --mwnf-footer-social-color: rgb(113 88 0 / 0.97);
