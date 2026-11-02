@@ -282,6 +282,8 @@
   --mwnf-standalone-pl-toggle-color: #2b2920;
   --mwnf-standalone-accordion-closed: url('./assets/legacy/down_arrow.png');
   --mwnf-standalone-accordion-open: url('./assets/legacy/up_arrow.png');
+  /* The Sponsors page's heading (h3.time_line_con_title). */
+  --mwnf-standalone-sp-heading-color: rgb(33 26 0);
   --mwnf-standalone-download-icon: url('./assets/legacy/download.png');
   /* The item sheet's language band (section.language_option). */
   --mwnf-standalone-language-bar: #e0b700;

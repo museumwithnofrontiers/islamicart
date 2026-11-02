@@ -99,6 +99,7 @@
   "islamicart.nav.portal": "Portail MWNF",
   "islamicart.nav.timeline": "Chronologie",
   "islamicart.page.print": "Imprimer cette page",
+  "islamicart.partner.sponsors": "Sponsors",
   "islamicart.pc.about": "À propos",
   "islamicart.pc.ad": "ap. J.C.",
   "islamicart.pc.country": "Pays",
@@ -186,8 +187,10 @@
   "islamicart.sponsors.europeanUnion": "The European Commission is the EU’s executive body.  \nThe European Union is made up of 27 Member States who have decided to gradually link together their know-how, resources and destinies. Together, during a period of enlargement of 50 years, they have built a zone of stability, democracy and sustainable development whilst maintaining cultural diversity, tolerance and individual freedoms. The European Union is committed to sharing its achievements and its values with countries and peoples beyond its borders.",
   "islamicart.sponsors.exploreHead": "Explorez les collections d’art islamique",
   "islamicart.sponsors.exploreText": "Version en arabe",
+  "islamicart.sponsors.internationalHeading": "Sponsors internationaux",
   "islamicart.sponsors.supportHead": "Découvrir l'art islamique",
   "islamicart.sponsors.supportText": "a été mis en place avec le soutien de:",
+  "islamicart.sponsors.title": "Sponsors",
   "record.action.hideShortDescription": "Cacher brève description",
   "record.action.viewShortDescription": "Voir brève description"
 }

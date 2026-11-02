@@ -1,0 +1,38 @@
+[
+  {
+    "name": "European Union",
+    "web": "www.ec.europa.eu/index_en.htm",
+    "remarks": "",
+    "logo": "sponsors/20.jpg"
+  },
+  {
+    "name": "Euromed Heritage",
+    "web": "www.euromedheritage.net",
+    "remarks": "",
+    "logo": "sponsors/21.jpg"
+  },
+  {
+    "name": "Fundação Calouste Gulbenkian",
+    "web": "www.gulbenkian.pt",
+    "remarks": "",
+    "logo": "sponsors/22.jpg"
+  },
+  {
+    "name": "Ministerio de Asuntos Exteriores y de Cooperación",
+    "web": "www.exteriores.gob.es/Portal/es/Paginas/inicio.aspx",
+    "remarks": "",
+    "logo": "sponsors/23.jpg"
+  },
+  {
+    "name": "Ministerio de Educación, Cultura y Deporte",
+    "web": "www.mecd.gob.es/portada-mecd/",
+    "remarks": "",
+    "logo": "sponsors/56.jpg"
+  },
+  {
+    "name": "Fondation ONA",
+    "web": "www.fondationona.ma",
+    "remarks": "",
+    "logo": "sponsors/57.jpg"
+  }
+]

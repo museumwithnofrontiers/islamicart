@@ -14,14 +14,14 @@ defineProps({ id: { type: String, required: true } })
 const { locale } = useI18n()
 
 const list = (type, project) => ({ name: 'partners-results', query: { type, project, lang: locale.value } })
-// Legacy's links back, for the list the partner is reached from. Its
-// Sponsors page and Explore's per-country list are not built yet: those
-// two links wait for them.
+// Legacy's links back, for the list the partner is reached from. Explore's
+// per-country list is not built yet: its link waits for it.
 const back = (record) => [
   { label: 'islamicart.pcr.back', history: true },
   ...(exploreOnly(record)
     ? [{ label: 'islamicart.pmi.allCountries', to: list('museum', PROJECTS.explore) }]
     : [
+        { label: 'islamicart.partner.sponsors', to: { name: 'sponsors', query: { lang: locale.value } } },
         { label: 'islamicart.pmi.partnerMuseums', to: list('museum', PROJECTS.discover) },
         { label: 'islamicart.pmi.otherPartners', to: list('institution', PROJECTS.discover) },
       ]),
