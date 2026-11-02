@@ -230,10 +230,27 @@
   --mwnf-standalone-header-height: 81px;
   --mwnf-standalone-header-inset: 65px;
   --mwnf-standalone-header-link-color: #000000;
+  /* The header hangs from the top: the logo and the links 15px down, the
+     heading 30px (under legacy's empty line), the "|" between the links;
+     the language list 2px under them, grey, 95 by 18; the logo 120 wide. */
+  --mwnf-standalone-header-align: start;
+  --mwnf-standalone-header-brand-offset: 15px;
+  --mwnf-standalone-header-title-offset: 30px;
+  --mwnf-standalone-header-tools-offset: 15px;
+  --mwnf-standalone-header-links-gap: 5.5px;
+  --mwnf-standalone-language-select-width: 95px;
+  --mwnf-standalone-language-select-height: 18px;
+  --mwnf-standalone-language-select-padding: 0 7px;
+  --mwnf-standalone-language-select-color: #000000;
+  --mwnf-standalone-language-select-background: #efefef;
+  --mwnf-standalone-header-tools-gap: 2px;
+  --mwnf-standalone-header-title-line-height: normal;
+  --mwnf-standalone-header-title-color: #4c420e;
   --mwnf-standalone-heading-size: 34px;
   --mwnf-standalone-heading-color: #4c420e;
   --mwnf-standalone-heading-shadow: 2px 2px 5px #ffd600;
   --mwnf-standalone-logo-height: 50px;
+  --mwnf-standalone-logo-width: 120px;
   --mwnf-standalone-banner-height: 160px;
   --mwnf-standalone-banner-title-size: 30px;
   --mwnf-standalone-banner-title-color: #ffeeab;
