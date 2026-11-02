@@ -181,6 +181,33 @@ export function resultTile(item, { tr, renderInline }) {
   }
 }
 
+// Legacy's search result (database_results.php): the name and the location
+// with the country's name; the date, cut at 145 characters past 150, and
+// the free-text dynasty. Its preview: the date line uncut, an object's
+// holding museum, and the location, the province and the country.
+export function databaseRow(item, { tr, renderInline }) {
+  const text = tr('items', item.id)
+  const plain = (value) => removeEndingPoint(String(value ?? '').replace(/[\r\n]/g, ''))
+  const date = plain(text.dates)
+  const listed = String(text.dates ?? '').length > 150 ? `${date.slice(0, 145)}...` : date
+  const dynasty = plain(text.dynasty)
+  const country = namesCountry(item) ? countryLabel(item.country_id, languageOf('items', item.id)) : ''
+  const line = (...parts) => renderInline(parts.filter(Boolean).join(', '))
+  return {
+    id: item.id,
+    to: itemRoute(item),
+    image: item.images?.[0]?.url ?? '',
+    name: renderInline(plain(text.name ?? item.internal_name)),
+    place: line(plain(text.location), country),
+    dates: line(listed, dynasty),
+    preview: {
+      lines: [line(date, dynasty)],
+      holder: item.type === 'object' && text.holder ? renderInline(plain(text.holder)) : '',
+      location: line(plain(text.location), plain(text.province), country),
+    },
+  }
+}
+
 export const permanentCollectionResultsSpec = {
   entity: 'items',
   keys: ['country', 'dynasty', 'partner', 'begin', 'end'],

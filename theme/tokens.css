@@ -248,6 +248,15 @@
   --mwnf-standalone-back-arrow: url('./assets/legacy/back_arrow.png');
   /* The Permanent Collection results' date lists (span.select_png). */
   --mwnf-standalone-select-arrow: url('./assets/legacy/select.png');
+  /* The search results' "Refine your search" band (section.timeline_color):
+     dark words on gold, pale yellow borders, gold buttons. */
+  --mwnf-standalone-refine-background: #e0b700;
+  --mwnf-standalone-refine-color: #222222;
+  --mwnf-standalone-refine-weight: 500;
+  --mwnf-standalone-refine-input-border: #f5f1bc;
+  --mwnf-standalone-refine-search-color: #000000;
+  --mwnf-standalone-refine-new-background: #a7881e;
+  --mwnf-standalone-refine-shadow: #795e00;
   /* The partner lists' accordion (pm_partner_list.php), closed and open. */
   --islamicart-accordion-closed: url('./assets/legacy/down_arrow.png');
   --islamicart-accordion-open: url('./assets/legacy/up_arrow.png');

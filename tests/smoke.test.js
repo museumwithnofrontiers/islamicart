@@ -10,7 +10,11 @@ import minisites from '../src/minisites.json'
 // The same two layers main.js assembles, in the same order: the shared bundle
 // first, this website's own file last. Mounting without them would prove
 // nothing about the chrome — every text would render as its own name.
-const messages = mergeMessages(sharedTexts, { en: ownTexts })
+const ownLocales = Object.fromEntries(
+  Object.entries(import.meta.glob('../locales/*.json', { eager: true, import: 'default' }))
+    .map(([path, texts]) => [path.match(/([a-z]+)\.json$/)[1], texts]),
+)
+const messages = mergeMessages(sharedTexts, ownLocales)
 
 // The kit's own `mountSite`, bound to this website's config and messages —
 // every call site below reads exactly as it did when this file built the
@@ -78,10 +82,9 @@ describe('website smoke test', () => {
   // Explore Islamic Art Collections records together. The tile count alone
   // would not show this — a page holds twenty regardless — so this reads the
   // heading's "[N Objects, M Monuments]" against the package.
-  // The composed view's summary total, which the database search still shows.
+  // The database results' count, legacy's "Results of your search | 431 records".
   function summaryTotal(host) {
-    return [...host.querySelectorAll('.mwnf-summary__count')]
-      .reduce((sum, el) => sum + Number(el.textContent), 0)
+    return Number(host.querySelector('.mwnf-standalone-pcr__heading').textContent.match(/\| (\d+)/)[1])
   }
 
   function headingTotal(host) {
@@ -283,13 +286,29 @@ describe('website smoke test', () => {
     const cross = items.find((i) => i.id === '55ec1f26-ba55-52bc-a1b6-556c48ff41e4')
     expect(cross.country_id).toBe('jor')
 
-    const { app, host } = await mountSite('#/database/results?q=Jordan&field=keyword')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 20000 })
+    // Its name narrows the twelve-a-page list to it; "Jordan" is not in its text.
+    const { app, host } = await mountSite('#/database/results?q=Jordan&field=keyword&q2=Greek+cross&field2=name&op2=AND')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-list__cell')).not.toBeNull(), { timeout: 20000 })
     expect(host.textContent).toContain('A bronze Greek cross')
-    // The recap line spells out what was searched — never just a count.
-    expect(host.textContent).toContain('Keyword(s): "Jordan"')
+    // Legacy's heading with the count; no recap of what was searched.
+    expect(host.querySelector('.mwnf-standalone-pcr__heading').textContent).toMatch(/^Results of your search \| \d+ records$/)
     app.unmount()
   }, 30000)
+
+  // Legacy's database_results.php: the "Refine your search" band, the way
+  // back, the list beside the first record's preview, twelve a page; in
+  // Arabic, legacy's Arabic words.
+  it('renders the database results as legacy drew them', async () => {
+    const { app, host } = await mountSite('#/database/results?q=mosque&field=keyword&lang=ar')
+    // The Arabic words arrive after the page.
+    await vi.waitFor(() => expect([...host.querySelectorAll('.mwnf-standalone-refine__label')].map((l) => l.textContent)).toEqual(['تنقية البحث:', 'في']), { timeout: 40000 })
+    expect(host.querySelector('.mwnf-standalone-refine__button--new').textContent).toBe('بحث جديد')
+    expect(host.querySelectorAll('.mwnf-standalone-list__cell').length).toBe(12)
+    const first = host.querySelector('.mwnf-standalone-list__name').textContent
+    expect(host.querySelector('.mwnf-standalone-list__preview strong').textContent).toBe(first.replace(/,$/, ''))
+    app.unmount()
+    localStorage.removeItem('mwnf.language')
+  }, 60000)
 
   // Decision D3: the counts are legacy's, every language searched unless one
   // is chosen. Measured on legacy's database_results.php on 2026-11-01
@@ -303,7 +322,7 @@ describe('website smoke test', () => {
     ['ذهب', '&lang=ar', 273],
   ])('finds as many records as legacy for %s', async (word, extra, count) => {
     const { app, host } = await mountSite(`#/database/results?q=${encodeURIComponent(word)}&field=keyword${extra}`)
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 40000 })
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-list__cell')).not.toBeNull(), { timeout: 40000 })
     expect(summaryTotal(host)).toBe(count)
     app.unmount()
     // The language a visitor picks is kept; the tests after this one read English.
@@ -315,12 +334,12 @@ describe('website smoke test', () => {
   // by both specs).
   it('widens the database search when Explore is set in the URL', async () => {
     const { app: withoutEpm, host: hostWithoutEpm } = await mountSite('#/database/results')
-    await vi.waitFor(() => expect(hostWithoutEpm.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 20000 })
+    await vi.waitFor(() => expect(hostWithoutEpm.querySelector('.mwnf-standalone-list__cell')).not.toBeNull(), { timeout: 20000 })
     const totalWithoutEpm = summaryTotal(hostWithoutEpm)
     withoutEpm.unmount()
 
     const { app: withEpm, host: hostWithEpm } = await mountSite('#/database/results?epm=1')
-    await vi.waitFor(() => expect(hostWithEpm.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 20000 })
+    await vi.waitFor(() => expect(hostWithEpm.querySelector('.mwnf-standalone-list__cell')).not.toBeNull(), { timeout: 20000 })
     const totalWithEpm = summaryTotal(hostWithEpm)
     withEpm.unmount()
 
@@ -332,12 +351,12 @@ describe('website smoke test', () => {
   // fourth keyword to the three already submitted.
   it('narrows a search with the refine row', async () => {
     const { app: broad, host: broadHost } = await mountSite('#/database/results?q=Jordan&field=keyword')
-    await vi.waitFor(() => expect(broadHost.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 20000 })
+    await vi.waitFor(() => expect(broadHost.querySelector('.mwnf-standalone-list__cell')).not.toBeNull(), { timeout: 20000 })
     const broadTotal = summaryTotal(broadHost)
     broad.unmount()
 
     const { app, host } = await mountSite('#/database/results?q=Jordan&field=keyword&q4=cross&field4=keyword&op4=AND')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-list__row')).not.toBeNull(), { timeout: 20000 })
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-list__cell')).not.toBeNull(), { timeout: 20000 })
     expect(summaryTotal(host)).toBeLessThan(broadTotal)
     expect(host.textContent).toContain('A bronze Greek cross')
     app.unmount()
