@@ -11,7 +11,8 @@ import { exploreOnly, partnerItemsSpec } from '../composables/partner.js'
 // pm_institution_items.php: the way back, the partner's name with its city
 // and country, the Permanent Collection's tiles with "Partner Profile"
 // beside them, and legacy's pages under both. Every word is legacy's own
-// (islamicart.pmi.*, islamicart.pcr.*, its translation table).
+// (islamicart.pmi.*, islamicart.pcr.*, its translation table); the
+// layout is the standalone family's (viewer-layout's `mwnf-standalone-pmi`).
 
 const props = defineProps({ id: { type: String, required: true } })
 
@@ -43,13 +44,13 @@ const backLinks = computed(() =>
 </script>
 
 <template>
-  <CatalogueResultsView :spec="spec" class="mwnf-standalone-pcr islamicart-pmi">
+  <CatalogueResultsView :spec="spec" class="mwnf-standalone-pcr mwnf-standalone-pmi">
     <template #before>
       <p class="mwnf-standalone-item__back mwnf-standalone-pcr__back">
         <button type="button" class="mwnf-standalone-item__back-link" @click="$router.back()">{{ t('islamicart.pcr.back') }}</button>
         <RouterLink v-for="link in backLinks" :key="link.label" class="mwnf-standalone-item__back-link" :to="link.to">{{ link.label }}</RouterLink>
       </p>
-      <div class="islamicart-pmi__heading">
+      <div class="mwnf-standalone-pmi__heading">
         <h3 class="mwnf-standalone-pcr__heading">{{ removeEndingPoint(text.name ?? partner?.internal_name ?? '') }}</h3>
         <p><i>{{ place }}</i></p>
       </div>
