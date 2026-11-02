@@ -99,6 +99,7 @@
   "islamicart.nav.portal": "بوابة متحف بلا حدود",
   "islamicart.nav.timeline": "الخط الزماني",
   "islamicart.page.print": "إطبع هذه الصفحة",
+  "islamicart.partner.sponsors": "الداعمون",
   "islamicart.pc.about": "عن",
   "islamicart.pc.ad": "بعد الميلاد",
   "islamicart.pc.country": "الدولة",
@@ -186,8 +187,10 @@
   "islamicart.sponsors.europeanUnion": "The European Commission is the EU’s executive body.  \nThe European Union is made up of 27 Member States who have decided to gradually link together their know-how, resources and destinies. Together, during a period of enlargement of 50 years, they have built a zone of stability, democracy and sustainable development whilst maintaining cultural diversity, tolerance and individual freedoms. The European Union is committed to sharing its achievements and its values with countries and peoples beyond its borders.",
   "islamicart.sponsors.exploreHead": "اكتشف مجموعات الفن الإسلامي",
   "islamicart.sponsors.exploreText": "النسخة العربية",
+  "islamicart.sponsors.internationalHeading": "International Sponsors",
   "islamicart.sponsors.supportHead": "اكتشف الفن الإسلامي",
   "islamicart.sponsors.supportText": "أنشئ بدعم من :",
+  "islamicart.sponsors.title": "الداعمون",
   "record.action.hideShortDescription": "إخفاء الوصف المختصر",
   "record.action.viewShortDescription": "طالع الوصف الموجز"
 }

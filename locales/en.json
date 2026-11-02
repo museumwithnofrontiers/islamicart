@@ -111,6 +111,7 @@
   "islamicart.partner.associatedMuseums": "Associated Museums",
   "islamicart.partner.introDiscover": "Discover Islamic Art is a collaborative project bringing together museums and institutions from across the Islamic world and beyond. Browse the partner museums that lend and hold the objects in the collection, or the partner institutions responsible for the monuments and historic sites.",
   "islamicart.partner.introExplore": "Explore Islamic Art Collections brings together further museums and institutions beyond the core Discover Islamic Art network.",
+  "islamicart.partner.sponsors": "Sponsors",
   "islamicart.pc.about": "About",
   "islamicart.pc.ad": "A.D.",
   "islamicart.pc.country": "Country",
@@ -200,8 +201,10 @@
   "islamicart.sponsors.europeanUnion": "The European Commission is the EU’s executive body.  \nThe European Union is made up of 27 Member States who have decided to gradually link together their know-how, resources and destinies. Together, during a period of enlargement of 50 years, they have built a zone of stability, democracy and sustainable development whilst maintaining cultural diversity, tolerance and individual freedoms. The European Union is committed to sharing its achievements and its values with countries and peoples beyond its borders.",
   "islamicart.sponsors.exploreHead": "Explore Islamic Art Collections",
   "islamicart.sponsors.exploreText": "Arabic version",
+  "islamicart.sponsors.internationalHeading": "International Sponsors",
   "islamicart.sponsors.supportHead": "Discover Islamic Art",
   "islamicart.sponsors.supportText": "was set up with the support of:",
+  "islamicart.sponsors.title": "Sponsors",
   "islamicart.timeline.intro": "Explore historical events from the Islamic world. Select a country and/or a time period below, then click **Go**.",
   "record.action.hideShortDescription": "Hide Short Description",
   "record.action.viewShortDescription": "View Short Description"

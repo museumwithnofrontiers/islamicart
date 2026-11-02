@@ -187,6 +187,7 @@ export default {
       dynasties: 'islamicart.dynasties.title',
       'mission-statement': 'islamicart.missionStatement.title',
       'recommended-links': 'islamicart.home.recommendedLinks',
+      sponsors: 'islamicart.sponsors.title',
     },
   },
 
@@ -313,6 +314,14 @@ export default {
         to.query.project === PROJECTS.explore
           ? { name: 'partners-explore', query: { type: to.query.type, lang: to.query.lang } }
           : true,
+    },
+    {
+      // atrium_sponsor_detail.php?id=ISL&flg=inter: legacy's international
+      // sponsors, from the website's own files.
+      path: '/sponsors',
+      name: 'sponsors',
+      component: () => import('./views/SponsorsPage.vue'),
+      meta: meta('sponsors'),
     },
     {
       // pm_partner_list_eiac.php, in a section of its own: its band's title.

@@ -38,6 +38,7 @@ const back = computed(() => [
   museums.value
     ? { label: t('islamicart.pmi.otherPartners'), to: list('institution', PROJECTS.discover) }
     : { label: t('islamicart.pmi.partnerMuseums'), to: list('museum', PROJECTS.discover) },
+  { label: t('islamicart.partner.sponsors'), to: { name: 'sponsors', query: { lang: locale.value } } },
 ])
 const heads = computed(() =>
   museums.value ? [t('islamicart.pl.partnerMuseums'), t('islamicart.pl.associatedMuseums')] : [t('islamicart.pmi.otherPartners')],

@@ -6,6 +6,7 @@ import ownTexts from '../locales/en.json'
 import config, { PROJECTS, SITE_LANGUAGES } from '../src/dataset.config.js'
 import { useData } from '../src/composables/data.js'
 import minisites from '../src/minisites.json'
+import sponsors from '../src/legacy/sponsors.json'
 
 // The same two layers main.js assembles, in the same order: the shared bundle
 // first, this website's own file last. Mounting without them would prove
@@ -593,7 +594,7 @@ describe('website smoke test', () => {
     await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-partner__name')?.textContent).toContain('Ajlun Castle Museum'), { timeout: 20000 })
 
     expect([...host.querySelectorAll('.mwnf-standalone-item__back-link')].map((link) => link.textContent.trim()))
-      .toEqual(['Back', 'Partner Museums', 'Other Partners'])
+      .toEqual(['Back', 'Sponsors', 'Partner Museums', 'Other Partners'])
     expect(host.querySelector('.mwnf-standalone-partner__location').textContent).toContain('Jordan')
     const tabs = [...host.querySelectorAll('[role="tab"]')].map((tab) => tab.textContent.trim())
     expect(tabs).toEqual(['About', 'Contact', 'Logo'])
@@ -638,6 +639,23 @@ describe('website smoke test', () => {
     app.unmount()
   }, 60000)
 
+  // Legacy's atrium_sponsor_detail.php?id=ISL&flg=inter: the international
+  // sponsors from the website's own files, each logo one the site holds.
+  it("renders legacy's international Sponsors page", async () => {
+    const { app, host } = await mountSite('#/sponsors?lang=en')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-sp__row')).not.toBeNull(), { timeout: 20000 })
+    expect(host.querySelector('.mwnf-standalone-sp__heading').textContent).toBe('International Sponsors')
+    const names = [...host.querySelectorAll('.mwnf-standalone-sp__text p:first-child')].map((p) => p.textContent)
+    expect(names).toEqual(sponsors.map((row) => row.name))
+    expect(names[0]).toBe('European Union')
+    const logos = [...host.querySelectorAll('.mwnf-standalone-sp__logo img')].map((img) => img.getAttribute('src'))
+    expect(logos).toHaveLength(sponsors.length)
+    expect(logos.every((src) => src && !src.includes('museumwnf.org'))).toBe(true)
+    expect([...host.querySelectorAll('.mwnf-standalone-item__back-link')].map((link) => link.textContent.trim()))
+      .toEqual(['Back', 'Partner Museums', 'Other Partners'])
+    app.unmount()
+  }, 60000)
+
   // Legacy's pm_museum_items.php / pm_institution_items.php: a museum's
   // objects of both projects, an institution's monuments, in the Permanent
   // Collection's order and tiles, under the partner's name and place, with
@@ -650,7 +668,7 @@ describe('website smoke test', () => {
     await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-results__tile')).not.toBeNull(), { timeout: 20000 })
     expect(host.querySelector('.mwnf-standalone-pmi__heading h3').textContent).toBe('Museum of Civilisations | Museum of Oriental Art')
     expect(host.querySelector('.mwnf-standalone-pmi__heading p').textContent).toBe('Rome, Italy')
-    expect([...host.querySelectorAll('.mwnf-standalone-pcr__back > *')].map((el) => el.textContent)).toEqual(['Back', 'Partner Museums', 'Other Partners'])
+    expect([...host.querySelectorAll('.mwnf-standalone-pcr__back > *')].map((el) => el.textContent)).toEqual(['Back', 'Sponsors', 'Partner Museums', 'Other Partners'])
     expect(host.querySelectorAll('.mwnf-standalone-results__tile').length).toBe(Math.min(20, objects.length))
     expect(host.querySelector('.mwnf-standalone-results__name').textContent).toBe('Coin (dirham)')
     expect(host.querySelector('.mwnf-standalone-pcr__related a').getAttribute('href')).toContain(`#/partner/${rome.id}`)

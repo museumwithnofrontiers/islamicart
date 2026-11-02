@@ -188,6 +188,12 @@
     "theme/assets/legacy/random_image/DIA_new/168.jpg": { "source": "https://islamicart.museumwnf.org/random_image/DIA_new/168.jpg", "sha256": "e8a097280e5474afcb9c3913a20777d3a8240e4a2cd20ffbd10cc542f5903581" },
     "theme/assets/legacy/random_image/DIA_new/169.jpg": { "source": "https://islamicart.museumwnf.org/random_image/DIA_new/169.jpg", "sha256": "7e9d083ca868995e61fad7fb67acb5a4df5a42b1af31f1e409764c1155bbd003" },
     "theme/assets/legacy/random_image/DIA_new/170.jpg": { "source": "https://islamicart.museumwnf.org/random_image/DIA_new/170.jpg", "sha256": "cd74f190b0be661d258a090b7c8d5ac59eeab8fe465e132ed32c71f7e57bafed" },
-    "theme/assets/legacy/random_image/DIA_new/171.jpg": { "source": "https://islamicart.museumwnf.org/random_image/DIA_new/171.jpg", "sha256": "cb0af730c599d37e2e71e2dd33268e6debb679fb7156950adaf15f6ae590dd19" }
+    "theme/assets/legacy/random_image/DIA_new/171.jpg": { "source": "https://islamicart.museumwnf.org/random_image/DIA_new/171.jpg", "sha256": "cb0af730c599d37e2e71e2dd33268e6debb679fb7156950adaf15f6ae590dd19" },
+    "theme/assets/legacy/sponsors/20.jpg": { "source": "https://images.museumwnf.org/full/sponsors/20.jpg", "sha256": "a86d8d101f2a2ae18681d1cd838bfcaa4cfcad57e3a23de7a6f4e8f938f8c528" },
+    "theme/assets/legacy/sponsors/21.jpg": { "source": "https://images.museumwnf.org/full/sponsors/21.jpg", "sha256": "57a9e3f5c061b3d69c2b219eebe199e2f2e1da091d761fe9cecf7c3585148f7e" },
+    "theme/assets/legacy/sponsors/22.jpg": { "source": "https://images.museumwnf.org/full/sponsors/22.jpg", "sha256": "da686ec1efef353ccf827d4a7b7797b2c02c5d3cd62aed1fbe7e7535aa38625e" },
+    "theme/assets/legacy/sponsors/23.jpg": { "source": "https://images.museumwnf.org/full/sponsors/23.jpg", "sha256": "5145c52df537ff176831171d61314addd944814580d4702758ee2501eaa431f8" },
+    "theme/assets/legacy/sponsors/56.jpg": { "source": "https://images.museumwnf.org/full/sponsors/56.jpg", "sha256": "b446811fc577c8a3c07290466638c2384156a3b607299ea6cca6ff577842d50e" },
+    "theme/assets/legacy/sponsors/57.jpg": { "source": "https://images.museumwnf.org/full/sponsors/57.jpg", "sha256": "b5e0b7e6f2b8124117df533639332cab5550aab479d0d87431bb835d9d2c8c9c" }
   }
 }
