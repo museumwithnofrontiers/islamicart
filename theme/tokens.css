@@ -365,4 +365,24 @@
      titles. */
   --site-rule-color: #e0b700;
   --site-gold-glow: #f5da66;
+
+  /* ---------- Phone (below 768px) ---------- */
+  /* Legacy's phone frame, measured at 390px: the 82px logo 13px down and
+     30px in, the heading 11px in the middle 32px down; the menu a drawer of
+     gold rows, every other one lighter, its words dark. */
+  --mwnf-standalone-phone-header-columns: 112px 1fr 112px;
+  --mwnf-standalone-phone-logo-offset: 13px 0 0 30px;
+  --mwnf-standalone-phone-logo-width: 82px;
+  --mwnf-standalone-phone-title-offset: 32px;
+  --mwnf-standalone-phone-heading-size: 11px;
+  --mwnf-standalone-phone-heading-weight: 500;
+  --mwnf-standalone-phone-heading-line-height: normal;
+  --mwnf-standalone-phone-tools-offset: 13px 10px 0 0;
+  --mwnf-standalone-phone-content-padding: 24px;
+  --mwnf-standalone-phone-drawer-background: #d1b44e;
+  --mwnf-standalone-phone-drawer-row: #d1b44e;
+  --mwnf-standalone-phone-drawer-row-alt: #ddc65e;
+  --mwnf-standalone-phone-drawer-rule: none;
+  --mwnf-standalone-phone-drawer-link-color: #222222;
+  --mwnf-standalone-phone-drawer-sublink-color: #222222;
 }
