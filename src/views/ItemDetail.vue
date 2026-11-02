@@ -1,5 +1,6 @@
 <script setup>
-import { timelineLinkFor, useI18n } from '@museumwnf/viewer-core'
+import { useI18n } from '@museumwnf/viewer-core'
+import { useRouter } from 'vue-router'
 import {
   DynastyList, OnDisplayIn, PartnerPanel, RelatedMedia, SpecialFeatures,
 } from '@museumwnf/viewer-layout/content'
@@ -9,6 +10,7 @@ import { artIntroHref } from '../composables/artIntro.js'
 import { exhibitionLinksForItem, minisiteHref } from '../composables/exhibitions.js'
 import { partnerViewOf } from '../composables/partner.js'
 import { itemSheetSpec } from '../composables/sheet.js'
+import { hasEvents } from '../composables/timeline.js'
 
 // The item sheet: legacy database_item.php in its three columns, the
 // standalone family's `StandaloneItemSheet` over the spec in
@@ -24,7 +26,14 @@ defineProps({ id: { type: String, required: true } })
 const { dynastyById, mdInline, partnerById, tr, translations } = useData()
 const { locale } = useI18n()
 
-const timelineLink = (record) => timelineLinkFor(record, { name: 'timeline-results' })
+// "Timeline for this item": legacy's openhcr(), the item's timeline in a
+// window of its own (ItemTimeline.vue, hcr.php) at legacy's 790 by 600,
+// offered when the item's country has events.
+const router = useRouter()
+const timelineHref = (record) => router.resolve({ name: 'item-timeline', params: { id: record.id }, query: { lang: locale.value } }).href
+function openTimeline(record) {
+  window.open(timelineHref(record), 'hcr', 'width=790,height=600,toolbar=0,resizable=0,directories=0,menubar=0,status=0,location=0,scrollbars=0')?.focus()
+}
 
 // The way back, as legacy's breadcrumbs: the previous page, then the
 // collection's start page.
@@ -131,8 +140,8 @@ const thgGalleryGroups = (record) => [{
       <p v-if="artIntroHome()" class="islamicart-artintro-link">
         <a :href="artIntroHome()">{{ $t('islamicart.nav.artisticIntroduction') }}</a>
       </p>
-      <p v-if="timelineLink(record)" class="islamicart-timeline-link">
-        <RouterLink :to="timelineLink(record)">{{ $t('islamicart.item.timeline') }}</RouterLink>
+      <p v-if="hasEvents(record.country_id)" class="islamicart-timeline-link">
+        <a :href="timelineHref(record)" :title="$t('islamicart.item.timelineTooltip')" @click.prevent="openTimeline(record)">{{ $t('islamicart.item.timeline') }}</a>
       </p>
       <DynastyList
         v-if="itemDynasties(record, language).length"
