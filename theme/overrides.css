@@ -64,6 +64,19 @@
   color: #000;
 }
 
+/* Legacy's Arabic home writes the record of the day before the side links,
+   and the band's columns from its last to its first; a phone stacks them as
+   written, so they read the other way round from the English page. */
+@media (max-width: 47.9375rem) {
+  [dir="rtl"] .mwnf-standalone-home__links {
+    order: 1;
+  }
+
+  [dir="rtl"] .mwnf-standalone-sponsors {
+    flex-direction: column-reverse;
+  }
+}
+
 /* Legacy's FontAwesome 4.4 (css/font-awesome.css), for the one glyph it
    drew of it: the cog on Explore Islamic Art Collections' partner list. */
 @font-face {
