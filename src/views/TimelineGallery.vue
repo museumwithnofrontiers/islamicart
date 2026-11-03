@@ -36,7 +36,7 @@ const results = computed(() => ({ name: 'timeline-results', query: { ...timeline
 </script>
 
 <template>
-  <CatalogueResultsView :spec="spec" class="mwnf-standalone-pcr mwnf-standalone-pmi">
+  <CatalogueResultsView :spec="spec" class="mwnf-standalone-pcr mwnf-standalone-pmi islamicart-gallery">
     <template #before="{ matching }">
       <p class="mwnf-standalone-item__back mwnf-standalone-pcr__back">
         <template v-for="link in back" :key="link.label">

@@ -19,3 +19,28 @@
   font-weight: normal;
   font-style: normal;
 }
+
+/* Legacy's timeline gallery (hcr_gallery.php) and a partner's monuments
+   (pm_institution_items.php) go straight from the place to "See Database
+   Entry", where the catalogue and a partner's objects keep a blank line. */
+.islamicart-gallery,
+.islamicart-pmi--monuments {
+  --mwnf-standalone-phone-results-see-offset: 0px;
+}
+
+/* In those and a partner's objects the blank line follows the date
+   (`</p><br/>`), holder or not; only pclist_all.php puts it over the holder. */
+.mwnf-standalone-pmi {
+  --mwnf-standalone-phone-results-date-gap: 18px;
+}
+
+@media (max-width: 749px) {
+  .mwnf-standalone-pmi .mwnf-standalone-results__panel .mwnf-standalone-results__holder {
+    margin-top: 0;
+  }
+}
+
+/* The gallery's heading: legacy's .short_heading, 5px over the tiles on a phone. */
+.islamicart-gallery {
+  --mwnf-standalone-phone-pcr-heading-gap: 5px;
+}
