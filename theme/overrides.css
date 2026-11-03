@@ -11,6 +11,59 @@
   --mwnf-standalone-pc-strong-weight: 700;
 }
 
+/* Legacy's Arabic stylesheets (style_ar.css, style_inside_ar.css) are copies
+   of the English ones that set in 600 what those set in 500. Roboto has no
+   Arabic, so the browser's Arabic face draws 600 bold and 500 regular: the
+   sheet's labels, the Related Content headings, the back links, the
+   partner list's countries. */
+[dir="rtl"] :is(
+  .mwnf-sheet__label,
+  .mwnf-sheet-section__heading,
+  .mwnf-standalone-related__heading strong,
+  .mwnf-standalone-related__group-heading,
+  .mwnf-standalone-related u,
+  .mwnf-standalone-related__download-heading,
+  .mwnf-standalone-item__back-link,
+  .mwnf-standalone-pl__head h3,
+  .mwnf-credits__biography b,
+  .mwnf-standalone-tlr__summary b,
+  .mwnf-standalone-tlr label,
+  .mwnf-standalone-tlr__download,
+  .mwnf-standalone-partner__tab,
+  .mwnf-standalone-partner__items
+) {
+  font-weight: 600;
+}
+
+/* They also print in black some of the text the English pages print in
+   #222 (the timeline's rows and the back links keep their #222). */
+[dir="rtl"] :is(
+  .mwnf-standalone-highlight,
+  .mwnf-standalone-sponsors__text,
+  .mwnf-standalone-home li,
+  .mwnf-standalone-tlr__date,
+  .mwnf-standalone-tlr__panel,
+  .mwnf-standalone-tlr__summary,
+  .mwnf-standalone-db,
+  .mwnf-standalone-pc,
+  .mwnf-standalone-partner__about,
+  .mwnf-standalone-related__heading,
+  .mwnf-standalone-related__group-heading
+),
+[dir="rtl"] :is(
+  .mwnf-standalone-highlight,
+  .mwnf-standalone-sponsors__text,
+  .mwnf-standalone-home li,
+  .mwnf-standalone-tlr__date,
+  .mwnf-standalone-tlr__panel,
+  .mwnf-standalone-tlr__summary,
+  .mwnf-standalone-db,
+  .mwnf-standalone-pc,
+  .mwnf-standalone-partner__about
+) :not(.mwnf-standalone-item__back-link) {
+  color: #000;
+}
+
 /* Legacy's FontAwesome 4.4 (css/font-awesome.css), for the one glyph it
    drew of it: the cog on Explore Islamic Art Collections' partner list. */
 @font-face {
