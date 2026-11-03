@@ -395,6 +395,11 @@
   /* The item sheet's labels, values and their links (.center_contents). */
   --mwnf-standalone-sheet-label-color: #000000;
   --mwnf-standalone-sheet-value-color: #222222;
+  /* A monument's special features: their heading (.specials h4). */
+  --mwnf-standalone-specials-heading-background: #ffd600;
+  --mwnf-standalone-specials-heading-color: #4c420e;
+  --mwnf-standalone-specials-heading-weight: 500;
+  --mwnf-standalone-specials-heading-padding: 4px;
   --mwnf-standalone-sheet-link-color: rgb(1 141 206);
   --mwnf-standalone-sponsors-background: #eec201;
   /* Legacy's sponsor logos at their own size (Barakat's is 81px high). */
@@ -410,7 +415,6 @@
   --mwnf-standalone-phone-sponsors-logo-gap: 25px;
   --mwnf-standalone-phone-sponsors-logos-bottom: 18px;
   --mwnf-standalone-phone-sponsors-logo-width: 50px;
-  --mwnf-standalone-drop-cap-color: #4c420e;
 
   /* ---------- This site's own ---------- */
   /* The colours of this site's own pages (src/views) that no platform token
