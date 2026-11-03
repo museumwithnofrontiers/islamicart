@@ -92,8 +92,12 @@
   --mwnf-sheet-label-background: #fdfbed;
   --mwnf-sheet-cell-border: 1px solid #a19869;
   --mwnf-sheet-toggle-color: #222222;
-  --mwnf-sheet-term-color: #4c420e;
-  --mwnf-sheet-term-underline: #e0b700;
+  /* A glossary term: legacy's link to its glossary window, in the link blue
+     and underlined in it (style="text-decoration: underline"). */
+  --mwnf-sheet-term-color: #018dce;
+  --mwnf-sheet-term-underline: #018dce;
+  --mwnf-sheet-term-underline-style: solid;
+  --mwnf-sheet-term-underline-offset: auto;
   --mwnf-sheet-section-border: 1px solid #a19869;
   --mwnf-sheet-heading-size: 0.8125rem;
   --mwnf-sheet-heading-color: #4c420e;
