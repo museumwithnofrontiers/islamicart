@@ -259,6 +259,7 @@
   --mwnf-standalone-banner-title-size: 30px;
   --mwnf-standalone-banner-title-color: #ffeeab;
   --mwnf-standalone-banner-title-padding: 8px 0 14px 64px;
+  --mwnf-standalone-banner-title-padding-rtl: 8px 64px 14px 0;
   --mwnf-standalone-menu-background: #ffd600;
   --mwnf-standalone-menu-alt-background: #e0b700;
   --mwnf-standalone-menu-link: #4c4214;
@@ -267,6 +268,8 @@
   --mwnf-standalone-menu-padding: 5px 0;
   --mwnf-standalone-bullet: url('./assets/legacy/next_arrow.png');
   --mwnf-standalone-back-arrow: url('./assets/legacy/back_arrow.png');
+  /* The Partners entrance's picture box (partners.php's .partners). */
+  --mwnf-standalone-pe-picture: url('./assets/legacy/partner_bg.jpg');
   /* The Permanent Collection results' date lists (span.select_png). */
   --mwnf-standalone-select-arrow: url('./assets/legacy/select.png');
   /* The search results' "Refine your search" band (section.timeline_color):
