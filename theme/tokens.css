@@ -316,6 +316,9 @@
   --mwnf-standalone-phone-pill: #ffd000;
   --mwnf-standalone-phone-pill-active: #c5a203;
   --mwnf-standalone-phone-partner-text-offset: 34px;
+  /* Below 750px the map's heading 44px under the profile (its section's
+     24px padding and the next one's 20px). */
+  --mwnf-standalone-phone-partner-map-offset: 44px;
   /* Below 750px the results keep their tile-wide frame and a blank line
      before "See Database Entry"; no gap between them. */
   --mwnf-standalone-phone-results-frame-width: 231px;
@@ -393,6 +396,17 @@
   --mwnf-standalone-sponsors-background: #eec201;
   /* Legacy's sponsor logos at their own size (Barakat's is 81px high). */
   --mwnf-standalone-sponsors-logo-height: none;
+  /* On a phone (below 768px) its columns one under another, 15px in, the
+     words 15px with 10px under them, the logos 50px wide on one line, 25px
+     apart (20px and the inline space) and 15px over the next words
+     (legacy's .image up to 620px; here up to 767px). */
+  --mwnf-standalone-phone-sponsors-column-padding: 15px;
+  --mwnf-standalone-phone-sponsors-text-gap: 10px;
+  --mwnf-standalone-phone-sponsors-text-size: 15px;
+  --mwnf-standalone-phone-sponsors-logo-align: flex-end;
+  --mwnf-standalone-phone-sponsors-logo-gap: 25px;
+  --mwnf-standalone-phone-sponsors-logos-bottom: 18px;
+  --mwnf-standalone-phone-sponsors-logo-width: 50px;
   --mwnf-standalone-drop-cap-color: #4c420e;
 
   /* ---------- This site's own ---------- */
