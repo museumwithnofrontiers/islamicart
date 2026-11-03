@@ -581,19 +581,24 @@ describe('website smoke test', () => {
   // `PROJECTS` (project UUIDs) rather than a legacy key — Discover offers
   // museums and institutions, Explore (legacy never had an institutions page
   // for it) offers only museums.
-  it('renders the partner entrance panels and buttons, routed by project UUID', async () => {
-    const { app, host } = await mountSite('#/partners')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-panel')).not.toBeNull(), { timeout: 20000 })
+  // The Partners entrance as legacy's partners.php: Discover Islamic Art's
+  // row (its lists by project UUID, Sponsors, Credits) and Explore's, each
+  // with About.
+  it("renders the Partners entrance as legacy's partners.php", async () => {
+    const { app, host } = await mountSite('#/partners?lang=en')
+    await vi.waitFor(() => expect(host.querySelectorAll('.mwnf-standalone-pe__row').length).toBe(2), { timeout: 20000 })
 
-    const panels = host.querySelectorAll('.mwnf-panel')
-    expect(panels.length).toBe(2)
-    expect(panels[0].textContent).toContain('Browse Museums')
-    expect(panels[0].textContent).toContain('Browse Institutions')
-    expect(panels[1].textContent).toContain('Browse Museums')
-    expect(panels[1].textContent).not.toContain('Browse Institutions')
-
-    const links = [...panels[1].querySelectorAll('button')]
-    expect(links.length).toBe(1)
+    const rows = [...host.querySelectorAll('.mwnf-standalone-pe__row')]
+    expect(rows.map((row) => row.querySelector('.mwnf-standalone-pe__name').textContent)).toEqual([
+      'Discover Islamic Art',
+      'Explore Islamic Art Collections',
+    ])
+    const links = (row) => [...row.querySelectorAll('.mwnf-standalone-pe__links a')]
+    expect(links(rows[0]).map((a) => a.textContent.trim())).toEqual(['Partner Museums', 'Other Partners', 'Sponsors', 'Credits'])
+    expect(links(rows[0])[0].getAttribute('href')).toContain(`project=${PROJECTS.discover}`)
+    expect(links(rows[1]).map((a) => a.textContent.trim())).toEqual(['Partners'])
+    expect(links(rows[1])[0].getAttribute('href')).toContain('#/partners/explore')
+    expect(rows.map((row) => row.querySelector('.mwnf-standalone-pe__about').textContent.trim())).toEqual(['About', 'About'])
 
     app.unmount()
   }, 30000)
