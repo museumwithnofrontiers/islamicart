@@ -5,6 +5,12 @@
  * nothing of it is left here.
  */
 
+/* Legacy's Arabic Collections entrance keeps its bold words at 700
+   (style_inside_ar.css), where the other languages' are 500. */
+[dir="rtl"] {
+  --mwnf-standalone-pc-strong-weight: 700;
+}
+
 /* Legacy's FontAwesome 4.4 (css/font-awesome.css), for the one glyph it
    drew of it: the cog on Explore Islamic Art Collections' partner list. */
 @font-face {

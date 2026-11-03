@@ -125,8 +125,21 @@ const thgGalleryGroups = (record) => [{
       />
     </template>
 
-    <template #after-sheet="{ record, language, dir, glossary }">
+    <!-- A monument's special features after its dating method, before the
+         bibliography (legacy's .specials); after the sheet when it has none. -->
+    <template #after-datation="{ record, language, dir, glossary }">
       <SpecialFeatures
+        :features="record.details ?? []"
+        :tr="(feature) => tr('items', feature.id, language)"
+        :language="language"
+        :glossary="glossary"
+        :dir="dir"
+        :picture-limit="6"
+      />
+    </template>
+    <template #after-sheet="{ record, text, language, dir, glossary }">
+      <SpecialFeatures
+        v-if="!text?.method_for_datation"
         :features="record.details ?? []"
         :tr="(feature) => tr('items', feature.id, language)"
         :language="language"
