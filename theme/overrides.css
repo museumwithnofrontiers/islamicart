@@ -77,6 +77,73 @@
   }
 }
 
+/* Legacy's Arabic header (style_ar.css) floats its parts from the right in
+   other proportions than the English one's quarters: the logo in a fifth,
+   65px in from that column's left edge; the heading centred in the half
+   after it, 15px in on either side; the links and the language in the last
+   three tenths, 65px from the page's left, the links in the English order. */
+@media (min-width: 48rem) {
+  [dir="rtl"] .mwnf-standalone .mwnf-header__inner {
+    grid-template-columns: 20% 50% 30%;
+    padding-inline: 0;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-header__brand {
+    justify-self: end;
+    margin-left: 65px;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-header__lockup {
+    padding-inline: 15px;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-header__tools {
+    margin-left: 65px;
+  }
+}
+
+[dir="rtl"] .mwnf-standalone .mwnf-header__links {
+  direction: ltr;
+}
+
+/* Legacy's phone header (style_inside.css, style_responsive.css): up to
+   620px only the portal link; from 380 to 570px the language in 8px, in a
+   65 by 14px select, 27px down, and 62px wide below 380px. In Arabic the
+   links and the language sit 29px from the left, the logo 15px from the
+   right. */
+@media (max-width: 620px) {
+  .mwnf-standalone .mwnf-header__links li:last-child {
+    display: none;
+  }
+}
+
+@media (min-width: 200px) and (max-width: 570px) {
+  :root {
+    --mwnf-standalone-language-size: 8px;
+    --mwnf-standalone-language-select-width: 65px;
+    --mwnf-standalone-language-select-height: 14px;
+    --mwnf-standalone-language-select-padding: 1px 4px;
+    --mwnf-standalone-header-tools-gap: 8px;
+  }
+}
+
+@media (min-width: 200px) and (max-width: 379px) {
+  :root {
+    --mwnf-standalone-language-select-width: 62px;
+  }
+}
+
+@media (max-width: 47.9375rem) {
+  [dir="rtl"] .mwnf-standalone .mwnf-header__brand {
+    padding: 13px 15px 0 0;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-header__tools {
+    padding: 13px 0 0 29px;
+    white-space: nowrap;
+  }
+}
+
 /* Legacy's FontAwesome 4.4 (css/font-awesome.css), for the one glyph it
    drew of it: the cog on Explore Islamic Art Collections' partner list. */
 @font-face {
