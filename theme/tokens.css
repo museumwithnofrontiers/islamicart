@@ -357,14 +357,14 @@
   --mwnf-standalone-home-link: #222222;
   --mwnf-standalone-home-text-size: 16px;
   /* The home page as legacy's index.php drew it (section.partnet_galery):
-     col-md-3's links 43px down, 40px in, 22px apart; col-md-9's record of
+     col-md-3's links 43px down, 40px in, 22px lines 2px apart; col-md-9's record of
      the day 48px down, its 320px picture beside 24px lines 10px apart. */
   --mwnf-standalone-home-padding: 0 16px;
   --mwnf-standalone-home-gap: 21px;
   --mwnf-standalone-home-links-margin: 43px 0 0;
   --mwnf-standalone-home-links-inset: 40px;
   --mwnf-standalone-home-links-line-height: 22px;
-  --mwnf-standalone-home-links-gap: 0;
+  --mwnf-standalone-home-links-gap: 2px;
   --mwnf-standalone-highlight-offset: 48px;
   --mwnf-standalone-highlight-image-width: 320px;
   --mwnf-standalone-highlight-line-height: 24px;

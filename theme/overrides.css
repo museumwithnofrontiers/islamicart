@@ -66,6 +66,22 @@
   color: #000;
 }
 
+/* The Database's last row, the complete listing, is 32px in Arabic: the
+   English row's floated link (a.pull-left) leaves 4px more under it. */
+[dir="rtl"] {
+  --mwnf-standalone-db-options-rows: 38px 37px 49px 49px 49px 49px 63px 31px 61px 32px;
+}
+
+/* The Database's arrows are inline 12px pictures against the words: the
+   complete listing's in both languages, Glossary & Spelling's in English. */
+:root {
+  --mwnf-standalone-db-listing-indent: 12px;
+}
+
+.mwnf-standalone .mwnf-standalone-db__aside a:dir(ltr)::before {
+  margin-inline-end: 0;
+}
+
 /* The Database page's links keep their #222 (the glossary, the Explore
    collections, the complete listing). */
 [dir="rtl"] .mwnf-standalone .mwnf-standalone-db a,
@@ -170,6 +186,23 @@
   [dir="rtl"] .mwnf-standalone .mwnf-standalone-tlr__selects select {
     flex-shrink: 0;
   }
+
+  /* Over its select, a date's label keeps legacy's 4px shift down
+     (transform: translateY(4px)). */
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-tlr__selects p:nth-child(-n + 2) label {
+    transform: translateY(4px);
+  }
+}
+
+/* The band's selects at 600, as the Arabic sheet sets them; the rows'
+   "Country | Description" heading against the right of its column
+   (h3.time_line_con_title). */
+[dir="rtl"] .mwnf-standalone .mwnf-standalone-tlr__selects select {
+  font-weight: 600;
+}
+
+[dir="rtl"] .mwnf-standalone .mwnf-standalone-tlr__heads h3:nth-child(2) {
+  text-align: right;
 }
 
 /* The Collections entrance's text ends on its last line, without the
@@ -225,9 +258,22 @@
   }
 }
 
-/* The home's record of the day: legacy's Arabic box is 775px wide against
-   its column's left, 15px in, its picture at the box's right end. */
+/* Below 992px legacy's Arabic home sets no direction on the record of the
+   day or the sponsor band: their Arabic lines start at the left. */
+@media (max-width: 61.9375rem) {
+  [dir="rtl"] .mwnf-standalone :is(.mwnf-standalone-highlight, .mwnf-standalone-sponsors) {
+    direction: ltr;
+  }
+}
+
+/* The home's record of the day: legacy's box is at most 830px wide; its
+   Arabic one is 775px wide against its column's left, 15px in, its picture
+   at the box's right end. */
 @media (min-width: 62rem) {
+  .mwnf-standalone .mwnf-standalone-highlight {
+    max-width: 830px;
+  }
+
   [dir="rtl"] .mwnf-standalone .mwnf-standalone-highlight {
     justify-self: end;
     width: 775px;
@@ -236,11 +282,21 @@
   }
 }
 
-/* The home's side links 25px nearer the right edge; the Sponsors page's
+/* The home's side links end where legacy's col-md-3 ends, 15px before the
+   record of the day's column; in Arabic they start 25px nearer the right
+   edge, and legacy's list keeps its 25px on the left. The Sponsors page's
    heading against the right of its half. */
 @media (min-width: 62rem) {
+  .mwnf-standalone .mwnf-standalone-home__links {
+    padding-inline-end: 10px;
+  }
+
   [dir="rtl"] {
     --mwnf-standalone-home-links-inset: 15px;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-home__links {
+    padding-inline-end: 34px;
   }
 
   [dir="rtl"] .mwnf-standalone .mwnf-standalone-sp__heading {
@@ -275,9 +331,77 @@
     order: 1;
   }
 
+  /* On a phone legacy's list keeps 25px on either side. */
+  .mwnf-standalone .mwnf-standalone-home__links {
+    padding-inline-end: 25px;
+  }
+
   [dir="rtl"] .mwnf-standalone-sponsors {
     flex-direction: column-reverse;
   }
+}
+
+/* The blank line legacy leaves after the Mission Statement link
+   (`<br/>&nbsp;`) is a line of its list's own font, Times at 16px: 18px,
+   then the list's 2px (the margin it collapses with). */
+.mwnf-standalone .mwnf-standalone-home__links li.mwnf-standalone-home__link--gap {
+  margin-top: 20px;
+}
+
+/* The home's sponsor band as legacy's section.sponsors lays it out on a wide
+   screen (col-lg-*): its columns in three, four, three and two twelfths,
+   15px in on either side and from the top; the texts 20px further down
+   (position: relative; top: 20px); the marks on one line at their foot,
+   44px apart, with the line's descent under them (they are inline images
+   in legacy's markup). Legacy's Arabic page keeps the band left to right, its columns
+   and marks written in the other order and the marks at the column's right;
+   its Arabic texts start at the left. */
+@media (min-width: 75rem) {
+  .mwnf-standalone .mwnf-standalone-sponsors {
+    gap: 0;
+    align-items: flex-start;
+  }
+
+  .mwnf-standalone .mwnf-standalone-sponsors__column {
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    width: 25%;
+    min-width: 0;
+    padding: 0 15px;
+  }
+
+  .mwnf-standalone .mwnf-standalone-sponsors__column:nth-child(2) {
+    width: calc(100% / 3);
+  }
+
+  .mwnf-standalone .mwnf-standalone-sponsors__column:nth-child(4) {
+    width: calc(100% / 6);
+  }
+
+  .mwnf-standalone .mwnf-standalone-sponsors__text {
+    position: relative;
+    top: 20px;
+  }
+
+  .mwnf-standalone .mwnf-standalone-sponsors__logos {
+    align-items: flex-end;
+    gap: 44px;
+    padding-bottom: 4px;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-sponsors {
+    direction: ltr;
+    flex-direction: row-reverse;
+  }
+}
+
+/* At every width legacy's Arabic marks are written in the other order and
+   floated to the right (style_ar.css's .sponsors_images). On a phone that
+   float also shrinks them to 11–23px (each a sixth of the floated box), a
+   slip of legacy's Arabic sheet only: they keep the English page's size. */
+[dir="rtl"] .mwnf-standalone .mwnf-standalone-sponsors__logos {
+  direction: ltr;
+  flex-direction: row-reverse;
 }
 
 /* Legacy's Arabic header (style_ar.css) floats its parts from the right in
