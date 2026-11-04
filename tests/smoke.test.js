@@ -877,6 +877,14 @@ describe('website smoke test', () => {
     expect(profileHost.querySelector('.dyn-profile__dates').textContent).toContain(`${umayyads.date_description_ah} / ${umayyads.date_description_ad}`)
     const related = [...profileHost.querySelectorAll('.dyn-related a')]
     expect(related.map((a) => a.textContent.trim())).toEqual(expect.arrayContaining(['Related objects', 'Timeline', 'Artistic Introduction']))
+    // Legacy's links: its Artistic Introduction theme and its exhibition,
+    // each on its mini-site (src/dynasties/links.json).
+    const theme = related.find((a) => a.textContent.trim() === 'Artistic Introduction')
+    expect(theme.getAttribute('href')).toMatch(/^https:\/\/museumwithnofrontiers\.github\.io\/islamicart-artistic-introduction\/#\/page\/\d+\/1\?lang=en$/)
+    expect(profileHost.querySelector('.dyn-related__exhibitions').textContent.trim()).toBe('Exhibitions')
+    const exhibition = related.find((a) => a.getAttribute('href').includes('islamicart-muslim-west'))
+    expect(exhibition.textContent.trim()).toBe('The Muslim West')
+    expect(exhibition.getAttribute('target')).toBe('_blank')
     profile.unmount()
 
     const { app: objects, host: objectsHost } = await mountSite(`#/dynasties/${id}/objects`)

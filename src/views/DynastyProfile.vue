@@ -1,24 +1,25 @@
 <script setup>
 import { computed, watch } from 'vue'
 import { isRtl, md, mdInline, removeEndingPoint, useDataPackage, useI18n, useSiteConfig } from '@museumwnf/viewer-core'
+import { artIntroHref, artIntroPosition, artIntroRoot } from '../composables/artIntro.js'
+import { useData } from '../composables/data.js'
 import { useDynasties } from '../composables/dynasties.js'
+import { minisiteHref } from '../composables/exhibitions.js'
 import DynastiesBack from '../dynasties/DynastiesBack.vue'
 import DynastiesFrame from '../dynasties/DynastiesFrame.vue'
 import { REPLY, SHARE, UP_RIGHT_FROM_SQUARE } from '../dynasties/icons.js'
+import dynastyLinks from '../dynasties/links.json'
 
 // A dynasty's profile, as legacy's client draws it: the languages its text
 // is in, over the page; the way back, the name, "Also known as", the date
 // line, the area in italics and the history; and, at the top right, the
 // Related Content box: its objects and monuments, the timeline of its period,
-// and the Artistic Introduction.
-//
-// Legacy's client also linked one Artistic Introduction theme and the
-// exhibitions of some dynasties; the data package carries neither link, so
-// the box links the Artistic Introduction itself and no exhibitions.
+// its Artistic Introduction theme and its exhibitions.
 const props = defineProps({ id: { type: String, required: true } })
 const { locale } = useI18n()
 const pkg = useDataPackage()
 const config = useSiteConfig()
+const { tr } = useData()
 const { dynasties, textOf, dateLine, recordsOf } = useDynasties()
 
 const dynasty = computed(() => (dynasties.value ?? []).find((d) => d.id === props.id) ?? null)
@@ -27,6 +28,25 @@ const objects = computed(() => recordsOf(props.id, 'object').length)
 const monuments = computed(() => recordsOf(props.id, 'monument').length)
 // The client's own timeline of the dynasty's years (DynastyTimeline.vue).
 const timeline = computed(() => (dynasty.value?.from_ad != null ? { name: 'dynasty-timeline', params: { id: props.id } } : null))
+
+// The Artistic Introduction theme and the exhibitions legacy's client linked
+// for the dynasty: its editors' choice, kept in this site's own
+// configuration (src/dynasties/links.json, dynasty id → theme and
+// exhibition ids), each opening its mini-site in a new window.
+const links = computed(() => dynastyLinks[props.id] ?? {})
+const theme = computed(() => {
+  const at = artIntroRoot.value && links.value.artisticIntroduction
+    ? artIntroPosition(artIntroRoot.value.id, links.value.artisticIntroduction)
+    : 0
+  return at > 0 ? artIntroHref(locale.value, { theme: at, page: 1 }) : null
+})
+const exhibitions = computed(() => (links.value.exhibitions ?? [])
+  .map((exhibitionId) => ({
+    id: exhibitionId,
+    href: minisiteHref(exhibitionId, locale.value),
+    label: tr('collections', exhibitionId).title,
+  }))
+  .filter((exhibition) => exhibition.href && exhibition.label))
 
 // The languages the dynasty's text is in, by code as legacy's bar lists
 // them (العربية, English, Español, Français); a click reads it in that one.
@@ -90,11 +110,20 @@ const inward = computed(() => (rtl.value ? REPLY : SHARE))
                 {{ $t('islamicart.nav.timeline') }}
               </RouterLink>
             </div>
-            <div class="dyn-related__gap">
-              <RouterLink :to="{ name: 'artistic-introduction' }">
+            <div v-if="theme" class="dyn-related__gap">
+              <a :href="theme" target="_blank">
                 <svg class="dyn-icon" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path fill="currentColor" :d="UP_RIGHT_FROM_SQUARE" /></svg>
                 {{ $t('islamicart.nav.artisticIntroduction') }}
-              </RouterLink>
+              </a>
+            </div>
+            <div v-if="exhibitions.length">
+              <div class="dyn-related__exhibitions">{{ $t('islamicart.nav.exhibitions') }}</div>
+              <div v-for="exhibition in exhibitions" :key="exhibition.id">
+                <a :href="exhibition.href" target="_blank">
+                  <svg class="dyn-icon" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path fill="currentColor" :d="UP_RIGHT_FROM_SQUARE" /></svg>
+                  {{ exhibition.label }}
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -197,6 +226,11 @@ const inward = computed(() => (rtl.value ? REPLY : SHARE))
 
 .dyn-related__gap {
   margin-bottom: 10px;
+}
+
+.dyn-related__exhibitions {
+  margin-bottom: 2px;
+  font-weight: 700;
 }
 
 .dyn-related__inward--rtl {
