@@ -9,6 +9,8 @@
    (style_inside_ar.css), where the other languages' are 500. */
 [dir="rtl"] {
   --mwnf-standalone-pc-strong-weight: 700;
+  /* On a phone its "About" follows the lists 6px sooner. */
+  --mwnf-standalone-phone-pc-about-gap: 35px;
 }
 
 /* Legacy's Arabic stylesheets (style_ar.css, style_inside_ar.css) are copies
@@ -62,6 +64,133 @@
   .mwnf-standalone-partner__about
 ) :not(.mwnf-standalone-item__back-link) {
   color: #000;
+}
+
+/* The Database page's links keep their #222 (the glossary, the Explore
+   collections, the complete listing). */
+[dir="rtl"] .mwnf-standalone .mwnf-standalone-db a,
+[dir="rtl"] .mwnf-standalone .mwnf-standalone-db .islamicart-db-epm,
+[dir="rtl"] .mwnf-standalone .mwnf-standalone-db .islamicart-db-epm * {
+  color: #222;
+}
+
+/* Legacy's Arabic headings (style_inside_ar.css's .short_heading h3): 19px
+   at 300 in #211A00, where the English ones are 400. */
+[dir="rtl"] .mwnf-standalone :is(
+  .mwnf-standalone-pc__heading,
+  .mwnf-standalone-pcr__heading,
+  .mwnf-standalone-db__criteria,
+  .mwnf-standalone-pl__heads h3,
+  .mwnf-standalone-partner__name,
+  .mwnf-standalone-partner__map-heading,
+  .mwnf-standalone-sp__heading,
+  .mwnf-standalone-tlr__heads h3
+) {
+  font-weight: 300;
+  color: #211a00;
+}
+
+/* On a phone the partner pages' and the Sponsors page's headings are 16px
+   at 600. */
+@media (max-width: 47.9375rem) {
+  [dir="rtl"] .mwnf-standalone :is(
+    .mwnf-standalone-pl__heads h3,
+    .mwnf-standalone-partner__name,
+    .mwnf-standalone-partner__map-heading,
+    .mwnf-standalone-sp__heading
+  ) {
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+/* The Arabic inner pages' stylesheet (style_inside_ar.css) sets every strong
+   and b in 16.5px at 600 where no rule of their own says otherwise: no
+   weight of its own here either, and the ones whose English rule sets one
+   follow the Arabic sheet. */
+:where([dir="rtl"] .mwnf-standalone--inner) :where(strong, b) {
+  font-size: 16.5px;
+  font-weight: 600;
+}
+
+[dir="rtl"] .mwnf-standalone :is(.mwnf-standalone-pcr__heading b, .mwnf-standalone-tlr__summary b, .mwnf-standalone-tlr__panel p strong) {
+  font-size: 16.5px;
+  font-weight: 600;
+}
+
+/* Where the Arabic sheet's own rules keep them at 16px: the Collections
+   entrance, a record's Related Content. */
+[dir="rtl"] .mwnf-standalone :is(.mwnf-standalone-pc, .mwnf-standalone-related, .islamicart-on-display) :is(strong, b) {
+  font-size: 16px;
+}
+
+[dir="rtl"] .mwnf-standalone :is(.mwnf-standalone-pcr__panel, .mwnf-standalone-pcr__related) p strong {
+  font-size: 16.5px;
+  color: #000;
+}
+
+[dir="rtl"] .mwnf-standalone :is(
+  .mwnf-standalone-pcr__count,
+  .islamicart-pl__eiac,
+  .mwnf-standalone-partner__homepage,
+  .mwnf-credits__heading--citation
+) {
+  font-weight: 600;
+}
+
+/* The monument sheet's Related Content prints its dynasties' heading, "On
+   display in" and the exhibitions in black. */
+[dir="rtl"] .mwnf-standalone :is(
+  .mwnf-dynasty-list__heading,
+  .islamicart-on-display,
+  .mwnf-on-display .mwnf-sheet-section__heading,
+  .mwnf-on-display__subheading
+) {
+  color: #000;
+}
+
+[dir="rtl"] .mwnf-standalone .mwnf-on-display__subheading {
+  font-weight: 600;
+}
+
+/* The timeline's band (hcr_result.php in Arabic): fields 296px wide, 4px
+   apart, each select its 192px, so a date's select goes under its label and
+   the country, on one line, sits on their bottom. */
+@media (min-width: 48rem) {
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-tlr__selects {
+    align-items: flex-end;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-tlr__selects p {
+    flex-wrap: wrap;
+    width: 296px;
+    margin-left: 4px;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-tlr__selects select {
+    flex-shrink: 0;
+  }
+}
+
+/* The Collections entrance's text ends on its last line, without the
+   English text's closing blank line. */
+[dir="rtl"] .mwnf-standalone .mwnf-standalone-pc__about p:last-child {
+  margin-bottom: 0;
+}
+
+/* A result's lines: its name and its holder at 600, the holder and the
+   other lines in black ("More information" keeps its #222). */
+[dir="rtl"] .mwnf-standalone .mwnf-standalone-results__panel p {
+  color: #000;
+}
+
+[dir="rtl"] .mwnf-standalone .mwnf-standalone-results__panel a span,
+[dir="rtl"] .mwnf-standalone .mwnf-standalone-results__holder strong {
+  font-weight: 600;
+}
+
+[dir="rtl"] .mwnf-standalone .mwnf-standalone-results__panel .mwnf-standalone-results__see {
+  color: #222;
 }
 
 /* Legacy's Arabic home writes the record of the day before the side links,
@@ -141,6 +270,12 @@
   [dir="rtl"] .mwnf-standalone .mwnf-header__tools {
     padding: 13px 0 0 29px;
     white-space: nowrap;
+  }
+
+  /* The Arabic heading in 14px (legacy's floats drop it under the header,
+     a slip not copied here: it stays in its place). */
+  [dir="rtl"] .mwnf-standalone .mwnf-header__title {
+    font-size: 14px;
   }
 }
 
