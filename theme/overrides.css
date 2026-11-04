@@ -331,6 +331,27 @@
     order: 1;
   }
 
+  /* On a phone legacy's Arabic Database heading starts at the left, and
+     Glossary & Spelling is floated right (a.pull-right). */
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-db__criteria {
+    text-align: left;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-db__aside {
+    text-align: right;
+  }
+
+  /* The category's heading, its "in" and the Language label 10px in from
+     the right (legacy's phone sheet: label { margin: 0 10px }, the
+     heading's padding-right: 10px). */
+  [dir="rtl"] .mwnf-standalone :is(.mwnf-standalone-db__head--category, .mwnf-standalone-db__label--language) {
+    padding-right: 10px;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-db__field > span {
+    margin-right: 10px;
+  }
+
   /* On a phone legacy's list keeps 25px on either side. */
   .mwnf-standalone .mwnf-standalone-home__links {
     padding-inline-end: 25px;
