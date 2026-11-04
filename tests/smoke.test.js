@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { loadEntities, mergeMessages, projectLabel, useDataPackage } from '@museumwnf/viewer-core'
+import { glossaryTermsForText, loadEntities, mergeMessages, projectLabel, useDataPackage } from '@museumwnf/viewer-core'
 import { checkOfferedLanguages, checkRoutes, checkSectionMeta, checkTextsRendered, mountSite as mountOn } from '@museumwnf/viewer-core/testing'
 import { catalogues as sharedTexts } from '@museumwnf/viewer-i18n/standalone'
 import ownTexts from '../locales/en.json'
@@ -907,6 +907,37 @@ describe('website smoke test', () => {
     expect(timelineHost.querySelector('.dyn-timeline__country-label').textContent.trim()).toBe('Country | Description')
     timeline.unmount()
   }, 90000)
+
+  // The history's glossary terms (a translation's `glossary_ids`, built by
+  // the inventory's glossary jobs, inventory-app#2470): each spelling is a
+  // link, and a click opens legacy's box with the term's definition. A
+  // package from before #2470 has no ids yet: the terms the history
+  // contains stand in for them.
+  it('links a dynasty history’s glossary terms to their definition', async () => {
+    const pkg = useDataPackage()
+    const names = await pkg.loadTranslations('dynasties', 'en')
+    const [id, umayyads] = Object.entries(names).find(([, t]) => t.name === 'Umayyads of al-Andalus')
+    if (!umayyads.glossary_ids?.length) {
+      await loadEntities(['glossary'])
+      await pkg.loadTranslations('glossary', 'en')
+      umayyads.glossary_ids = glossaryTermsForText(umayyads.history, 'en').map((term) => term.id)
+    }
+    expect(umayyads.glossary_ids.length).toBeGreaterThan(0)
+
+    const { app, host } = await mountSite(`#/dynasties/${id}`)
+    await vi.waitFor(() => expect(host.querySelector('.dyn-profile__history .gloss-term')).not.toBeNull(), { timeout: 15000 })
+    expect(document.querySelector('.dyn-glossary')).toBeNull()
+    const term = host.querySelector('.dyn-profile__history .gloss-term')
+    term.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await vi.waitFor(() => expect(document.querySelector('.dyn-glossary')).not.toBeNull())
+    const box = document.querySelector('.dyn-glossary')
+    expect(box.querySelector('.dyn-glossary__header').textContent).toBe('Glossary')
+    expect(box.querySelector('.dyn-glossary__word').textContent.toLowerCase()).toBe(term.textContent.toLowerCase())
+    expect(box.querySelector('.dyn-glossary__definition').textContent.trim()).not.toBe('')
+    box.querySelector('.dyn-glossary__close').click()
+    await vi.waitFor(() => expect(document.querySelector('.dyn-glossary')).toBeNull())
+    app.unmount()
+  }, 60000)
 
   // T6: the Mission Statement and the Recommended Links, legacy's own text.
   it('renders the Mission Statement and the Recommended Links from legacy', async () => {
