@@ -227,7 +227,7 @@ export default {
       name: 'dynasty',
       component: () => import('./views/DynastyProfile.vue'),
       props: (route) => ({ id: decodeURIComponent(route.params.id) }),
-      meta: { ...meta('dynasties', 'dynasties', 'items'), bare: true },
+      meta: { ...meta('dynasties', 'dynasties', 'items', 'collections'), bare: true },
     },
     {
       path: '/dynasties/:id/:kind(objects|monuments)',
