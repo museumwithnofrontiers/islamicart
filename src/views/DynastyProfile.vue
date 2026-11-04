@@ -25,13 +25,8 @@ const dynasty = computed(() => (dynasties.value ?? []).find((d) => d.id === prop
 const text = computed(() => (dynasty.value ? textOf(dynasty.value.id) : {}))
 const objects = computed(() => recordsOf(props.id, 'object').length)
 const monuments = computed(() => recordsOf(props.id, 'monument').length)
-const timeline = computed(() => {
-  const d = dynasty.value
-  if (!d || d.from_ad == null) return null
-  const query = { country: 'all', begin: String(d.from_ad) }
-  if (d.to_ad != null) query.end = String(d.to_ad)
-  return { name: 'timeline-results', query }
-})
+// The client's own timeline of the dynasty's years (DynastyTimeline.vue).
+const timeline = computed(() => (dynasty.value?.from_ad != null ? { name: 'dynasty-timeline', params: { id: props.id } } : null))
 
 // The languages the dynasty's text is in, by code as legacy's bar lists
 // them (العربية, English, Español, Français); a click reads it in that one.

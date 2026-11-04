@@ -237,6 +237,14 @@ export default {
       meta: { ...meta('dynasties', 'dynasties', 'items', 'countries', 'partners'), bare: true },
     },
     {
+      // The client's own timeline for a dynasty: every event of its years.
+      path: '/dynasties/:id/timeline',
+      name: 'dynasty-timeline',
+      component: () => import('./views/DynastyTimeline.vue'),
+      props: (route) => ({ id: decodeURIComponent(route.params.id) }),
+      meta: { ...meta('dynasties', 'dynasties', 'timeline_events', 'countries'), bare: true },
+    },
+    {
       // recommendedlinks.php: its groups of links, in English as legacy
       // printed them in every language.
       path: '/recommended-links',

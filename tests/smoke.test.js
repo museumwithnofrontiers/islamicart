@@ -888,7 +888,17 @@ describe('website smoke test', () => {
     expect(objectsHost.querySelector('.dyn-results__main .dyn-results__bold').innerHTML)
       .toBe(objectsHost.querySelector('.dyn-results__item .dyn-results__bold').innerHTML)
     objects.unmount()
-  }, 60000)
+
+    // The client's own timeline: every event of the dynasty's years, twelve to a page.
+    const { app: timeline, host: timelineHost } = await mountSite(`#/dynasties/${id}/timeline`)
+    await vi.waitFor(() => expect(timelineHost.querySelector('.dyn-timeline__row')).not.toBeNull(), { timeout: 20000 })
+    expect(timelineHost.querySelector('.dyn-timeline__information').textContent.replace(/\s+/g, ' ').trim())
+      .toBe('Timeline for Umayyads of al-Andalus')
+    expect(timelineHost.querySelectorAll('.dyn-timeline__row').length).toBeLessThanOrEqual(12)
+    expect(timelineHost.querySelector('.dyn-timeline__year').textContent.trim()).toMatch(/^\d+ A\.D\.$/)
+    expect(timelineHost.querySelector('.dyn-timeline__country-label').textContent.trim()).toBe('Country | Description')
+    timeline.unmount()
+  }, 90000)
 
   // T6: the Mission Statement and the Recommended Links, legacy's own text.
   it('renders the Mission Statement and the Recommended Links from legacy', async () => {
