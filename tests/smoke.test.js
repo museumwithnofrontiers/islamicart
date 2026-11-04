@@ -859,27 +859,34 @@ describe('website smoke test', () => {
     const names = await pkg.loadTranslations('dynasties', 'en')
     const [id, umayyads] = Object.entries(names).find(([, t]) => t.name === 'Umayyads of al-Andalus')
 
+    // The client's own frame: its header, menu, band and footer, not the shell's.
     const { app, host } = await mountSite('#/dynasties')
-    await vi.waitFor(() => expect(host.querySelectorAll('.dynasties-entrance option').length).toBeGreaterThan(50), { timeout: 15000 })
-    expect(host.querySelector('.mwnf-standalone-banner').textContent.trim()).toBe('Islamic Dynasties')
-    expect(host.querySelector('.mwnf-nav__link--active').textContent.trim()).toBe('Islamic Dynasties')
-    expect(host.querySelector('.dynasties-entrance__intro').textContent).toContain('What do we intend by')
-    expect(host.querySelector('.dynasties-entrance button').textContent).toBe('GO')
+    await vi.waitFor(() => expect(host.querySelectorAll('.dyn-entrance option').length).toBeGreaterThan(50), { timeout: 15000 })
+    expect(host.querySelector('.mwnf-header')).toBeNull()
+    expect(host.querySelector('.dyn-band__title').textContent.trim()).toBe('Islamic Dynasties')
+    expect([...host.querySelectorAll('.dyn-nav li')].map((li) => li.textContent.trim())).toContain('Islamic Dynasties')
+    expect(host.querySelector('.dyn-footer').textContent).not.toContain('Language Policy')
+    expect(host.querySelector('.dyn-entrance__description').textContent).toContain('What do we intend by')
+    expect(host.querySelector('.dyn-entrance__go button').textContent).toBe('GO')
     app.unmount()
 
     const { app: profile, host: profileHost } = await mountSite(`#/dynasties/${id}`)
-    await vi.waitFor(() => expect(profileHost.querySelector('.dynasty__history')).not.toBeNull(), { timeout: 15000 })
-    expect(profileHost.querySelector('.dynasty__name').textContent).toContain('Umayyads of al-Andalus')
-    expect(profileHost.querySelector('.dynasty__name').textContent).toContain(`Also known as: ${umayyads.also_known_as}`)
-    expect(profileHost.querySelector('.dynasty__when').textContent).toContain(`${umayyads.date_description_ah} / ${umayyads.date_description_ad}`)
-    const related = [...profileHost.querySelectorAll('.dynasty__links a')]
+    await vi.waitFor(() => expect(profileHost.querySelector('.dyn-profile__history')).not.toBeNull(), { timeout: 15000 })
+    expect(profileHost.querySelector('.dyn-profile__name').textContent).toContain('Umayyads of al-Andalus')
+    expect(profileHost.querySelector('.dyn-profile__name').textContent).toContain(`Also known as: ${umayyads.also_known_as}`)
+    expect(profileHost.querySelector('.dyn-profile__dates').textContent).toContain(`${umayyads.date_description_ah} / ${umayyads.date_description_ad}`)
+    const related = [...profileHost.querySelectorAll('.dyn-related a')]
     expect(related.map((a) => a.textContent.trim())).toEqual(expect.arrayContaining(['Related objects', 'Timeline', 'Artistic Introduction']))
     profile.unmount()
 
     const { app: objects, host: objectsHost } = await mountSite(`#/dynasties/${id}/objects`)
-    await vi.waitFor(() => expect(objectsHost.querySelector('.dynasty-related__heading')).not.toBeNull(), { timeout: 20000 })
-    expect(objectsHost.querySelector('.dynasty-related__heading').textContent.replace(/\s+/g, ' ').trim())
+    await vi.waitFor(() => expect(objectsHost.querySelector('.dyn-results__header')).not.toBeNull(), { timeout: 20000 })
+    expect(objectsHost.querySelector('.dyn-results__header').textContent.replace(/\s+/g, ' ').trim())
       .toMatch(/^\d+ Related Objects for Umayyads of al-Andalus$/)
+    // Twelve to a page, the first page's first the large one.
+    expect(objectsHost.querySelectorAll('.dyn-results__item').length).toBeLessThanOrEqual(12)
+    expect(objectsHost.querySelector('.dyn-results__main .dyn-results__bold').innerHTML)
+      .toBe(objectsHost.querySelector('.dyn-results__item .dyn-results__bold').innerHTML)
     objects.unmount()
   }, 60000)
 

@@ -3,9 +3,11 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { I18nText } from '@museumwnf/viewer-core'
 import { useDynasties } from '../composables/dynasties.js'
+import DynastiesFrame from '../dynasties/DynastiesFrame.vue'
 
 // Legacy's /dynasties/ start page: the picker on the left — every dynasty,
-// "GO" opens its profile — and the introduction on the right.
+// "GO" opens its profile — and the introduction on the right; one under the
+// other below 850px.
 const router = useRouter()
 const { list } = useDynasties()
 const picked = ref('')
@@ -16,37 +18,92 @@ function go() {
 </script>
 
 <template>
-  <div class="dynasties-entrance">
-    <form class="dynasties-entrance__picker" @submit.prevent="go">
-      <select v-model="picked" class="mwnf-select" :aria-label="$t('islamicart.dynasties.pick')">
-        <option value="">{{ $t('islamicart.dynasties.pick') }}</option>
-        <option v-for="dynasty in list" :key="dynasty.id" :value="dynasty.id">{{ dynasty.name }}</option>
-      </select>
-      <button type="submit" class="mwnf-button">{{ $t('islamicart.dynasties.go') }}</button>
-    </form>
-    <I18nText keypath="islamicart.dynasties.intro" class="dynasties-entrance__intro" />
-  </div>
+  <DynastiesFrame>
+    <div class="dyn-entrance">
+      <form class="dyn-entrance__picker" @submit.prevent="go">
+        <select v-model="picked" class="dyn-entrance__select" :aria-label="$t('islamicart.dynasties.pick')">
+          <option value="">{{ $t('islamicart.dynasties.pick') }}</option>
+          <option v-for="dynasty in list" :key="dynasty.id" :value="dynasty.id">{{ dynasty.name }}</option>
+        </select>
+        <div class="dyn-entrance__go">
+          <button type="submit">{{ $t('islamicart.dynasties.go') }}</button>
+        </div>
+      </form>
+      <I18nText keypath="islamicart.dynasties.intro" class="dyn-entrance__description" />
+    </div>
+  </DynastiesFrame>
 </template>
 
 <style scoped>
-.dynasties-entrance {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 40px;
-  padding-block: 20px 30px;
-  font-size: 14px;
+.dyn-entrance {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  background-color: #fff;
 }
-.dynasties-entrance__picker {
+
+.dyn-entrance__picker {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  margin-top: 30px;
+  justify-content: center;
+  align-items: flex-start;
+  width: 45%;
+  padding: 60px;
 }
-.dynasties-entrance__picker select {
+
+.dyn-entrance__select {
   width: 100%;
+  max-width: 350px;
+  padding: 4px;
 }
-@media (max-width: 48rem) {
-  .dynasties-entrance { grid-template-columns: 1fr; }
+
+.dyn-entrance__go {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 350px;
+}
+
+.dyn-entrance__go button {
+  margin-top: 10px;
+  padding: 4px 15px;
+  color: #222;
+  background-color: #ffd500;
+  border: none;
+  border-radius: 100px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* The text: one block, its paragraphs a blank line apart (legacy's <br><br>). */
+.dyn-entrance__description {
+  width: 55%;
+  padding: 50px 75px 50px 0;
+}
+
+.dyn-entrance__description :deep(p + p) {
+  margin-top: 1lh;
+}
+
+@media (max-width: 849px) {
+  .dyn-entrance { flex-direction: column; }
+
+  .dyn-entrance__picker {
+    width: 100%;
+    align-items: center;
+  }
+
+  .dyn-entrance__description {
+    align-self: center;
+    width: 100%;
+    padding: 0 50px 50px;
+  }
+}
+
+@media (max-width: 599px) {
+  .dyn-entrance__picker { padding: 30px; }
+  .dyn-entrance__description { padding: 0 30px 30px; }
 }
 </style>

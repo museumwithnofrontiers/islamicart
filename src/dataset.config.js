@@ -214,25 +214,27 @@ export default {
     },
     {
       // Islamic Dynasties (legacy's /dynasties/ client): the start page with
-      // the picker, a dynasty's profile, and its objects or monuments.
+      // the picker, a dynasty's profile, and its objects or monuments. The
+      // client had a frame of its own (src/dynasties/DynastiesFrame.vue): the
+      // shell leaves these pages bare and each draws in that frame.
       path: '/dynasties',
       name: 'dynasties',
       component: () => import('./views/DynastiesEntrance.vue'),
-      meta: meta('dynasties', 'dynasties'),
+      meta: { ...meta('dynasties', 'dynasties'), bare: true },
     },
     {
       path: '/dynasties/:id',
       name: 'dynasty',
       component: () => import('./views/DynastyProfile.vue'),
       props: (route) => ({ id: decodeURIComponent(route.params.id) }),
-      meta: meta('dynasties', 'dynasties', 'items'),
+      meta: { ...meta('dynasties', 'dynasties', 'items'), bare: true },
     },
     {
       path: '/dynasties/:id/:kind(objects|monuments)',
       name: 'dynasty-related',
       component: () => import('./views/DynastyRelated.vue'),
       props: (route) => ({ id: decodeURIComponent(route.params.id), kind: route.params.kind }),
-      meta: meta('dynasties', 'dynasties', 'items', 'countries', 'partners'),
+      meta: { ...meta('dynasties', 'dynasties', 'items', 'countries', 'partners'), bare: true },
     },
     {
       // recommendedlinks.php: its groups of links, in English as legacy
