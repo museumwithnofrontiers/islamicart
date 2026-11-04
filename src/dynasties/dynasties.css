@@ -1,0 +1,507 @@
+/*
+ * Legacy's Islamic Dynasties client (/dynasties/), its own stylesheet
+ * (css/app.css) ported to the frame (DynastiesFrame.vue) and its pages:
+ * every size, colour and breakpoint is the client's.
+ */
+
+/* The client's reset: no margins, Roboto at its parent's size, border boxes.
+   Zero specificity, so each page's own rules win. */
+:where(.dyn-ground, .dyn-ground *) {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, sans-serif;
+  font-size: 100%;
+  box-sizing: border-box;
+}
+
+.dyn-ground {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: normal;
+  color: #000;
+  background-color: #fff9dd;
+  overflow-x: hidden;
+}
+
+.dyn-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 1350px;
+  max-width: 1350px;
+  box-shadow: 0 2px 8px 2px #707070;
+}
+
+.dyn-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Font Awesome's inline icons. */
+.dyn-icon {
+  display: inline-block;
+  height: 1em;
+  overflow: visible;
+  vertical-align: -0.125em;
+}
+
+/* ── The header ── */
+
+.dyn-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  width: 100%;
+  color: #222;
+  background-color: #eec201;
+}
+
+.dyn-header__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  z-index: 8;
+}
+
+.dyn-header__title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 45%;
+  padding: 10px;
+  font-size: 190%;
+  text-align: center;
+  z-index: 10;
+}
+
+.dyn-header__title a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #4c420e;
+  text-decoration: none;
+}
+
+.dyn-header__title span {
+  margin-top: 4px;
+  line-height: 100%;
+  text-transform: uppercase;
+}
+
+.dyn-header__tools {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0 10px;
+  font-size: 14px;
+  z-index: 10;
+}
+
+.dyn-header__links a {
+  padding: 0 10px;
+  color: #222;
+  text-decoration: none;
+}
+
+.dyn-header__language {
+  padding-top: 10px;
+  padding-right: 5px;
+}
+
+/* ── The menu ── */
+
+.dyn-nav {
+  width: 100%;
+}
+
+.dyn-nav__icon,
+.dyn-nav__close {
+  display: none;
+}
+
+.dyn-nav ul {
+  display: flex;
+  width: 100%;
+  list-style-type: none;
+}
+
+.dyn-nav li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-size: 96%;
+  font-weight: 500;
+  line-height: 28px;
+  color: #4c4214;
+}
+
+.dyn-nav li:nth-child(odd) {
+  background-color: #e0b700;
+}
+
+.dyn-nav li:nth-child(2n) {
+  background-color: #ffd500;
+}
+
+.dyn-nav a {
+  width: 100%;
+  color: #4c4214;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* ── The band ── */
+
+.dyn-band {
+  position: relative;
+  width: 100%;
+  height: 20vh;
+  min-height: 50px;
+  max-height: 150px;
+}
+
+.dyn-band img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dyn-band__overlay {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 50px;
+}
+
+.dyn-band__title {
+  padding: 10px 10px 10px 50px;
+  font-size: 190%;
+  color: #ffeeab;
+}
+
+.dyn-main {
+  width: 100%;
+}
+
+/* ── The footer ── */
+
+.dyn-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  font-size: 14px;
+  color: #222;
+  text-align: center;
+  background-color: #eec201;
+}
+
+.dyn-footer a {
+  color: #222;
+  text-decoration: none;
+}
+
+.dyn-footer__links,
+.dyn-footer__social {
+  padding: 0 15px;
+}
+
+/* The shared social icons, as the client's: inline, 5px either side (the
+   standalone footer's own placement does not apply here). */
+.dyn-footer .dyn-footer__social .mwnf-footer__social,
+.dyn-footer .dyn-footer__social .mwnf-footer__social li {
+  position: static;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  line-height: inherit;
+  list-style: none;
+}
+
+.dyn-footer .dyn-footer__social .mwnf-footer__social-link {
+  display: inline;
+  margin: 0 5px;
+  color: #222;
+}
+
+.dyn-footer .dyn-footer__social .mwnf-footer__social-icon {
+  display: inline-block;
+  height: 1em;
+  width: auto;
+  overflow: visible;
+  vertical-align: -0.125em;
+}
+
+/* ── The client's breakpoints ── */
+
+@media (max-width: 1349px) {
+  .dyn-page { width: 100vw; }
+  .dyn-nav li { font-size: 80%; }
+}
+
+@media (max-width: 1249px) {
+  .dyn-nav ul {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .dyn-nav li:nth-child(5),
+  .dyn-nav li:nth-child(7) { background-color: #ffd500; }
+
+  .dyn-nav li:nth-child(6),
+  .dyn-nav li:nth-child(8) { background-color: #e0b700; }
+}
+
+@media (max-width: 1199px) {
+  .dyn-header__title { font-size: 175%; }
+  .dyn-band__title { font-size: 170%; }
+}
+
+@media (max-width: 974px) {
+  .dyn-footer {
+    flex-direction: column;
+    height: 65px;
+  }
+
+  .dyn-footer__links,
+  .dyn-footer__social { width: 100%; }
+}
+
+@media (max-width: 849px) {
+  .dyn-header__title { font-size: 150%; }
+  .dyn-band__title { font-size: 155%; }
+}
+
+@media (max-width: 724px) {
+  .dyn-header__logo { width: 120px; }
+
+  .dyn-header__logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .dyn-header__title {
+    font-size: 135%;
+    text-align: center;
+  }
+
+  .dyn-header__tools { font-size: 13px; }
+  .dyn-header__language { padding-top: 5px; }
+
+  .dyn-band { max-height: 100px; }
+  .dyn-band__overlay { min-height: 40px; }
+
+  .dyn-band__title {
+    padding: 5px 5px 5px 50px;
+    font-size: 145%;
+  }
+
+  .dyn-footer {
+    height: 90px;
+    line-height: 22px;
+  }
+}
+
+/* Phone: the header stays at the top; the menu is a button that opens it
+   over the page. */
+@media (max-width: 599px) {
+  .dyn-header {
+    position: sticky;
+    top: 0;
+    height: 65px;
+    z-index: 90;
+  }
+
+  .dyn-header__logo {
+    width: 110px;
+    padding-left: 0;
+    margin-left: 45px;
+  }
+
+  .dyn-header__tools { padding-right: 12px; }
+
+  .dyn-header__links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  /* The client offers only the portal on a phone. */
+  .dyn-header__separator,
+  .dyn-header__links > :not(:first-child) { display: none; }
+
+  .dyn-header__links a {
+    padding: 4px 0;
+    font-size: 85%;
+  }
+
+  .dyn-nav {
+    position: absolute;
+    height: 0;
+    z-index: 100;
+  }
+
+  .dyn-nav__icon {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 50px;
+    height: 65px;
+    z-index: 91;
+  }
+
+  .dyn-nav__toggle {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    font-size: 25px;
+    color: #222;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .dyn-nav__backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  .dyn-nav--open .dyn-nav__backdrop { display: block; }
+
+  .dyn-nav__menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 50%;
+    height: 100%;
+    background-color: #e0b700;
+  }
+
+  .dyn-nav__close {
+    display: block;
+    align-self: flex-end;
+    padding: 10px;
+    font-size: 24px;
+    color: #222;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .dyn-nav ul {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+
+  .dyn-nav ul li:first-child { border-top: 2px solid #e0b700; }
+
+  .dyn-nav li {
+    line-height: 35px;
+    border-bottom: 2px solid #e0b700;
+  }
+
+  .dyn-nav li:nth-child(5),
+  .dyn-nav li:nth-child(7) { background-color: #e0b700; }
+
+  .dyn-nav li:nth-child(6),
+  .dyn-nav li:nth-child(8) { background-color: #ffd500; }
+
+  .dyn-band { max-height: 80px; }
+  .dyn-band__overlay { min-height: 35px; }
+
+  .dyn-band__title {
+    padding: 5px 5px 5px 30px;
+    font-size: 130%;
+  }
+}
+
+@media (max-width: 499px) {
+  .dyn-header { height: 80px; }
+
+  .dyn-header__logo {
+    width: 90px;
+    margin-left: 36px;
+  }
+
+  .dyn-nav__icon {
+    width: 42px;
+    height: 75px;
+  }
+
+  .dyn-nav__toggle {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 399px) {
+  .dyn-header__title {
+    height: 60px;
+    font-size: 100%;
+  }
+
+  .dyn-header__logo {
+    width: 80px;
+    margin-left: 32px;
+  }
+
+  .dyn-header__tools { padding-right: 8px; }
+  .dyn-nav__toggle { margin-left: 8px; }
+  .dyn-nav__menu { width: 65%; }
+  .dyn-nav__close { font-size: 20px; }
+
+  .dyn-footer {
+    height: 110px;
+    line-height: 24px;
+  }
+}
+
+@media print {
+  .dyn-header,
+  .dyn-nav,
+  .dyn-band,
+  .dyn-footer { display: none; }
+
+  .dyn-page {
+    width: auto;
+    max-width: none;
+    box-shadow: none;
+  }
+}
