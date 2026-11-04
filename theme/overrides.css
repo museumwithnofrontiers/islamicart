@@ -193,6 +193,80 @@
   color: #222;
 }
 
+/* Legacy's Arabic inner pages keep the English pages' columns, left to
+   right, and set the Arabic text right to left inside each one: the
+   Collections entrance's lists on the left and its text on the right, the
+   ways back from the left. */
+[dir="rtl"] .mwnf-standalone :is(.mwnf-standalone-pc, .mwnf-standalone-item__back) {
+  direction: ltr;
+}
+
+[dir="rtl"] .mwnf-standalone :is(.mwnf-standalone-pc, .mwnf-standalone-item__back) > * {
+  direction: rtl;
+}
+
+/* The partner page's tabs and an item's languages in their English order,
+   from the left (the languages still against the right edge); the partner's
+   name and the map's heading 15px in from the right (h3.time_line_con_title). */
+[dir="rtl"] .mwnf-standalone :is(.mwnf-standalone-partner__tabs, .mwnf-standalone-item__top .mwnf-languages) {
+  direction: ltr;
+}
+
+[dir="rtl"] .mwnf-standalone :is(.mwnf-standalone-partner__name, .mwnf-standalone-partner__map-heading) {
+  margin-right: 15px;
+}
+
+/* The Database's Date and Language labels from the left of their column,
+   15px in (label.langu). */
+@media (min-width: 48rem) {
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-db__label {
+    padding-left: 30px;
+    text-align: left;
+  }
+}
+
+/* The home's record of the day: legacy's Arabic box is 775px wide against
+   its column's left, 15px in, its picture at the box's right end. */
+@media (min-width: 62rem) {
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-highlight {
+    justify-self: end;
+    width: 775px;
+    max-width: 100%;
+    margin-left: 15px;
+  }
+}
+
+/* The home's side links 25px nearer the right edge; the Sponsors page's
+   heading against the right of its half. */
+@media (min-width: 62rem) {
+  [dir="rtl"] {
+    --mwnf-standalone-home-links-inset: 15px;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-sp__heading {
+    width: calc(50% - 30px);
+    text-align: right;
+  }
+}
+
+/* The partner list stays left to right altogether, its Arabic names
+   included, as legacy's did; only its two headings run right to left in
+   their columns. (On a phone it is left as it is, 2026-11-03.) */
+@media (min-width: 48rem) {
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-pl {
+    direction: ltr;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-pl__heads > * {
+    direction: rtl;
+    margin-right: 15px;
+  }
+
+  [dir="rtl"] .mwnf-standalone .mwnf-standalone-pl__heads h3:nth-child(2) {
+    width: calc(50% - 30px);
+  }
+}
+
 /* Legacy's Arabic home writes the record of the day before the side links,
    and the band's columns from its last to its first; a phone stacks them as
    written, so they read the other way round from the English page. */
