@@ -13,6 +13,17 @@
   --mwnf-standalone-phone-pc-about-gap: 35px;
 }
 
+/* Legacy's Arabic style_ar.css sets the banner's title on a dark band
+   (`.banner-text`), and keeps the footer's icons 65px from the left, left to
+   right (`.socialIcons`); on a phone they also keep the English 25px from the
+   right, so they sit centred between. */
+[dir="rtl"] {
+  --mwnf-standalone-banner-title-background: rgb(0 0 0 / 0.31);
+  --mwnf-standalone-footer-social-left: 65px;
+  --mwnf-standalone-footer-social-right: auto;
+  --mwnf-standalone-footer-social-direction: ltr;
+}
+
 /* Legacy's Arabic stylesheets (style_ar.css, style_inside_ar.css) are copies
    of the English ones that set in 600 what those set in 500. Roboto has no
    Arabic, so the browser's Arabic face draws 600 bold and 500 regular: the
