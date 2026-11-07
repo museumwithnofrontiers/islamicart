@@ -260,6 +260,9 @@
   --mwnf-standalone-logo-height: 50px;
   --mwnf-standalone-logo-width: 120px;
   --mwnf-standalone-banner-height: 160px;
+  /* Legacy's `.banner-image` sets its picture with the `background`
+     shorthand: it sits at its top left. */
+  --mwnf-standalone-banner-position: 0 0;
   --mwnf-standalone-banner-title-size: 30px;
   --mwnf-standalone-banner-title-color: #ffeeab;
   --mwnf-standalone-banner-title-padding: 8px 0 14px 64px;
