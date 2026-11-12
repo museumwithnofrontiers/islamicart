@@ -8,26 +8,12 @@ import { dateOptions, entranceCountries } from '../composables/timeline.js'
 // The Timeline entrance as legacy's hcr_home.php, the standalone family's
 // (viewer-layout's `StandaloneTimelineEntrance`): the country, the start and
 // end centuries, Go. Go writes the query the results page reads
-// (composables/timeline.js). Every word is legacy's own (islamicart.tl.*);
+// (composables/timeline.js). Every word is legacy's own (islamicart.tl.*), which the component reads by name;
 // the alerts are the ones legacy's page script wrote, in English.
 
 const router = useRouter()
 const { t } = useI18n()
 
-const labels = computed(() => ({
-  selectCountry: t('islamicart.tl.selectCountry'),
-  allCountries: t('islamicart.tl.allCountries'),
-  startDate: t('islamicart.tl.startDate'),
-  endDate: t('islamicart.tl.endDate'),
-  go: t('islamicart.db.go'),
-}))
-const alerts = computed(() => ({
-  country: t('islamicart.tl.alertCountry'),
-  countryOrDates: t('islamicart.tl.alertCountryOrDates'),
-  startDate: t('islamicart.tl.alertStartDate'),
-  endDate: t('islamicart.tl.alertEndDate'),
-  period: t('islamicart.tl.alertPeriod'),
-}))
 const dates = computed(() => dateOptions(t))
 
 function go({ country, start, end }) {
@@ -37,8 +23,7 @@ function go({ country, start, end }) {
 
 <template>
   <StandaloneTimelineEntrance
-    :labels="labels"
-    :alerts="alerts"
+    texts="islamicart"
     :countries="entranceCountries()"
     :starts="dates.starts"
     :ends="dates.ends"
