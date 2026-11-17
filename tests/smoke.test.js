@@ -149,8 +149,12 @@ describe('website smoke test', () => {
     await vi.waitFor(() => expect(host.querySelector('.mwnf-standalone-tle')).not.toBeNull(), { timeout: 20000 })
     const [country, start, end] = host.querySelectorAll('.mwnf-standalone-tle select')
     const options = (select) => [...select.options].map((o) => o.textContent)
-    expect(options(country).slice(0, 2)).toEqual(['Select a Country', 'All Countries'])
-    expect(options(country)).toContain('Egypt')
+    // Legacy's countries: those with events and Discover Islamic Art objects,
+    // and France (hcr_home.php, measured on its page on 2026-11-17).
+    expect(options(country)).toEqual([
+      'Select a Country', 'All Countries', 'Algeria', 'Egypt', 'France', 'Germany', 'Italy', 'Jordan', 'Morocco',
+      'Palestine', 'Portugal', 'Spain', 'Sweden', 'Syria', 'Tunisia', 'Türkiye', 'United Kingdom',
+    ])
     expect(options(start).slice(0, 2)).toEqual(['Start Date', '400 A.D.'])
     expect(options(end).slice(0, 2)).toEqual(['End Date', '500 A.D.'])
     country.value = 'egy'
