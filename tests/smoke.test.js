@@ -717,12 +717,19 @@ describe('website smoke test', () => {
     const exhibitions = collections.filter((c) => c.parent_id === root.id)
     for (const exhibition of exhibitions) expect(minisites[exhibition.id], exhibition.internal_name).toMatch(/^https:\/\//)
 
+    // Legacy's landing page (exhibitions/ISL/index.php), in its own frame:
+    // its title, and the exhibitions in two columns, the first ten and the rest.
     const { app, host } = await mountSite('#/exhibitions?lang=en')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-cards')).not.toBeNull(), { timeout: 20000 })
-    expect(host.querySelector('.mwnf-heading').textContent).toContain('Exhibitions')
-    const hrefs = Array.from(host.querySelectorAll('.mwnf-cards__link')).map((a) => a.getAttribute('href'))
+    await vi.waitFor(() => expect(host.querySelector('.exh-menu a')).not.toBeNull(), { timeout: 20000 })
+    expect(host.querySelector('.exh-title').textContent).toContain('Discover Islamic Art')
+    expect(host.querySelector('.exh-menu-title').textContent).toBe('Welcome to the Virtual Exhibitions')
+    const columns = Array.from(host.querySelectorAll('.exh-menu')).map((column) => column.querySelectorAll('a').length)
+    expect(columns).toEqual([Math.min(10, exhibitions.length), Math.max(0, exhibitions.length - 10)])
+    const hrefs = Array.from(host.querySelectorAll('.exh-menu a')).map((a) => a.getAttribute('href'))
     expect(hrefs).toHaveLength(exhibitions.length)
     for (const href of hrefs) expect(Object.values(minisites).some((base) => href.startsWith(base))).toBe(true)
+    // The frame is the page's: the site's shell draws no header around it.
+    expect(host.querySelector('.mwnf-heading')).toBeNull()
     app.unmount()
   }, 30000)
 
